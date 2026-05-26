@@ -160,6 +160,9 @@ label.swatch-option.d-inline-flex.align-items-center.justify-content-center.acti
                       </div>  
                   {% when 'variant_selector' %}
                     <div class="variant_selector top-bottom-spacing" {{ block.shopify_attributes }} style=" --variant-selector-padding-block-start: {{ block.settings.padding-block-start }}px; --variant-selector-padding-block-end: {{ block.settings.padding-block-end }}px;">
+                      {% if product.combined_listing %}
+                        <meta name="combined-listing" content="true">
+                      {% endif %}
                       <variant-selector data-url="{{ product.url }}" data-section="{{ section.id }}" role="status" aria-atomic="true" >
                         {% unless product.has_only_default_variant %}
                           {% for option in product.options_with_values %}
