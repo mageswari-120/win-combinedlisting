@@ -1014,6 +1014,52 @@ label.swatch-option.d-inline-flex.align-items-center.justify-content-center.acti
                       <div class="w-100 product-app-block" {{ block.shopify_attributes }}>
                         {% render block %}
                       </div>
+                       {%- when 'usage_information' -%}
+                          {%- assign usage = product.metafields.custom.usage_information -%}
+                          {%- if usage != blank -%}
+                            {%- if block.settings.display_style == 'collapse' -%}
+                              <section class="product-usage" {{ block.shopify_attributes }}>
+                                <div class="accordion" id="accordionUsage-{{ section.id }}">
+                                  <div class="accordion-item">
+                                    <h2 class="accordion-header" id="heading-usage-{{ block.id }}-{{ section.id }}">
+                                      <button
+                                        class="accordion-button collapsed px-0"
+                                        type="button"
+                                        data-bs-toggle="collapse"
+                                        data-bs-target="#collapse-usage-{{ block.id }}-{{ section.id }}"
+                                        aria-controls="collapse-usage-{{ block.id }}-{{ section.id }}"
+                                      >
+                                        <span class="h4 mb-0">
+                                         <h1>Usage Infomation </h1>
+                                        </span>
+                                      </button>
+                                    </h2>
+                                    <div
+                                      class="accordion-collapse collapse"
+                                      id="collapse-usage-{{ block.id }}-{{ section.id }}"
+                                      aria-labelledby="heading-usage-{{ block.id }}-{{ section.id }}"
+                                      data-bs-parent="#accordionUsage-{{ section.id }}"
+                                    >
+                                      <div class="rte accordion-body px-0">
+                                        <div class="accordion__content">
+                                          {{ usage | metafield_tag }}
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </section>
+                            {%- else -%}
+                              <section class="product-usage my-3" {{ block.shopify_attributes }}>
+                                <h2 class="h4 mb-2">
+                                  <h1>Usage Infomation </h1>
+                                </h2>
+                                <div class="rte product-usage__content">
+                                  {{ usage | metafield_tag }}
+                                </div>
+                              </section>
+                            {%- endif -%}
+                          {%- endif -%}
                   {% endcase %}
                 {% endfor %}
               {%- endif -%}
