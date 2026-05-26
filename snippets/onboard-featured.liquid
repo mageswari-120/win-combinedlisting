@@ -1,0 +1,86 @@
+{% for block in section.blocks %}
+  {% case block.type %}
+    {% when 'title' %}
+    <div class="product-title">
+    <h2 class="mb-0">{{ 'onboarding.product_title' | t }}</h2>
+    </div>
+    {% when 'price' %}
+    <div class="mt-2 price_block" id="price-{{ section.id }}">
+    <span class="price">{{ 0000 | money }}</span>
+    </div>
+    {%- when 'text' -%}
+      <div class="mt-3 mb-2 product-text" > {{ 'onboarding.description' | t }} </div>
+    {% when 'variant_selector' %}
+    <div class="mb-3">
+    {% if block.settings.swatch_style == 'button' %}   
+    <variant-selector>
+    <label class="form-label w-100 h4">{{ 'onboarding.varients' | t }}</label>
+    <ul class="variant-options p-0 d-flex flex-wrap gap-3" >
+    <li class="variant-option-item selected  btn btn-secondary d-inline-block px-3 ">
+    <span class="mb-0"> {{ 'onboarding.options_1' | t }}</span>
+    </li>
+    <li class="variant-option-item btn btn-secondary d-inline-block px-3 ">
+    <span class="mb-0">{{ 'onboarding.options_2' | t }} </span>
+    </li>
+    <li class="variant-option-item  btn btn-secondary d-inline-block px-3 ">
+    <span class="mb-0"> {{ 'onboarding.options_3' | t }} </span>
+    </li>
+    <li class="variant-option-item btn btn-secondary d-inline-block px-3 ">
+    <span class="mb-0"> {{ 'onboarding.options_4' | t }} </span>
+    </li>
+    </ul>
+    </variant-selector>
+   {% endif %}   
+   {% if block.settings.swatch_style == 'dropdown' %}
+     <variant-selector>
+       <label class="form-label w-100 h4"> {{ 'onboarding.varients' | t }} </label> 
+       <div class="mb-2">
+          <select class="form-select px-3 py-2 border btn btn-primary" >
+             <option> {{ 'onboarding.options_1' | t }}</option>
+             <option> {{ 'onboarding.options_2' | t }} </option>
+             <option> {{ 'onboarding.options_3' | t }} </option>
+             <option> {{ 'onboarding.options_4' | t }} </option>
+          </select>
+       </div>
+     </variant-selector>
+   {% endif %}      
+    </div>
+     {% when 'quantity' %}
+      <quantity-editor>
+      <div class="mt-2 mb-3">
+      <label class="form-label w-100 h4" for="quantity-{{ section.id }}">{{ 'products.product.quantity.label' | t }}</label>
+      <div class="quantity w-100 mb-0">
+      <span class="decrement-btn quantity__button">{% render 'icon-minus' %}</span>
+      <input
+      type="number"
+      name="quantity"
+      class="form-control quantity-input"
+      value="1"
+      min="1"
+      id="quantity-{{ section.id }}">
+      <span class="increment-btn quantity__button">{% render 'icon-plus' %}</span>
+      </div>
+      </div>
+      </quantity-editor>
+    <div class="mb-3">
+    <div class="cta-buttons d-flex w-100 gap-2">
+    <button
+    type="submit"
+    name="add"
+    class="btn btn btn-primary w-100"
+    id="addToCart"     
+    disabled      
+    >      
+    {{ 'products.product.sold_out' | t }}      
+    </button>
+    {%- if block.settings.show_dynamic_checkout -%}
+    {{ form | payment_button }}
+    {%- endif -%}
+    </div>
+    </div>
+    {%- when 'share' -%}
+    <div class="mb-3">
+    {% render 'share', share_title: block.settings.share_label %}
+    </div>
+  {% endcase %}
+{% endfor %}

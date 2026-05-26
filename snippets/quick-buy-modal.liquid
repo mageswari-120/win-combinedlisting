@@ -1,0 +1,75 @@
+<!-- Offcanvas structure for Bootstrap -->
+<div
+  class="quickview-modal offcanvas offcanvas-center color-{{ settings.offcanvas_color_scheme }} gradient"
+  tabindex="-1"
+  id="quickViewOffcanvas"
+  aria-labelledby="quickViewOffcanvasLabel"
+>
+   <button
+      type="button"
+      class="btn-close end-0 position-absolute  top-5 z-3 m-2"
+      data-bs-dismiss="offcanvas"
+      aria-label="Close"
+    >  {% render 'cancel.svg' %} </button>
+  <div class="offcanvas-body position-relative">
+   
+    <div id="quickViewContent" class="h-100">{{ 'onboarding.loading' | t }}</div>
+  </div>
+</div>
+{% stylesheet %}
+  /* #quickViewContent .mainProduct .sidebar {display: none;}
+  #quickViewContent .mainProduct .product-thumbnails{ display: none;}
+  #quickViewContent .mainProduct .dt-sc-enquiry-form{display: none;}
+  #quickViewContent .mainProduct .accordion-item {display: none;} */
+  /* #quickViewContent .mainProduct .social-proof-sales, */
+  /* #quickViewContent .mainProduct  .availablity-stack{display: none;} */
+  /* #quickViewContent .mainProduct .product-deal-count .deal-clock{ transition: none;} */
+  /* #quickViewContent .mainProduct .share_button{display: none !important;} */
+  #quickViewContent .mainProduct:has(.sidebar) > .row{ margin: 0;}
+  #quickViewContent .mainProduct:has(.sidebar) .product{ padding:0;}
+  #quickViewContent .mainProduct .shopify-product-form > div:last-of-type {margin-bottom:0 !important;}
+  #quickViewContent .mainProduct .product__info-bottom{display:none !important; margin-top: 0 !important;}
+  #quickViewContent .mainProduct .stacked-gallery .swiper-wrapper{flex-direction: row !important;}
+  #quickViewContent .mainProduct .swiper-slide{margin-bottom: 0 !important; border: 0; border-radius: 0;}
+  #quickViewContent .mainProduct .product--information{top:0;}
+  #quickViewContent .mainProduct .qv-cta_buttons{margin-bottom: 0 !important;}
+  #quickViewContent .mainProduct .product{margin-bottom: 0 !important;}
+  #quickViewContent .mainProduct .accordion{margin:0 !important;}
+  #quickViewContent .mainProduct  .product > *{padding: 20px !important;}
+  /* .quickview-modal:has(#quickViewContent) .btn-close{position:fixed !important; top: -23px !important;right: -21px !important;} */
+  #quickViewContent  .mainProduct.photoswipe_lightbox  .product-media-gallery .swiper-slide.media-type-image img{cursor:auto; }
+  #quickViewContent  .mainProduct .product-media-gallery a{pointer-events: none; transition: none; } /* applying this will fix the delay of the zoom image on closing */ 
+  #quickViewContent .mainProduct :is(.sidebar,  .product-thumbnails,  .accordion-item,  .dt-sc-enquiry-form, .product__description),
+  #quickViewContent .mainProduct .product__info-wrapper #product-form >*:not(.product-text, .badge_group, .qv-cta_buttons, .qv-product_title,.qv-variant_selector,.qv-quantity,.qv-cta_buttons,.qv-price_block,.qty-status,quantity-editor) {display: none !important;}
+  #quickViewContent #nextpre{ display: none;}
+  #quickViewContent .mainProduct  .product > *:first-child{padding: 0px !important;}
+  #quickViewContent .mainProduct .product--information .product-title h1{ font-size: var(--bs-font-h4-size) !important; }
+
+
+  @media (min-width:768px){
+  #quickViewContent .mainProduct .product__media-wrapper{ position: sticky !important;top: 0;height: fit-content;}
+  #quickViewContent .mainProduct .product-title{margin-right: 25px;}
+  #quickViewContent .mainProduct .product{flex-direction: row;flex-wrap: nowrap;width: 100%;height: 100%; }
+  #quickViewContent .mainProduct  .product > *{width:50% !important;}
+  #quickViewContent .mainProduct  .product > *{padding: 30px !important; overflow: auto; }
+  #quickViewContent .mainProduct  .product .product__info-wrapper{ height: 100%; }
+  }
+
+  @media (max-width:1199.98px){
+   #quickViewContent .mainProduct .cta-buttons{flex-direction: row;}
+   #quickViewContent .mainProduct .cta-buttons > *{width: 50%;}
+  }
+
+  @media (max-width:991.98px){
+    #quickViewContent .mainProduct .cta-buttons{flex-direction: column;}
+    #quickViewContent .mainProduct .cta-buttons > *{width: 100%;}
+  }
+
+  @media (max-width:767.98px){
+    #quickViewContent .mainProduct .cta-buttons{flex-direction: row;}
+    #quickViewContent .mainProduct .cta-buttons > *{width: 50%;}
+    #quickViewContent .mainProduct > .row >{padding:20px !important;}
+    #quickViewContent .mainProduct .product-media-gallery {margin-top: 0 !important;}
+    /* .quickview-modal:has(#quickViewContent) .btn-close{margin:4px !important;top: -18px !important;right: -16px !important; }} */
+  }
+{% endstylesheet %}

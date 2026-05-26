@@ -1,0 +1,53 @@
+{% style %}
+  .section_block-{{ block.id }}>* {margin:0;} 
+{% if settings.type_preset != "rte" %} .section_block-{{ block.id }}>*{
+   font-size:inherit;
+   font-family:inherit;
+   color: inherit;
+   font-weight: inherit;
+   } 
+{% endif %}
+{% if block.settings.border_radius > 1 and block.settings.padding-block-end == 0 and block.settings.padding-block-start == 0 and
+     block.settings.padding-inline-end == 0 and block.settings.padding-inline-start == 0 %}
+  /* .section_block-{{ block.id }} {padding:5px; } */
+  {% endif %}
+{% if block.settings.width =='fit-content' %}
+  .d-flex.flex-row.justify-content-start.align-items-center > .section_block-{{ block.id }},
+  /* .d-flex.flex-column.justify-content-center.align-items-start > .section_block-{{ block.id }}  */
+  {
+  text-align: left;
+  }
+  .d-flex.flex-row.justify-content-center.align-items-center > .section_block-{{ block.id }} ,
+  .d-flex.flex-column.justify-content-center.align-items-center > .section_block-{{ block.id }}, 
+  .d-flex.flex-column.justify-content-center.align-items-start > .section_block-{{ block.id }},
+   .d-flex.flex-column.justify-content-center.align-items-end > .section_block-{{ block.id }},
+   .d-flex.flex-row.justify-content-center.align-items-start > .section_block-{{ block.id }},
+   .d-flex.flex-row.justify-content-center.align-items-end > .section_block-{{ block.id }}
+  {
+  text-align: center;
+  }
+  .d-flex.flex-row.justify-content-end.align-items-center > .section_block-{{ block.id }}  ,
+  .d-flex.flex-column.justify-content-end.align-items-start > .section_block-{{ block.id }},
+  .d-flex.flex-column.justify-content-end.align-items-start > .section_block-{{ block.id }},
+  .d-flex.flex-column.justify-content-end.align-items-center > .section_block-{{ block.id }},
+   .d-flex.flex-column.justify-content-end.align-items-end > .section_block-{{ block.id }},
+   .d-flex.flex-row.justify-content-end.align-items-start > .section_block-{{ block.id }},
+   .d-flex.flex-row.justify-content-end.align-items-end > .section_block-{{ block.id }}
+  {
+  text-align:right;    
+  }
+ {% endif %} 
+
+ /* .section_block-{{ block.id }}{
+   {% if settings.background %}
+   padding: max(5px, calc({{ settings.border_radius }}px * 0.2));
+   {% endif %}
+ } */
+  
+{% endstyle %}  
+
+
+<div class="section_block-{{ block.id }} text-{{ settings.text_transform }} {{ settings.type_preset }} spacing-style"  {{ block.shopify_attributes }}
+style="{% render 'spacing-style', settings: block.settings  %} {% render 'text-bg-space', settings: block.settings  %}">
+  {{ block.settings.text }}
+</div>

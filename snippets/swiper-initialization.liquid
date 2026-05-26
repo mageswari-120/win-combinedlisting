@@ -1,0 +1,44 @@
+
+{%- style -%}
+
+@media screen and (min-width: 576px){  
+.section-{{ section.id }} .swiper:not(.swiper-initialized) .swiper-wrapper .swiper-slide  {
+width: calc((100% - {{ space }}px * 1 ) / 2);
+margin-right:{{ space }}px; 
+}
+}
+ 
+@media screen and (min-width: 992px){  
+ .section-{{ section.id }} .swiper:not(.swiper-initialized) .swiper-wrapper .swiper-slide  {
+width: calc((100% - {{ space }}px * 2 ) / 3);
+margin-right:{{ space }}px; 
+}
+} 
+
+@media screen and (min-width: 1200px){
+
+{% if slider_desktop == '3' %}  
+.section-{{ section.id }} .swiper:not(.swiper-initialized) .swiper-wrapper .swiper-slide  {
+width: calc((100% - {{ space }}px * 2 ) / 3);
+margin-right:{{ space }}px; 
+}
+{% elsif slider_desktop == '4' %}
+.section-{{ section.id }} .swiper:not(.swiper-initialized) .swiper-wrapper .swiper-slide  {
+width: calc((100% - {{ space }}px * 3 ) / 4);
+margin-right:{{ space }}px; 
+}      
+{% elsif slider_desktop == '5' %}
+.section-{{ section.id }} .swiper:not(.swiper-initialized) .swiper-wrapper .swiper-slide  {
+width: calc((100% - {{ space }}px * 4 ) / 5);
+margin-right:{{ space }}px; 
+} 
+{% elsif slider_desktop == '6' %}
+.section-{{ section.id }} .swiper:not(.swiper-initialized) .swiper-wrapper .swiper-slide  {
+width: calc((100% - {{ space }}px * 5 ) / 6);
+margin-right:{{ space }}px; 
+} 
+{% endif %}
+}  
+ 
+
+{%- endstyle -%}

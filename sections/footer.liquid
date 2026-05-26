@@ -1,0 +1,242 @@
+{% style %}
+        .footer-section-container{ position: absolute; inset: 0;z-index: -2; }
+        .footer_section  .footer_background{ grid-area: 1 / -1; }
+        .footer_section .footer_background .background_media{ position: absolute; inset: 0; }
+        .footer_section .footer_background .background_media :is(img, svg, video){
+          width:100%;
+          height: 100%;
+        }
+        .footer_section .footer_container{
+          position:relative;
+          width:100%;
+          height:100%;
+        }
+        .footer_section{display:grid;}
+      /*
+
+        @media(min-width:576px){
+      .footer_container > :not(.menu) {
+        min-width: 250px;
+         flex: 1 0 25%;
+      }
+        }
+   */
+   {% if section.settings.content_direction != 'column' %}
+  @media(min-width:576px){
+      .footer_container.footer_container--{{ section.id }} > * { min-width: 350px; flex: 1 0;}
+      .footer_container.footer_container--{{ section.id }} .Footer-branding { flex-grow:2;}
+      .footer_container.footer_container--{{ section.id }} .news-letter{flex-grow:2;}
+      .footer_container.footer_container--{{ section.id }} .menu { flex-grow:1; min-width: 250px;}
+      .footer_container.footer_container--{{ section.id }} > .social-icons__wrapper{ flex-grow:0; min-width:fit-content;}
+  }
+  {% endif %}
+ 
+{% endstyle %}
+
+{% liquid
+  if section.settings.content_direction == 'column'
+    assign direction = 'flex-sm-column'
+  else
+    assign direction = 'flex-sm-row'
+  endif
+%}
+
+{% capture children %}
+  {% content_for 'blocks' %}
+{% endcapture %}
+
+<div class="footer-section-container color-{{ section.settings.color_scheme }} custom-section-{{ section.id }}"></div>
+<div
+  class="footer_section {% if section.settings.full_width %}container-fluid {% else %}container{% endif %}  color-{{ section.settings.color_scheme }}"
+>
+  <div class="footer_background">
+    {% render 'background-media',
+      background_media: section.settings.background_media,
+      background_image: section.settings.background_image,
+      background_image_position: section.settings.background_image_position
+    %}
+  </div>
+
+  <div
+    class="z-1 gap-style"
+  >
+    {% if section.settings.toggle_overlay %}
+      {% render 'overlay', settings: section.settings %}
+    {% endif %}
+
+    <div
+      class="footer_container footer_container--{{ section.id }} spacing-style d-flex flex-column {{ direction }} justify-content-between flex-wrap  gap-style top-bottom-spacing"
+      style="
+         --padding-top:{{ section.settings.padding-block-start }}px;
+        --padding-bottom:{{ section.settings.padding-block-end }}px;
+         --gap-style: max(calc(var(--space-scale, 1.0) * {{ section.settings.grid_space }}px));
+      "
+    >
+      {{ children }}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "t:name.footer",
+  "class": "section footer",
+   "enabled_on": {
+    "groups": ["footer"]
+  },
+  "blocks": [
+    { "type": "footer-branding" },
+    { "type": "news-letter" },
+    { "type": "menu" },
+    { "type": "footer-social-icon" },
+    { "type": "contact-details" }
+  ],
+  "max_blocks": 5,
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "full_width",
+      "label": "t:settings.full_width"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:settings.color_scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "header",
+      "content": "t:content.layout"
+    },
+    {
+      "type": "select",
+      "id": "content_direction",
+      "label": "t:settings.direction",
+      "options": [
+        {
+          "value": "column",
+          "label": "t:options.vertical"
+        },
+        {
+          "value": "row",
+          "label": "t:options.horizontal"
+        }
+      ],
+      "default": "column"
+    },
+    {
+      "type": "range",
+      "id": "grid_space",
+      "label": "t:settings.gap",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 2
+    },
+    {
+      "type": "header",
+      "content": "t:content.appearance"
+    },
+    {
+      "type": "select",
+      "id": "background_media",
+      "label": "t:settings.background_media",
+      "options": [
+        {
+          "value": "none",
+          "label": "t:options.none"
+        },
+        {
+          "value": "image",
+          "label": "t:options.image"
+        }
+      ],
+      "default": "none"
+    },
+    {
+      "type": "image_picker",
+      "id": "background_image",
+      "label": "t:settings.image",
+      "visible_if": "{{ section.settings.background_media == 'image' }}"
+    },
+    {
+      "type": "checkbox",
+      "id": "toggle_overlay",
+      "label": "t:settings.background_overlay"
+    },
+    {
+      "type": "color",
+      "id": "overlay_color",
+      "label": "t:settings.overlay_color",
+      "alpha": true,
+      "default": "#00000026",
+      "visible_if": "{{ section.settings.toggle_overlay }}"
+    },
+    {
+      "type": "select",
+      "id": "overlay_style",
+      "label": "t:settings.overlay_style",
+      "options": [
+        {
+          "value": "solid",
+          "label": "t:options.solid"
+        },
+        {
+          "value": "gradient",
+          "label": "t:options.gradient"
+        }
+      ],
+      "default": "solid",
+      "visible_if": "{{ section.settings.toggle_overlay }}"
+    },
+    {
+      "type": "select",
+      "id": "gradient_direction",
+      "label": "t:settings.gradient_direction",
+      "options": [
+        {
+          "value": "to top",
+          "label": "t:options.up"
+        },
+        {
+          "value": "to bottom",
+          "label": "t:options.down"
+        }
+      ],
+      "default": "to top",
+      "visible_if": "{{ section.settings.toggle_overlay and section.settings.overlay_style == 'gradient' }}"
+    },
+    {
+      "type": "header",
+      "content": "t:content.padding"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start",
+      "label": "t:settings.top",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end",
+      "label": "t:settings.bottom",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "default": 0
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:name.footer",
+      "category": "t:categories.footer"
+    }
+  ]
+}
+{% endschema %}

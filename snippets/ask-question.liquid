@@ -1,0 +1,100 @@
+<div
+  class="popup_modal modal fade"
+  id="askQuestionModal"
+  tabindex="-1"
+  aria-labelledby="askQuestionModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="askQuestionModalLabel">
+          Ask a Question
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+          {% render 'cancel.svg' %}
+        </button>
+      </div>
+
+      <div class="modal-body">
+        <div class="product-addons__content ask-question__content">
+          <form
+            method="post"
+            action="/contact#ContactForm"
+            id="AskQuestionContactForm"
+            accept-charset="UTF-8"
+            class="isolate field"
+          >
+            <input type="hidden" name="form_type" value="contact">
+            <input type="hidden" name="utf8" value="✓">
+            <input type="hidden" name="contact[Product]" value="{{ product.title | escape }}">
+            <input type="hidden" name="contact[Product URL]" value="{{ shop.url }}{{ product.url }}">
+            <input type="hidden" name="contact[Product ID]" value="{{ product.id }}">
+
+            <div class="row mx-0">
+              <div class="col-12 col-sm-6 pe-sm-1 ps-sm-0 p-0 mb-2 mb-sm-0">
+                <input
+                  class="form-control"
+                  autocomplete="name"
+                  type="text"
+                  id="Ask-name"
+                  name="contact[Your name*]"
+                  value=""
+                  placeholder="Your name*"
+                  required=""
+                >
+              </div>
+
+              <div class="col-12 col-sm-6 pe-sm-0 ps-sm-1 p-0">
+                <input
+                  type="tel"
+                  id="Ask-phone"
+                  class="form-control"
+                  autocomplete="tel"
+                  name="contact[Your phone number]"
+                  pattern="[0-9\-]*"
+                  value=""
+                  placeholder="Your phone number"
+                  required=""
+                >
+              </div>
+            </div>
+
+        
+              <input
+                autocomplete="email"
+                type="email"
+                id="Ask-email"
+                class="form-control"
+                name="contact[email]"
+                spellcheck="false"
+                autocapitalize="off"
+                value=""
+                aria-required="true"
+                placeholder="Your email *"
+                required=""
+              >
+
+              <textarea
+                rows="5"
+                id="AskMessage"
+                class="form-control"
+                name="contact[Your message*]"
+                placeholder="Your message*"
+                required=""
+              ></textarea>
+   
+
+            <div class="note my-4">
+              * Required fields cannot be left blank.
+            </div>
+
+            <button type="submit" class="btn btn-secondary w-100">
+              Send Your Message
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

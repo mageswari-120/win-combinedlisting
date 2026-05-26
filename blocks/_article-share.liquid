@@ -1,0 +1,40 @@
+
+        <div class="article-share d-flex flex-wrap gap-3 modal-link justify-content-{{ section.settings.alignment }}">
+          <!-- Facebook Share Button -->
+          <button
+            onclick="window.open('https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent(location.href), 'facebook-share-dialog', 'width=436,height=436'); return false;"
+            aria-label="{{ 'general.social.links.facebook' | t }}"
+            title="{{ 'general.social.links.facebook' | t }}"
+            class="border rounded-1 d-flex align-items-center justify-content-center p-2 btn btn-secondary"
+          >
+            {%- render 'icon-facebook', class: 'overflow-visible' -%}
+          </button>
+
+          <!-- Twitter Share Button -->
+          <button
+            onclick="window.open('http://twitter.com/home/?status='+encodeURIComponent(location.href), 'twitter-share-dialog', 'width=436,height=436'); return false;"
+            aria-label="{{ 'general.social.links.twitter' | t }}"
+            title="{{ 'general.social.links.twitter' | t }}"
+            class="border rounded-1 d-flex align-items-center justify-content-center p-2 btn btn-secondary"
+          >
+            {%- render 'icon-twitter', class: 'overflow-visible' -%}
+          </button>
+
+          <!-- Pinterest Share Button -->
+          <button
+            onclick="window.open('http://pinterest.com/pin/create/button/?url='+encodeURIComponent(location.href), 'pinterest-share-dialog', 'width=436,height=436'); return false;"
+            aria-label="{{ 'general.social.links.pinterest' | t }}"
+            title="{{ 'general.social.links.pinterest' | t }}"
+            class="border rounded-1 d-flex align-items-center justify-content-center p-2 btn btn-secondary"
+          >
+            {%- render 'icon-pinterest', class: 'overflow-visible' -%}
+          </button>
+        </div>
+    
+{% schema %}
+  {
+    "name": "Share",
+    "tag": null,
+    "settings": []
+  }
+{% endschema %}

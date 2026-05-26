@@ -1,0 +1,457 @@
+{% liquid
+  assign aspect_ratio = ''
+  case settings.grid_image_ratio
+    when 'square'
+      assign aspect_ratio = 'ratio-1x1'
+    when 'portrait'
+      assign aspect_ratio = 'ratio-3x4'
+    when 'landscape'
+      assign aspect_ratio = 'ratio-4x3'
+    when 'adapt'
+      assign aspect_ratio = 'ratio-auto'
+    else
+      assign aspect_ratio = 'ratio-1x1'
+  endcase
+
+  assign product = closest.product
+
+  if settings.alignment == 'start'
+    assign text_alignment = 'justify-content-start text-start'
+  elsif settings.alignment == 'center'
+    assign text_alignment = 'justify-content-center text-center'
+  else
+    assign text_alignment = 'justify-content-end text-end'
+  endif
+%}
+
+
+{% comment %} menu {% endcomment %}
+
+{% if settings.show_menu %}
+  <div class="menu_block pb-3 pb-xxl-4">
+    <nav class="menu-panel__navigation-container">
+      {% if settings.enable_title %}
+        <h5 class="mb-md-3 sidebar_title">
+          {{ settings.heading | default: menu.title }}
+        </h5>
+      {% endif %}
+      <ul class="navbar-nav navbar-nav-scroll me-auto mobile_navigation" role="list" id="menuGroup">
+        {%- for link in settings.menu.links -%}
+          <li class="nav-item text-wrap">
+            {%- if link.links != blank -%}
+              <a
+                class="nav-link heading_link  dropdown-toggle d-flex justify-content-between text-{{ settings.text_transform }}"
+                href="#collapse-{{ link.handle }}"
+                data-bs-toggle="collapse"
+                role="button"
+                aria-expanded="false"
+                aria-controls="collapse-{{ link.handle }}"
+              >
+                {{ link.title | escape }}
+                <span class="dt-sc-caret d-flex align-items-center"> {% render 'arrow-svg' %}</span>
+              </a>
+              <div class="collapse" id="collapse-{{ link.handle }}" data-bs-parent="#menuGroup">
+                <ul class="list-unstyled ps-3 nav_child">
+                  {%- for childlink in link.links -%}
+                    <li class="nav-item">
+                      {%- if childlink.links == blank -%}
+                        <a
+                          id="HeaderDrawer-{{ link.handle }}-{{ childlink.handle }}"
+                          href="{{ childlink.url }}"
+                          class="nav-link grand-child-link text-{{ settings.text_transform }} {% if childlink.current %} menu-panel__menu-item--active text-decoration-underline{% endif %}"
+                          {% if childlink.current %}
+                            aria-current="page"
+                          {% endif %}
+                        >
+                          {{ childlink.title | escape }}
+                        </a>
+                      {%- else -%}
+                        <a
+                          class="nav-link heading_link dropdown-toggle text-deccoration-none  d-flex justify-content-between"
+                          href="#collapse-{{ link.handle }}-{{ childlink.handle }}"
+                          data-bs-toggle="collapse"
+                          role="button"
+                          aria-expanded="false"
+                          aria-controls="collapse-{{ link.handle }}-{{ childlink.handle }}"
+                        >
+                          {{ childlink.title | escape }}
+                          <span class="dt-sc-caret d-flex align-items-center"> {% render 'arrow-svg' %}</span>
+                        </a>
+                        <div
+                          class="collapse"
+                          id="collapse-{{ link.handle }}-{{ childlink.handle }}"
+                          data-bs-parent="#collapse-{{ link.handle }}"
+                        >
+                          <ul class="list-unstyled ps-3 py-0">
+                            {%- for grandchildlink in childlink.links -%}
+                              <li class="nav-item">
+                                <a
+                                  id="HeaderDrawer-{{ link.handle }}-{{ childlink.handle }}-{{ grandchildlink.handle }}"
+                                  href="{{ grandchildlink.url }}"
+                                  class="nav-link grand-child-link py-2{% if grandchildlink.current %} menu-panel__menu-item--active text-decoration-underline{% endif %}"
+                                  {% if grandchildlink.current %}
+                                    aria-current="page"
+                                  {% endif %}
+                                >
+                                  {{ grandchildlink.title | escape }}
+                                </a>
+                              </li>
+                            {%- endfor -%}
+                          </ul>
+                        </div>
+                      {%- endif -%}
+                    </li>
+                  {%- endfor -%}
+                </ul>
+              </div>
+            {%- else -%}
+              <a
+                id="HeaderDrawer-{{ link.handle }}"
+                href="{{ link.url }}"
+                class="nav-link heading_link {% if link.current %} menu-panel__menu-item--active text-decoration-underline{% endif %}"
+                {% if link.current %}
+                  aria-current="page"
+                {% endif %}
+              >
+                {{ link.title | escape }}
+              </a>
+            {%- endif -%}
+          </li>
+        {%- endfor -%}
+      </ul>
+    </nav>
+  </div>
+{% endif %}
+
+{% comment %} end menu {% endcomment %}
+
+
+
+
+{% comment %} collection {% endcomment %}
+
+{% if settings.show_collection %}
+  <div class="collection_block pb-3 pb-xxl-4">
+    {% if settings.show_title %}
+      <h5 class="mb-md-4 sidebar_title">
+        {{ settings.collection_title | default: collection_item.title }}
+      </h5>
+    {% endif %}
+
+    <wdt-collection-sidebar>
+      <div
+        data-slider-options='
+                  {
+            "desktop": "1",
+            "laptop": "1",
+            "tablet": "1",
+            "mobile": "1",
+            "loop": "false",
+            "mode": "false",
+            "auto_play": "false",
+            "space": "20"
+          }
+        '
+      >
+        <div class="product-carousel swiper position-relative" data-swiper-slider>
+          <div class="product-carousel-wrapper swiper-wrapper">
+            {% for product in collection_item.products limit: settings.collection_limit %}
+              {% assign card_product = product %}
+              <div class="swiper-slide h-auto desk-{{ slider_desktop }} laptop-{{ slider_laptop }} tablet-{{ slider_tablet }} mobile-{{ slider_mobile }}">
+                {% assign product_form_id = 'quick-add-' | append: section_id | append: card_product.id %}
+                <div class="card-wrapper product-card-wrapper h-100">
+                  <div
+                    class="card-main h-100 card overflow-hidden {% if settings.card_inherit_color_scheme == true and settings.card_style != 'on_image' %}color-{{ settings.card_color_scheme }}{% endif %} gradient"
+                    {% if settings.card_style == 'card' %}
+                      style="
+                        border-width: {{ settings.card_border_width }}px;
+                        border-style: {{ settings.card_border }};
+                        border-color: rgba(var(--color-border), {{ settings.card_border_opacity | divided_by: 100.0 }});
+                        border-radius:{{ settings.card_border_radius }}px;
+                         {% if card_product.media.aspect_ratio == null %}
+                               --aspect-ratio:100%;
+                               {% else %}
+                              --aspect-ratio:{%- if card_product.media -%}{{ 1 | divided_by: card_product.media.aspect_ratio | times: 100 }}% {%- else -%} 100% {%- endif -%};
+                              {% endif %}
+                      "
+                    {% endif %}
+                  >
+                    <div
+                      class="card__inner overflow-hidden position-relative ratio {{ aspect_ratio }}"
+
+                      {% if settings.card_style == 'on_image' %}
+                        style="
+                          border-width: {{ settings.card_border_width }}px;
+                          border-style: {{ settings.card_border }};
+                          border-color: rgba(var(--color-border), {{ settings.card_border_opacity | divided_by: 100.0 }});
+                          border-radius:{{ settings.card_border_radius }}px;
+                           {% if card_product.media.aspect_ratio == null %}
+                               --aspect-ratio:100%;
+                               {% else %}
+                              --aspect-ratio:{%- if card_product.media -%}{{ 1 | divided_by: card_product.media.aspect_ratio | times: 100 }}% {%- else -%} 100% {%- endif -%};
+                              {% endif %}
+                        "
+                      {% endif %}
+                    >
+                      <div class="card__inner_wrapper ">
+                        {%- if card_product.featured_media -%}
+                          <a href="{{ card_product.url }}" class="card--image">
+                            {{
+                              card_product.featured_media
+                              | image_url: width: 1280
+                              | image_tag:
+                                loading: 'lazy',
+                                width: card_product.featured_media.width,
+                                height: card_product.featured_media.height,
+                                sizes: '(min-width: 1200px) 600px, (min-width: 992px) calc((100vw - 130px) / 3), (min-width: 768px) calc((100vw - 120px) / 2), calc((100vw - 35px) / 2)',
+                                widths: '540, 600, 713, 823, 990, 1100, 1206, 1346, 1426, 1646, 1946',
+                                class: 'motion-reduce featured-media',
+                                alt: card_product.featured_media.alt
+                              | escape
+                            }}
+
+                            {%- if card_product.media[1] != null and show_secondary_image -%}
+                              <span class="card-secondary-image overflow-hidden">
+                                {{
+                                  card_product.media[1]
+                                  | image_url: width: 1280
+                                  | image_tag:
+                                    alt: card_product.media[1].alt,
+                                    aria_hidden: 'true',
+                                    loading: 'lazy',
+                                    width: card_product.media[1].width,
+                                    height: card_product.media[1].height,
+                                    sizes: '(min-width: 1200px) 600px, (min-width: 992px) calc((100vw - 130px) / 3), (min-width: 768px) calc((100vw - 120px) / 2), calc((100vw - 35px) / 2)',
+                                    widths: '540, 600, 713, 823, 990, 1100, 1206, 1346, 1426, 1646, 1946',
+                                    class: 'motion-reduce'
+                                  | escape
+                                }}
+                              </span>
+                            {%- endif -%}
+                          </a>
+                        {% else %}
+                          <img
+                            src="{{ 'product_placeholder.jpg' | asset_url }}"
+                            class="placeholder h-100 w-100"
+                            alt="product_placeholder"
+                          >
+                        {%- endif -%}
+
+                        <div class="product_card_icons z-3">
+                          {% if enable_wishlist %}
+                            {% render 'button-wishlist' %}
+                          {% endif %}
+
+                          {% if enable_compare %}
+                            {% render 'button-compare' %}
+                          {% endif %}
+
+                          {% if enable_quickview %}
+                            {% render 'quick-add-button' %}
+                          {% endif %}
+                        </div>
+                      </div>
+                      <div class="card_content">
+                        {%- if card_product.available == false -%}
+                          <span
+                            id="Badge-{{ section_id }}-{{ card_product.id }}"
+                            class="badge badge--bottom-left h6 sold_out_badge"
+                          >
+                            {{- 'products.product.sold_out' | t -}}
+                          </span>
+                        {%- elsif card_product.compare_at_price > card_product.price and card_product.available -%}
+                          <span
+                            id="Badge-{{ section_id }}-{{ card_product.id }}"
+                            class="badge badge--bottom-left h6 sale_badge"
+                          >
+                            {{- 'products.product.on_sale' | t -}}
+                          </span>
+                        {%- endif -%}
+                      </div>
+                    </div>
+                    <div class="card-body {{ text_alignment }} {% if settings.card_style == 'card' %}p-3{% else %} px-0 py-3{% endif %}">
+                      <div class="card-body-information">
+                        <h3 class="card-title h6" id="title-{{ section_id }}-{{ card_product.id }}">
+                          <a
+                            href="{{ card_product.url }}"
+                            id="CardLink-{{ section_id }}-{{ card_product.id }}"
+                            aria-labelledby="CardLink-{{ section_id }}-{{ card_product.id }}"
+                          >
+                            {{ card_product.title | escape }}
+                          </a>
+                        </h3>
+                        {% render 'price',
+                          product: card_product,
+                          price_class: '',
+                          show_compare_at_price: true,
+                          text_align: text_alignment
+                        %}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            {% else %}
+              {% for i in (1..settings.collection_limit) %}
+                <div class="swiper-slide h-auto desk-{{ slider_desktop }} laptop-{{ slider_laptop }} tablet-{{ slider_tablet }} mobile-{{ slider_mobile }}">
+                  <div class="card-wrapper product-card-wrapper">
+                    <div
+                      class="card card-main h-100 overflow-hidden {% if settings.card_inherit_color_scheme == true and settings.card_style != 'on_image' %}color-{{ settings.card_color_scheme }}{% endif %}"
+                      {% if settings.card_style == 'card' %}
+                        style="
+                          border-width: {{ settings.card_border_width }}px;
+                          border-style: {{ settings.card_border }};
+                          border-color: rgba(var(--color-border), {{ settings.card_border_opacity | divided_by: 100.0 }});
+                          border-radius:{{ settings.card_border_radius }}px;
+                           {% if card_product.media.aspect_ratio == null %}
+                               --aspect-ratio:100%;
+                               {% else %}
+                              --aspect-ratio:{%- if card_product.media -%}{{ 1 | divided_by: card_product.media.aspect_ratio | times: 100 }}% {%- else -%} 100% {%- endif -%};
+                              {% endif %}
+                        "
+                      {% endif %}
+                    >
+                      <div
+                        class="eee card__inner overflow-hidden position-relative ratio {{ aspect_ratio }} color-{{ card_background }} gradient"
+                        {% if settings.card_style == 'on_image' %}
+                          style="
+                            border-width: {{ settings.card_border_width }}px;
+                            border-style: {{ settings.card_border }};
+                            border-color: rgba(var(--color-border), {{ settings.card_border_opacity | divided_by: 100.0 }});
+                            border-radius:{{ settings.card_border_radius }}px;
+                            {% if card_product.media.aspect_ratio == null %}
+                             --aspect-ratio:100%;
+                             {% else %}
+                            --aspect-ratio:{%- if card_product.media -%}{{ 1 | divided_by: card_product.media.aspect_ratio | times: 100 }}% {%- else -%} 100% {%- endif -%};
+                            {% endif %}
+                          "
+                        {% endif %}
+                      >
+                        <div class="card__inner_wrapper">
+                          {%- if placeholder_image -%}
+                            {{ placeholder_image | placeholder_svg_tag: 'placeholder-svg' }}
+                          {%- else -%}
+                            {{ 'product-2' | placeholder_svg_tag: 'placeholder-svg' }}
+                          {% endif %}
+                        </div>
+                      </div>
+                      <div class="card-body {{ text_alignment }} {% if settings.card_style == 'card' %}p-3{% else %} px-0 py-3{% endif %}">
+                        <div class="card-body-information">
+                          <h3 class="card-title h6" id="title-{{ section_id }}-{{ card_product.id }}">
+                            <a role="link" aria-disabled="true" class="full-unstyled-link">
+                              {{ 'onboarding.product_title' | t }}
+                            </a>
+                          </h3>
+                          <div class="placeholder-price">{{ 0.00 | money }}</div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              {% endfor %}
+            {% endfor %}
+          </div>
+          <div class="swiper-navigation">
+            {%- if settings.style == 'arrow' -%}
+                <div
+                id="swiper-sidebar-prev" 
+                tabindex="0"
+                class="navigation_button swiper-button-prev  border-style  {% if settings.collection_inherit_color_scheme == false %}color-{{ settings.collectin_pagination_color_scheme }}{% endif %}"
+                type="button"
+                title="Prev"
+                style="
+                --border-width: {{ settings.collectin_border_width }}px;  --border-style: {{ settings.collectin_border }};  --border-radius: {{ settings.collectin_border_radius }}px;
+                --border-color:rgba(var(--bs-border-color),{{ settings.collectin_border_opacity | divided_by: 100.0 }});
+                "
+                >
+                {% render 'left-arrow' %}
+                </div>
+                <div
+                id="swiper-sidebar-next" 
+                tabindex="0"
+                class="navigation_button swiper-button-next border-style  {% if settings.collection_inherit_color_scheme == false %}color-{{ settings.collectin_pagination_color_scheme }}{% endif %} "
+                type="button"
+                title="Next"
+                style="
+                --border-width: {{ settings.collectin_border_width }}px;  --border-style: {{ settings.collectin_border }};  --border-radius: {{ settings.collectin_border_radius }}px;
+                --border-color:rgba(var(--bs-border-color),{{ settings.collectin_border_opacity | divided_by: 100.0 }});
+                "
+                >
+                {% render 'right-arrow' %}
+                </div>
+                 {%- endif -%}
+         </div>
+            
+          {%- if settings.style == 'dots' -%}
+            <div class="swiper-pagination mx-auto"></div>
+          {%- endif -%}
+        </div>
+      </div>
+    </wdt-collection-sidebar>
+  </div>
+{% endif %}
+
+{% comment %} end collection {% endcomment %}
+
+
+
+
+
+{% comment %} promo banner {% endcomment %}
+
+{% if settings.show_promo %}
+  {% liquid
+    assign media_width_desktop = '100vw'
+    assign media_width_mobile = '100vw'
+    assign sizes = 'auto, (min-width: 750px) ' | append: media_width_desktop | append: ', ' | append: media_width_mobile
+    assign widths = '300, 450, 600, 750, 900, 1050, 1200, 1350, 1500, 1650, 1800, 1950, 2000, 2500, 3000, 3500, 4000, 5000'
+  %}
+  {% if settings.promo_image != blank %}
+    <div class="widget-image pb-3 pb-xxl-4">
+      {% if settings.promo_title != blank %}
+        <h5 class="sidebar_title mb-0 pb-3">{{ settings.promo_title }}</h5>
+      {% endif %}
+      <div class="collection-widget position-relative" style="{% render 'border-style', settings:settings %};">
+        <div
+          class="overflow-hidden"
+          style="
+            border-width: {{ settings.promo_border_width }}px;
+            border-style: {{ settings.promo_border }};
+            border-color: rgba(var(--color-border), {{ settings.promo_border_opacity | divided_by: 100.0 }});
+            border-radius:{{ settings.promo_border_radius }}px;
+          "
+        >
+          <a href="{{settings.promo_link}}" class="collection__image mb-3">
+            {{
+              settings.promo_image
+              | image_url: width: 3840
+              | image_tag: widths: widths, sizes: sizes, class: 'object-fit-cover image-block img-fluid'
+            }}
+          </a>
+          {% if settings.promo_btn != blank  %}
+            <div class="position-absolute bottom-0 start-0 end-0 w-fit m-auto mb-3">
+              <a
+                {% if settings.promo_link == blank %}
+                  role="link" aria-disabled="true"
+                {% else %}
+                  href="{{ settings.promo_link }}"
+                {% endif %}
+                class="btn {{ settings.btn_style }} {% if settings.btn_animation %}d-inline-flex align-items-center justify-content-center gap-3 position-relative btn-hover-animate hover-animate {% endif %}"
+                {%- if settings.open_in_new_tab -%}
+                  target="_blank" rel="noopener noreferrer"
+                {%- endif -%}
+              >
+                <span>{{ settings.promo_btn }} </span>
+                {% if settings.btn_animation -%}
+                  <span class="btn-arrow"> {% render 'btn-arrow' %}</span>
+                {%- endif %}
+              </a>
+            </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  {% endif %}
+{% endif %}
+
+{% comment %} end promo banner {% endcomment %}

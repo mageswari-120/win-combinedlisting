@@ -1,0 +1,181 @@
+<div class="details d-flex flex-wrap gap-3 justify-content-{{ block.settings.alignment }} spacing-style" style="{% render 'spacing-style', settings:block.settings %}">
+    {% if block.settings.show_date %}
+      <div  class="published-date {{ block.settings.heading_size }}"{{ block.shopify_attributes }}>
+          <p class=" m-0">{{ article.published_at | time_tag: format: 'date' }}</p> 
+      </div>
+    {% endif %}
+
+    {% if block.settings.show_author %}
+      <div class="article-author-block {{ block.settings.heading_size }}"
+        {{ block.shopify_attributes }}>
+        {{ article.author | default: 'Author' }}
+      </div>
+    {% endif %}
+  
+    {% if block.settings.comments %}
+      <div class="comments">
+        {% assign count = article.comments_count %}
+        <span class="comment">
+          {% if count == 1 -%}
+            {{- 'blogs.article.comments.one' | t: count: count }}
+          {% else %}
+            {{ 'blogs.article.comments.other' | t: count: count -}}
+          {%- endif %}
+        </span>
+      </div>
+    {% endif %}
+  </div>
+  {% if block.settings.tag %}
+    {%- if article.tags.size > 0 -%}
+    <ul class="tag-container d-flex flex-wrap row-gap-2 column-gap-3 list-unstyled justify-content-{{ block.settings.alignment }}">
+      {% for tag in article.tags %}
+        {% if current_tags contains tag %}
+          <li class="article_tag active text-decoration-none">{{ tag }}</li>
+        {% else %}
+          <li class="article_tag text-decoration-none text-wrap">{{ tag | link_to_tag: tag }}</li>
+        {% endif %}
+      {% endfor %}
+    </ul>
+  {% endif %}
+{% endif %}
+   
+ {% if block.settings.share %}
+  <div class="article-share d-flex flex-wrap gap-3 modal-link justify-content-{{ block.settings.alignment }}">
+      <!-- Facebook Share Button -->
+      <button
+        onclick="window.open('https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent(location.href), 'facebook-share-dialog'); return false;"
+        aria-label="{{ 'general.social.links.facebook' | t }}"
+        title="{{ 'general.social.links.facebook' | t }}"
+        class="border rounded-1 d-flex align-items-center justify-content-center p-2 btn btn-secondary"
+      >
+        {%- render 'icon-facebook', class: 'overflow-visible' -%}
+      </button>
+
+      <!-- Twitter Share Button -->
+      <button
+        onclick="window.open('http://twitter.com/home/?status='+encodeURIComponent(location.href), 'twitter-share-dialog',); return false;"
+        aria-label="{{ 'general.social.links.twitter' | t }}"
+        title="{{ 'general.social.links.twitter' | t }}"
+        class="border rounded-1 d-flex align-items-center justify-content-center p-2 btn btn-secondary"
+      >
+        {%- render 'icon-twitter', class: 'overflow-visible' -%}
+      </button>
+
+      <!-- Pinterest Share Button -->
+      <button
+        onclick="window.open('http://pinterest.com/pin/create/button/?url='+encodeURIComponent(location.href), 'pinterest-share-dialog'); return false;"
+        aria-label="{{ 'general.social.links.pinterest' | t }}"
+        title="{{ 'general.social.links.pinterest' | t }}"
+        class="border rounded-1 d-flex align-items-center justify-content-center p-2 btn btn-secondary"
+      >
+        {%- render 'icon-pinterest', class: 'overflow-visible' -%}
+      </button>
+    </div>
+{% endif %}
+
+{% schema %}
+{
+  "name": "t:name.details",
+  "tag": null,
+  "settings": [   
+    {
+      "type": "checkbox",
+      "id": "show_date",
+      "label": "t:settings.show_date",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_author",
+      "label": "t:settings.show_author",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "comments",
+      "label": "t:settings.comments",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "tag",
+      "label": "t:settings.tag",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "share",
+      "label": "t:settings.share",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "t:content.layout"
+    },
+    {
+      "type": "select",
+      "id": "alignment",
+      "label": "t:settings.alignment",
+      "options": [
+        {
+          "value": "start",
+          "label": "t:options.left"
+        },
+        {
+          "value": "center",
+          "label": "t:options.center"
+        },
+        {
+          "value": "end",
+          "label": "t:options.right"
+        }
+      ],
+      "default": "start",
+    },
+    {
+      "type": "header",
+      "content": "t:content.padding"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start",
+      "label": "t:settings.top",
+      "min": 0,
+      "max": 50,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end",
+      "label": "t:settings.bottom",
+      "min": 0,
+      "max": 50,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding-inline-start",
+      "label": "t:settings.left",
+      "min": 0,
+      "max": 50,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding-inline-end",
+      "label": "t:settings.right",
+      "min": 0,
+      "max": 50,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    }
+  ]
+}
+{% endschema %}

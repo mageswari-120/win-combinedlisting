@@ -1,0 +1,67 @@
+<div class="size-chart mt-4">
+  <svg xmlns="http://www.w3.org/2000/svg" class="popup-svg" width="16.432" height="28.2" viewBox="0 0 16.432 28.2">
+    <g id="Component_46_1" data-name="Component 46 – 1" transform="translate(0.6 0.6)">
+    <rect id="Rectangle_8800" data-name="Rectangle 8800" width="8" height="27" rx="1" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.2"/>
+    <line id="Line_302" data-name="Line 302" x2="3" transform="translate(5 3.5)" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.2"/>
+    <line id="Line_303" data-name="Line 303" x2="2" transform="translate(6 5.5)" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.2"/>
+    <line id="Line_304" data-name="Line 304" x2="3" transform="translate(5 7.5)" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.2"/>
+    <line id="Line_305" data-name="Line 305" x2="2" transform="translate(6 9.5)" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.2"/>
+    <line id="Line_306" data-name="Line 306" x2="3" transform="translate(5 11.5)" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.2"/>
+    <line id="Line_307" data-name="Line 307" x2="2" transform="translate(6 13.5)" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.2"/>
+    <line id="Line_308" data-name="Line 308" x2="3" transform="translate(5 15.5)" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.2"/>
+    <line id="Line_309" data-name="Line 309" x2="2" transform="translate(6 17.5)" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.2"/>
+    <line id="Line_310" data-name="Line 310" x2="3" transform="translate(5 19.5)" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.2"/>
+    <line id="Line_311" data-name="Line 311" x2="2" transform="translate(6 21.5)" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.2"/>
+    <line id="Line_312" data-name="Line 312" x2="3" transform="translate(5 23.5)" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.2"/>
+    <path id="Path_54441" data-name="Path 54441" d="M11.5,3.5l2-3,2,3" transform="translate(-0.5 -0.5)" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.2"/>
+    <path id="Path_54442" data-name="Path 54442" d="M11.5,24.5l2,3,2-3" transform="translate(-0.5 -0.5)" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.2"/>
+    <line id="Line_313" data-name="Line 313" y2="24" transform="translate(13 2)" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.2"/>
+    </g>
+  </svg>
+  <modal-opener
+    class="product-popup-modal__opener no-js-hidden quick-add-hidden"
+    data-modal="#PopupModal-{{ block.id }}"
+    {{ block.shopify_attributes }}
+  >
+    <button
+      id="ProductPopup-{{ block.id }}"
+      class="product-popup-modal__button link"
+      type="button"
+      aria-haspopup="dialog"
+    >
+      {{ block.settings.text | default: block.settings.page.title }}
+    </button>
+  </modal-opener>
+  <a href="{{ block.settings.page.url }}" class="product-popup-modal__button link no-js">
+    {{- block.settings.text -}}
+  </a>
+  {% assign popups = section.blocks | where: 'type', 'size-popup' %}
+  {%- for block in popups -%}
+    <modal-dialog
+      id="PopupModal-{{ block.id }}"
+      class="product-popup-modal"
+      {{ block.shopify_attributes }}
+    >
+      <div
+        role="dialog"
+        aria-label="{{ block.settings.text }}"
+        aria-modal="true"
+        class="product-popup-modal__content"
+        tabindex="-1"
+      >
+        <button
+          id="ModalClose-{{ block.id }}"
+          type="button"
+          class="product-popup-modal__toggle"
+          aria-label="{{ 'accessibility.close' | t }}"
+        >
+          {% render 'icon-close' %}
+        </button>
+        <div class="product-popup-modal__content-info">
+          <h1 class="h2">{{ block.settings.page.title }}</h1>
+          {{ block.settings.page.content }}
+        </div>
+      </div>
+    </modal-dialog>
+  {%- endfor -%}
+</div>

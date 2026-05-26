@@ -1,0 +1,63 @@
+{% style %}
+ {% if shape_class == 'shaper-top' or shape_class == 'shaper-both' %}
+   {% if section.settings.padding_top < 50  %}
+   /* .section-{{ section.id }}-padding {padding-top:50px;} */
+  {% endif %} 
+ {% endif %}
+   {% if shape_class == 'shaper-bottom' or shape_class == 'shaper-both'  %}
+    {% if  section.settings.padding_bottom < 50 %}
+     /* .section-{{ section.id }}-padding {padding-bottom:50px;} */
+  
+    {% endif %}
+ {% endif %}
+{% endstyle %}
+{% if shape_class == 'shaper-top' %}
+  <div class="shape shape-top {{ shape_class }}">
+
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1922 51.3" preserveAspectRatio="none">
+        <path d="M-0.8,50.1c64.5-2.3,66.2-49,133.9-49c69.5,0,69.5,49.1,138.9,49.1s69.4-46.4,133.4-49
+        	c63.9,2.6,65.8,49,133.4,49c67.6,0,69.5-49.1,138.9-49.1c69.5,0,69.5,49.1,138.9,49.1c69.5,0,69.5-49.1,138.9-49.1
+        	c2.2,0,4.4,0.1,6.5,0.2c2.1-0.1,4.3-0.2,6.5-0.2c69.5,0,69.5,49.1,138.9,49.1s69.5-49.1,138.9-49.1c69.5,0,69.5,49.1,138.9,49.1
+        	c69.5,0,69.4-46.4,133.4-49c63.9,2.6,65.8,49,133.4,49c67.6,0,69.5-49.1,138.9-49.1c67.1,0,69.4,45.7,132,48.9v7.1l-1924-1.8V50.1z" stroke="inherit"  fill="{{ shape_top }}"/>
+    </svg>
+  </div>
+{% endif %}
+        
+{% if shape_class == 'shaper-bottom' %}
+  <div class="shape shape-bottom {{ shape_class }}">  
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1922 51.3" preserveAspectRatio="none">
+        <path d="M-1-4l1924-1.8v7.1c-62.6,3.2-64.9,48.9-132,48.9c-69.5,0-71.4-49.1-138.9-49.1c-67.6,0-69.4,46.4-133.4,49
+        	c-63.9-2.6-63.9-49-133.4-49c-69.5,0-69.5,49.1-138.9,49.1c-69.5,0-69.5-49.1-138.9-49.1S1038,50.1,968.5,50.1c-2.3,0-4.4,0-6.5-0.2
+        	c-2.1,0.1-4.3,0.2-6.5,0.2C886,50.1,886,1,816.5,1C747,1,747,50.1,677.6,50.1C608.1,50.1,606.2,1,538.6,1C471,1,469.2,47.4,405.2,50
+        	c-63.9-2.6-63.9-49-133.4-49s-69.5,49.1-138.9,49.1C65.2,50.1,63.5,3.5-1,1.1V-4z" stroke="inherit"  fill="{{ shape_bottom }}"/>
+    </svg> 
+  </div>
+{% endif %}
+        
+{% if shape_class == 'shaper-both' %}
+  <div class="shape shape-top {{ shape_class }}"> 
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1922 51.3" preserveAspectRatio="none">
+        <path d="M-0.8,50.1c64.5-2.3,66.2-49,133.9-49c69.5,0,69.5,49.1,138.9,49.1s69.4-46.4,133.4-49
+        	c63.9,2.6,65.8,49,133.4,49c67.6,0,69.5-49.1,138.9-49.1c69.5,0,69.5,49.1,138.9,49.1c69.5,0,69.5-49.1,138.9-49.1
+        	c2.2,0,4.4,0.1,6.5,0.2c2.1-0.1,4.3-0.2,6.5-0.2c69.5,0,69.5,49.1,138.9,49.1s69.5-49.1,138.9-49.1c69.5,0,69.5,49.1,138.9,49.1
+        	c69.5,0,69.4-46.4,133.4-49c63.9,2.6,65.8,49,133.4,49c67.6,0,69.5-49.1,138.9-49.1c67.1,0,69.4,45.7,132,48.9v7.1l-1924-1.8V50.1z" stroke="inherit"  fill="{{ shape_top }}"/>
+    </svg>
+  </div> 
+  <div class="shape shape-bottom {{ shape_class }}"> 
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1922 51.3" preserveAspectRatio="none">
+        <path d="M-1-4l1924-1.8v7.1c-62.6,3.2-64.9,48.9-132,48.9c-69.5,0-71.4-49.1-138.9-49.1c-67.6,0-69.4,46.4-133.4,49
+        	c-63.9-2.6-63.9-49-133.4-49c-69.5,0-69.5,49.1-138.9,49.1c-69.5,0-69.5-49.1-138.9-49.1S1038,50.1,968.5,50.1c-2.3,0-4.4,0-6.5-0.2
+        	c-2.1,0.1-4.3,0.2-6.5,0.2C886,50.1,886,1,816.5,1C747,1,747,50.1,677.6,50.1C608.1,50.1,606.2,1,538.6,1C471,1,469.2,47.4,405.2,50
+        	c-63.9-2.6-63.9-49-133.4-49s-69.5,49.1-138.9,49.1C65.2,50.1,63.5,3.5-1,1.1V-4z" stroke="inherit"  fill="{{ shape_bottom }}"/>
+    </svg> 
+  </div>
+{% endif %}
+{% if shape_class == 'border-top' %}
+  <div class="shape  border-top"></div>
+{% endif %} 
+ {% if shape_class == 'border-bottom' %}
+  <div class="shape  border-bottom"></div>
+{% endif %}    
+ {% if shape_class == 'border-both' %}
+  <div class="shape border-top border-bottom"></div>
+{% endif %}           

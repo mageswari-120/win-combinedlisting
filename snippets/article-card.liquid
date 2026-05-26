@@ -1,0 +1,267 @@
+{% liquid
+  if blog_post_align == 'center'
+    assign alignment = 'justify-content-center'
+    assign text_align = 'text-center'
+  elsif blog_post_align == 'right'
+    assign alignment = 'justify-content-end'
+    assign text_align = 'text-right'
+  else
+    assign alignment = 'justify-content-start'
+    assign text_align = 'text-left'
+  endif
+%}
+{% case settings.card_style %}
+  {% when 'classic' %}
+    <div class="blog-wrapper">
+      <div class="card blog-article color-{{ settings.blog_card_background }} classic rounded-5">
+        {% if featured_image %}
+          {% if article.image %}
+            <div class="card-img overflow-hidden border">
+              <div
+                class="
+                  card-inner ratio
+                  {% case media_aspect_ratio %}
+                              {%- when 'square' -%}
+                                ratio-1x1
+                              {%- when 'portrait' -%}
+                                ratio-3x4
+                              {%- when 'adapt' -%}
+                                ratio-auto
+                              {%- else -%}
+                                ratio-1x1
+                    {%- endcase -%}
+                "
+                style=" --aspect-ratio: {%- if article.image -%}{{ 1 | divided_by: article.image.aspect_ratio | times: 100 }}% {%- else -%} 100% {%- endif -%};"
+              >
+                <a href="{{ article.url }}" class="text-decoration-none">
+                  {{
+                    article.image
+                    | image_url: width: 1500
+                    | image_tag:
+                      aria_hidden: 'true',
+                      loading: 'lazy',
+                      width: article.image.width,
+                      height: article.image.height,
+                      sizes: '(min-width: 750px) 50vw, 100vw',
+                      alt: article.image.alt
+                    | escape
+                  -}}
+                </a>
+              </div>
+            </div>
+          {% else %}
+            <div class="card-img overflow-hidden border">
+              <div
+                class="
+                  card-inner ratio
+                  {% case media_aspect_ratio %}
+                              {%- when 'square' -%}
+                                ratio-1x1
+                              {%- when 'portrait' -%}
+                                ratio-3x4
+                              {%- when 'adapt' -%}
+                                ratio-auto
+                              {%- else -%}
+                                ratio-1x1
+                    {%- endcase -%}
+                "
+                style=" --aspect-ratio: {%- if article.image -%}{{ 1 | divided_by: article.image.aspect_ratio | times: 100 }}% {%- else -%} 100% {%- endif -%};"
+              >
+                <a href="{{ article.url }}" class="text-decoration-none" aria-label="{{ article.title }}">
+                  {{ placeholder_image | placeholder_svg_tag: 'placeholder-svg' }}
+                </a>
+              </div>
+            </div>
+          {% endif %}
+        {% endif %}
+        <div class="card-body {{ text_align }} d-flex flex-column justify-content-between  px-3 px-sm-3">
+          <div class="card-body-information ">
+            {%- if blog_tag and article.tags.size > 0 -%}
+              <ul class="d-flex flex-wrap row-gap-2 column-gap-3 list-unstyled mb-3 {{ alignment }}">
+                {% for tag in article.tags %}
+                  {% if current_tags contains tag %}
+                    <li class="articla_tag active text-decoration-none">{{ tag }}</li>
+                  {% else %}
+                    <li class="articla_tag text-decoration-none text-wrap">{{ tag | link_to_tag: tag }}</li>
+                  {% endif %}
+                {% endfor %}
+              </ul>
+            {% endif %}
+            {% if show_date or show_author or show_comments %}
+              <div class="d-flex flex-wrap gap-2 align-items-center mb-3 row-gap-1 {{ alignment }}">
+                {% if show_date %}
+                  <p class=" m-0">{{ article.published_at | date: '%d %b %Y' }}</p>
+                {% endif %}
+
+                {%- if show_author -%}
+                  <span class="author text-wrap">
+                    {%- if show_date and show_author %}<span class="seperator-circle me-1"></span> {% endif %}
+                    {{ article.author }}
+                  </span>
+                {%- endif -%}
+
+                {%- if show_comments -%}
+                  {% assign count = article.comments_count %}
+                  <span class="comment text-capitalize">
+                    {% if show_date and show_comments and show_author != true -%}
+                      <span class="seperator-circle me-1"></span>
+                    {%- endif %}
+                    {% if show_comments and show_author %}<span class="seperator-circle me-1"></span> {% endif %}
+                    {% if count == 1 -%}
+                      {{- 'blogs.article.comments.one' | t: count: count }}
+                    {% else %}
+                      {{ 'blogs.article.comments.other' | t: count: count -}}
+                    {%- endif %}
+                  </span>
+                {%- endif -%}
+              </div>
+            {% endif %}
+            <h4 class="mb-0 card-title ">
+              <a href="{{ article.url }}" class="text-decoration-none">{{ article.title }}</a>
+            </h4>
+            {% if show_excerpts %}
+              <p class="article-description mt-4 text-wrap">
+                {%- if article.excerpt.size > 0 -%}
+                  {{ article.excerpt | strip_html | truncatewords: 20 }}
+                {%- else -%}
+                  {{ article.content | strip_html | truncatewords: 20 }}
+                {%- endif -%}
+              </p>
+            {% endif %}
+          </div>
+          {%- if read-more -%}
+            <div class="d-flex {{ alignment }} mt-4">
+              <a href="{{ article.url }}" class="link-underline btn btn-primary">
+                <span> {{ 'general.link.read_more_text' | t }} </span>
+              </a>
+            </div>
+          {%- endif -%}
+        </div>
+      </div>
+    </div>
+  {% when 'modern' %}
+    <div class="blog-wrapper h-100 ">
+      <div class="card blog-article color-{{ settings.blog_card_background }} modern border-end border-bottom rounded-0 d-flex flex-column h-100">
+        {% if featured_image %}
+          {% if article.image %}
+            <div class="overflow-hidden border-bottom">
+              <div
+                class="
+                  card-inner ratio
+                  {% case media_aspect_ratio %}
+                              {%- when 'square' -%}
+                                ratio-1x1
+                              {%- when 'portrait' -%}
+                                ratio-3x4
+                              {%- when 'adapt' -%}
+                                ratio-auto
+                              {%- else -%}
+                                ratio-1x1
+                    {%- endcase -%}
+                "
+                style=" --aspect-ratio: {%- if article.image -%}{{ 1 | divided_by: article.image.aspect_ratio | times: 100 }}% {%- else -%} 100% {%- endif -%};"
+              >
+                <a href="{{ article.url }}" class="text-decoration-none">
+                  {{
+                    article.image
+                    | image_url: width: 1500
+                    | image_tag:
+                      aria_hidden: 'true',
+                      loading: 'lazy',
+                      width: article.image.width,
+                      height: article.image.height,
+                      sizes: '(min-width: 750px) 50vw, 100vw',
+                      alt: article.image.alt
+                    | escape
+                  -}}
+                </a>
+              </div>
+            </div>
+          {% else %}
+            <div class="overflow-hidden border-bottom">
+              <div
+                class="
+                  card-inner ratio
+                  {% case media_aspect_ratio %}
+                              {%- when 'square' -%}
+                                ratio-1x1
+                              {%- when 'portrait' -%}
+                                ratio-3x4
+                              {%- when 'adapt' -%}
+                                ratio-auto
+                              {%- else -%}
+                                ratio-1x1
+                    {%- endcase -%}
+                "
+                style=" --aspect-ratio: {%- if article.image -%}{{ 1 | divided_by: article.image.aspect_ratio | times: 100 }}% {%- else -%} 100% {%- endif -%};"
+              >
+                <a href="{{ article.url }}" class="text-decoration-none">
+                  {{ placeholder_image | placeholder_svg_tag: 'placeholder-svg' }}
+                </a>
+              </div>
+            </div>
+          {% endif %}
+        {% endif %}
+        <div class="card-body {{ text_align }} d-flex flex-column   justify-content-between ">
+          <div class="card-body-information">
+            {%- if blog_tag and article.tags.size > 0 -%}
+              <ul class="d-flex flex-wrap row-gap-2 column-gap-3 list-unstyled mb-3 {{ alignment }}">
+                {% for tag in article.tags %}
+                  {% if current_tags contains tag %}
+                    <li class="articla_tag active text-decoration-none">{{ tag }}</li>
+                  {% else %}
+                    <li class="articla_tag text-decoration-none text-wrap">{{ tag | link_to_tag: tag }}</li>
+                  {% endif %}
+                {% endfor %}
+              </ul>
+            {% endif %}
+            {% if show_date or show_author or show_comments %}
+              <div class="d-flex flex-wrap gap-0 gap-sm-1 align-items-center mb-3 row-gap-1 {{ alignment }}">
+                {% if show_date %}
+                  <p class="m-0 {% if show_comments or show_author %} pe-2 {% endif %}">{{ article.published_at | date: '%d %b %Y' }}</p>
+                {% endif %}
+                {%- if show_author -%}
+                  <span class="author text-wrap {% if show_date and show_author %} d-flex align-items-center gap-2 pe-2 {% endif %}">
+                    {% if show_date and show_author %}<span class="seperator-circle me-1"></span> {% endif %} {{ article.author }}</span>
+                {%- endif -%}
+                <!-- {% if show_date and show_comments and show_author != true -%}
+                  <span class="seperator-circle"></span>
+                {%- endif %} -->
+              
+                {%- if show_comments -%}
+                  {% assign count = article.comments_count %}
+                  <span class="comment {% if show_comments and show_author %} d-flex align-items-center gap-2 {% endif %}">
+                      {% if show_comments and show_author %}<span class="seperator-circle me-1"></span> {% endif %}
+                    {% if count == 1 -%}
+                      {{- 'blogs.article.comments.one' | t: count: count }}
+                    {% else %}
+                      {{ 'blogs.article.comments.other' | t: count: count -}}
+                    {%- endif %}
+                  </span>
+                {%- endif -%}
+              </div>
+            {% endif %}
+            <h4 class="mb-0 card-title ">
+              <a href="{{ article.url }}" class="text-decoration-none">{{ article.title }}</a>
+            </h4>
+            {% if show_excerpts %}
+              <p class="article-description mt-4 mb-0 text-wrap">
+                {%- if article.excerpt.size > 0 -%}
+                  {{ article.excerpt | strip_html | truncatewords: 20 }}
+                {%- else -%}
+                  {{ article.content | strip_html | truncatewords: 20 }}
+                {%- endif -%}
+              </p>
+            {% endif %}
+          </div>
+          {%- if read-more -%}
+            <div class="d-flex {{ alignment }} mt-4">
+              <a href="{{ article.url }}" class="link-underline btn btn-primary ">
+                <span> {{ 'general.link.read_more_text' | t }} </span>
+              </a>
+            </div>
+          {%- endif -%}
+        </div>
+      </div>
+    </div>
+{% endcase %}

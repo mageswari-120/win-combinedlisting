@@ -1,0 +1,487 @@
+{% liquid
+  assign enable_flag = section.settings.flag
+  assign divider = section.settings.divider
+
+  if divider
+   assign divider  = 'border-bottom border-1'
+  endif
+%}
+
+
+{% style %}
+   /*vertical style*/
+    .announcement_bar_style-horizontal .swiper-container:not(.swiper-initialized) .swiper-wrapper {
+      width:100%;
+      max-width: calc({{  section.settings.content_width }}% - -100px);
+    }
+    .announcement_bar_style-horizontal .swiper-list {
+      padding:0;
+    }
+    .announcement_bar_style-horizontal .swiper-item {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: auto;
+      width: 100%;
+      text-align: center;
+      background:rgb(var(--color-background));
+    }
+    /*Horizontal style*/
+     .marquee_annoucement.reverse {
+      animation-direction: reverse;
+    }
+    .announcement_bar_style-horizontal:hover .marquee_annoucement{
+      animation-play-state:paused;
+    }
+     .marquee_annoucement.no-marquee{animation:none;}
+    .marquee_annoucement {
+      animation: scroll-left {{ section.settings.timer}}s linear infinite;min-width: 100%;
+    }
+    .Announcement{
+      position:relative;
+      z-index:1022;
+    }
+    @keyframes scroll-left{
+      0%{
+        transform:translateX(0%);
+      }
+      100%{
+        transform:translateX(-100%);
+      }
+    }
+  .announcement-bar li.list-social__item {
+      width: 26px;
+      height: 26px;
+      background: rgb(var(--color-primary-button-bg));
+      color: rgb(var(--color-primary-button-text));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 8px;
+      border: var(--bs-border-width) var(--bs-border-style) rgb(var(--color-primary-button-border));
+  }
+  .announcement-bar li.list-social__item a.link.list-social__link {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: auto;
+  }
+  .announcement-bar .contact_information p{margin-bottom:0;}
+  .announcement-bar li.list-social__item a.link.list-social__link svg{
+      overflow:visible;
+      display:flex;
+      color:rgb(var(--color-primary-button-text));
+      font-size: calc(var(--bs-body-font-size) - 4px);
+  }
+.announcement-bar :is(.navigation_button) {
+    height: 25px;
+    width: 25px;
+}
+.announcement-bar :is(.navigation_button svg) {
+    width: 13px;
+    height: 13px;
+}
+
+  @media screen and (max-width:576px){
+  .marquee_annoucement {
+     min-width: auto;
+    }
+    .announcement-bar :is(.navigation_button){ position: absolute; }
+  }
+  .contact_wrapper a{color:rgb(var(--color-foreground)); text-decoration:underline;}
+    .vertical-marquee-selector {
+    overflow: hidden;
+    }
+    .vertical-marquee-selector .swiper-slide {
+    width: 100% !important;
+    height: auto !important;
+    flex-shrink: 0;
+  }
+   .marquee_annoucement p a{transition:all 0.3s linear;}
+   .marquee_annoucement p a:hover{text-decoration:underline;}
+
+   /* .announcement-bar .announcement_bar_style-horizontal .swiper-container{
+      width:100%; 
+      max-width: {{  section.settings.content_width }}px;
+      margin:auto;
+    } */
+  
+    .disclosure .localization-selector span > img, .countries .disclosure__item span > img {
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+  .announcement_bar_style-horizontal .swiper-navigation .navigation_button svg {
+    width: 13px;
+    height: auto;
+}
+.announcement_bar_style-horizontal .swiper-navigation{
+    position: absolute;
+    width: 100%;
+    display: flex;
+    height: 100%;
+    inset:0;
+    /* max-width:700px; */
+    margin: auto;
+    padding:0;
+    justify-content: space-between;
+    z-index:1;
+    align-items: center;
+}
+.announcement_bar_style-horizontal .swiper-navigation .navigation_button.swiper-prev, .announcement_bar_style-horizontal .swiper-navigation .navigation_button.swiper-next{
+  position:relative;
+  width:30px;
+  height:30px;
+  margin:0;
+  color: rgb(var(--color-foreground));
+  bottom:0;
+  top:0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.announcement_bar_style-horizontal :is(.heading_font) {
+    font-weight: var(--font-heading-weight);
+    line-height: 1.2;
+    color: rgb(var(--color-heading));
+    font-family: var(--font-heading-family);
+    font-style: var(--font-heading-style);
+}
+.announcement-bar-section :is(.announcemenet_content){
+  /* max-width:350px; */
+  padding-inline: 50px;
+}
+
+@media (min-width:992px){
+.announcement-bar-section :is(.announcemenet_content){
+  max-width:500px;
+  padding-inline: 50px;
+}
+}
+@media (min-width:1200px){
+.announcement-bar-section :is(.announcemenet_content){
+  max-width:700px;
+  padding-inline: 50px;
+}
+}
+
+    
+{% endstyle %}
+
+
+
+<div class="announcement-bar-section {{ divider }}  color-{{ section.settings.color_scheme }} gradient {% if section.settings.disable_announcement_bar_mobile %} d-none d-md-block {% endif %}">
+  <div class="top-bottom-spacing {% if section.settings.full_width %}container-fluid {% else %}container{% endif %}"
+   style="
+      --padding-top:{{ section.settings.padding-top }}px;
+      --padding-bottom:{{ section.settings.padding-bottom }}px;
+    "
+  >
+    <div class="row announcement-bar align-items-center justify-content-between {% unless section.settings.enable_social_icons or section.settings.enable_contact_information  %} justify-content-end {% endunless %}">
+      
+      <div class="col-3 d-none d-lg-block">
+        <div class="social_icons-{{ block.id }} social-icons__wrapper w-100 d-flex flex-wrap" {{ block.shopify_attributes }} style="--gap: {{ block.settings.gap }}px;">
+          {% content_for 'block', type: 'header-social-icon', id: 'social_icon' %}
+        </div>
+      </div>
+      
+      {% capture announcements %}
+        {% content_for 'blocks' %}
+      {% endcapture %}
+   
+      <!-- Vertical Style -->
+    <div class="col col-xl-6 position-relative mx-auto"> 
+          <vertical-bar>
+            <div class="announcement_bar_style-horizontal d-flex justify-content-center mx-auto overflow-hidden">
+              <div class="swiper m-0 swiper-container vertical-marquee-selector" data-timer="{{ section.settings.timer }}">
+                <div class="swiper-wrapper">
+                  {{ announcements }}
+                </div>
+                
+            {%- if section.settings.enable_arrow and section.blocks.size > 1 -%}
+                <div
+                id="swiper-sidebar-prev" 
+                tabindex="0"
+                class="navigation_button swiper-button-prev swiper-prev border-style  {% if section.settings.inherit_color_scheme == false %}color-{{ section.settings.nav_color_scheme }}{% endif %}"
+                type="button"
+                title="Prev"
+                style="
+                --border-width: {{ section.settings.border_width }}px;  --border-style: {{ section.settings.border }};  --border-radius: {{ section.settings.border_radius }}px;
+                --border-color:rgba(var(--bs-border-color),{{ section.settings.border_opacity | divided_by: 100.0 }});
+                "
+                >
+                {% render 'left-arrow' %}
+                </div>
+                <div
+                id="swiper-sidebar-next" 
+                tabindex="0"
+                class="navigation_button swiper-button-next swiper-next border-style  {% if section.settings.inherit_color_scheme == false %}color-{{ section.settings.nav_color_scheme }}{% endif %} "
+                type="button"
+                title="Next"
+                style="
+                --border-width: {{ section.settings.border_width }}px;  --border-style: {{ section.settings.border }};  --border-radius: {{ section.settings.border_radius }}px;
+                --border-color:rgba(var(--bs-border-color),{{ section.settings.border_opacity | divided_by: 100.0 }});
+                "
+                >
+                {% render 'right-arrow' %}
+                </div>
+                 {%- endif -%}
+              </div>
+            </div>
+          </vertical-bar>
+    </div>
+
+        <!-- - country selector - -->
+    <div class="col-3 d-none d-lg-flex justify-content-end align-items-center gap-4">
+        {% if section.settings.enable_country_selector %}
+          <div class="country_localization d-none d-lg-block">
+            <localization-form>
+              {%- form 'localization', id: 'HeaderCountryForm', class: 'localization-form' -%}
+                <h2 class="visually-hidden" id="HeaderCountryFormLabel">
+                  {{ 'localization.country_label' | t }}
+                </h2>
+                {% render 'country-localization',
+                  localPosition: 'HeaderCountryForm',
+                  menu_style: section.settings.menu_style,
+                  enable_flag:enable_flag
+                %}
+              {%- endform -%}
+            </localization-form>
+          </div>
+        {% endif %}
+
+        <!-- - language selector - -->
+
+        {% if section.settings.enable_language_selector %}
+          <div class="language_localization d-none d-lg-block">
+            <localization-form>
+              {%- form 'localization', id: 'HeaderLanguageForm', class: 'localization-form' -%}
+                <h2 class="visually-hidden" id="HeaderLanguageFormLabel">
+                  {{ 'localization.language_label' | t }}
+                </h2>
+                {% render 'language-localization',
+                  localPosition: 'HeaderLanguageForm',
+                  menu_style: section.settings.menu_style
+                %}
+              {%- endform -%}
+            </localization-form>
+          </div>
+        {% endif %}
+      </div>
+
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "t:name.announcement_bar",
+  "class": "announcement",
+  "limit": 1,
+  "enabled_on": { "groups": ["header"] },
+  "settings": [
+    {
+      "type": "header",
+      "content": "t:content.layout"
+    },
+    {
+      "type": "checkbox",
+      "id": "full_width",
+      "label": "t:settings.full_width",
+      "default": true
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:settings.color_scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "checkbox",
+      "id": "disable_announcement_bar_mobile",
+      "label": "t:settings.hide_on_mobile",
+      "default": false
+    },
+    {
+      "type":"checkbox",
+      "id":"divider",
+      "label":"t:settings.dividers",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "t:content.carousel_settings"
+    },
+    {
+      "type": "range",
+      "id": "timer",
+      "label": "t:settings.chane_slide",
+      "min": 1,
+      "max": 10,
+      "step": 1,
+      "unit": "s",
+      "default": 3
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_arrow",
+      "label": "t:settings.navigation",
+      "default": true
+    },
+    {
+      "type": "select",
+      "id": "border",
+      "label": "t:settings.border",
+      "options": [
+        {
+          "value": "none",
+          "label": "t:options.none"
+        },
+        {
+          "value": "solid",
+          "label": "t:options.solid"
+        }
+      ],
+      "default": "none",
+       "visible_if": "{{ section.settings.enable_arrow == true }}"
+    },
+    {
+      "type": "range",
+      "id": "border_width",
+      "min": 1,
+      "max": 5,
+      "step": 1,
+      "unit": "px",
+      "label": "t:settings.thickness",
+      "default": 1,
+      "visible_if": "{{ section.settings.enable_arrow == true and section.settings.border == 'solid' }}"
+    },
+    {
+      "type": "range",
+      "id": "border_opacity",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "label": "t:settings.opacity",
+      "default": 100,
+      "visible_if": "{{ section.settings.enable_arrow == true and section.settings.border == 'solid' }}"
+    },
+    {
+      "type": "range",
+      "id": "border_radius",
+      "label": "t:settings.border_radius",
+      "min": 0,
+      "max": 30,
+      "step": 1,
+      "default": 0,
+      "unit": "px",
+      "visible_if": "{{ section.settings.enable_arrow == true and section.settings.border == 'solid' }}"
+    },
+    {
+      "type": "checkbox",
+      "id": "inherit_color_scheme",
+      "label": "t:settings.inherit_color_scheme",
+      "default": true,
+      "visible_if": "{{ section.settings.enable_arrow == true and section.settings.border == 'solid' }}"
+    },
+    {
+      "type": "color_scheme",
+      "id": "nav_color_scheme",
+      "label": "t:settings.color_scheme",
+      "default": "scheme-1",
+      "visible_if": "{{ section.settings.inherit_color_scheme == false and section.settings.border == 'solid' and section.settings.enable_arrow == true }}"
+    },
+    {
+      "type": "header",
+      "content": "t:settings.localization_settings"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_country_selector",
+      "default": false,
+      "label": "t:settings.enable_country_selector",
+      "info": "t:info.enable_country_selector"
+    },
+    {
+      "type": "checkbox",
+      "id": "flag",
+      "label": "t:settings.flag",
+      "default": false,
+      "visible_if": "{{ section.settings.enable_country_selector == true }}"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_language_selector",
+      "default": false,
+      "label": "t:settings.enable_language_selector",
+      "info": "t:info.enable_language_selector"
+    },
+    {
+      "type": "header",
+      "content": "t:content.padding"
+    },
+    {
+      "type": "range",
+      "id": "padding-top",
+      "label": "t:settings.top",
+      "min": 0,
+      "max": 20,
+      "step": 2,
+      "unit": "px",
+      "default": 10
+    },
+    {
+      "type": "range",
+      "id": "padding-bottom",
+      "label": "t:settings.bottom",
+      "min": 0,
+      "max": 20,
+      "step": 2,
+      "unit": "px",
+      "default": 10
+    },
+  ],
+  "blocks": [
+    {
+      "type": "header-social-icon"
+    },
+    {
+      "type": "_announcement_bar"
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:name.announcement_bar",
+      "blocks": [
+        {
+          "type": "header-social-icon",
+          "name": "social_icon",
+          "settings": {
+          }
+        },
+        {
+          "type": "_announcement_bar",
+          "settings": {
+            "text": "Free Shipping On Orders Over $50 – Shop Now!"
+          }
+        },
+        {
+          "type": "_announcement_bar",
+          "settings": {
+            "text": "Free Sunscreen With Order Over $30"
+          }
+        },
+        {
+          "type": "_announcement_bar",
+          "settings": {
+            "text": "Free Gift Wrapping + 20% Off"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,144 @@
+{% liquid
+  if block.settings.alignment == 'left'
+    assign text_alignment = 'd-flex justify-content-start text-start'
+  elsif block.settings.alignment == 'center'
+    assign text_alignment = 'd-flex justify-content-center text-center'
+  else
+    assign text_alignment = 'd-flex justify-content-end text-end'
+  endif
+  assign product = closest.product
+%}
+{% style %}
+  {% if block.settings.background %} .title-block-{{ block.id }} { background-color: {{ block.settings.background_color | default: 'rgb(200 200 200 / 0.5)' }}; border-radius: {{block.settings.border_radius}}px; } {% endif %}
+   {% if block.settings.border_radius > 1 and
+      block.settings.padding-block-end == 0 and
+      block.settings.padding-block-start == 0 and
+      block.settings.padding-inline-end == 0 and
+      block.settings.padding-inline-start == 0 %}
+   .title-block-{{ block.id }} {padding:10px; }
+   {% endif %}
+
+   {% if block.settings.width =='fit-content' %}
+   .d-flex.flex-row.justify-content-start.align-items-center > .title-block-{{ block.id }},
+     .d-flex.flex-column.justify-content-center.align-items-start > .title-block-{{ block.id }},
+   .d-flex.flex-column.justify-content-end.align-items-start > .title-block-{{ block.id }},
+   .d-flex.flex-column.justify-content-between.align-items-start  > .title-block-{{ block.id }}{
+   text-align: left;
+   }
+   .d-flex.flex-row.justify-content-center.align-items-center > .title-block-{{ block.id }},
+   .d-flex.flex-column.justify-content-center.align-items-center > .title-block-{{ block.id }},
+   .d-flex.flex-column.justify-content-end.align-items-center  > .title-block-{{ block.id }},
+   .d-flex.flex-column.justify-content-start.align-items-center  > .title-block-{{ block.id }},
+   .d-flex.flex-column.justify-content-between.align-items-center > .title-block-{{ block.id }}{
+   text-align: center;
+   }
+   .d-flex.flex-row.justify-content-end.align-items-center > .title-block-{{ block.id }} ,
+   .d-flex.flex-column.justify-content-center.align-items-end > .title-block-{{ block.id }},
+   .d-flex.flex-column.justify-content-end.align-items-end > .title-block-{{ block.id }},
+   .d-flex.flex-column.justify-content-start.align-items-end  > .title-block-{{ block.id }},
+   .d-flex.flex-column.justify-content-between.align-items-end  > .title-block-{{ block.id }}{
+   text-align:right;
+   }
+
+
+   {% endif %}
+{% endstyle %}
+
+<div
+  class="title-block-{{ block.id }} {{ alignment }} {% if block.settings.background %} text-bg-space{% endif %} text-{{ block.settings.text_transform }} {{ block.settings.type_preset }} mb-0 spacing-style size-style-width"
+  style="{% render 'spacing-style', settings: block.settings  %} {% render 'text-bg-space', settings: block.settings  %} {% render 'size-style-width', settings: block.settings %}"
+  {{ block.shopify_attributes }}
+>
+  <a href="{{ product.url }}">
+    {{ product.title | default: 'Product title' }}
+  </a>
+</div>
+
+{% schema %}
+{
+  "name": "t:name.product_title",
+  "tag": null,
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "t:content.product_title"
+    },
+    {
+      "type": "header",
+      "content": "t:content.appearance"
+    },
+    {
+      "type": "select",
+      "id": "type_preset",
+      "label": "t:content.typography",
+      "options": [
+        {
+          "value": "h3",
+          "label": "t:options.h3"
+        },
+        {
+          "value": "h4",
+          "label": "t:options.h4"
+        },
+        {
+          "value": "h5",
+          "label": "t:options.h5"
+        },
+        {
+          "value": "h6",
+          "label": "t:options.h6"
+        }
+      ],
+      "default": "h5",
+      "info": "t:info.edit_presets_in_theme_settings"
+    },
+    {
+      "type": "select",
+      "id": "text_transform",
+      "label": "t:settings.testcase",
+      "options": [
+        {
+          "value": "uppercase",
+          "label": "t:options.uppercase"
+        },
+        {
+          "value": "capitalize",
+          "label": "t:options.capitalize"
+        }
+      ],
+      "default": "capitalize"
+    },
+    {
+      "type": "header",
+      "content": "t:content.padding"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start",
+      "label": "t:settings.top",
+      "min": 0,
+      "max": 50,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end",
+      "label": "t:settings.bottom",
+      "min": 0,
+      "max": 50,
+      "step": 1,
+      "unit": "px",
+      "default": 10
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:name.product_title",
+      "category": "t:categories.product",
+      "settings": {}
+    }
+  ]
+}
+{% endschema %}

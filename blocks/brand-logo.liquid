@@ -1,0 +1,114 @@
+{% liquid
+  assign media_width_desktop = '100vw'
+  assign media_width_mobile = '100vw'
+  assign sizes = 'auto, (min-width: 750px) ' | append: media_width_desktop | append: ', ' | append: media_width_mobile
+  assign widths = '300, 450, 600, 750, 900, 1050, 1200, 1350, 1500, 1650, 1800, 1950, 2000, 2500, 3000, 3500, 4000, 5000'
+%}
+
+<style>
+  {% comment %} .brand-logo-block.brand-logo-block-{{ block.id }} .placeholder-image{
+    aspect-ratio: 3 / 2;
+  } {% endcomment %}
+</style>
+
+<div class="swiper-slide brand-logo-block brand-logo-block-{{ block.id }} d-flex justify-content-center overflow-hidden spacing-style " {{ block.shopify_attributes }} style="{% render 'spacing-style', settings:block.settings %}">
+  {%- if block.settings.image != blank -%}
+    {% if block.settings.link != blank %}
+      <a href="{{ block.settings.link }}">
+        {{
+          block.settings.image
+          | image_url: width: 3000
+          | image_tag: width: block.settings.image.width, class: 'object-fit-contain image-block w-100', widths: widths, sizes: sizes
+        }}
+      </a>
+
+    {% else %}
+      {{
+        block.settings.image
+        | image_url: width: 3000
+        | image_tag: width: block.settings.image.width, class: 'object-fit-contain image-block w-100', widths: widths, sizes: sizes
+      }}
+    {% endif %}
+  {%- else -%}
+    {% if block.settings.link != blank -%}
+      <a href="{{ block.settings.link }}">
+        <div class="placeholder-image w-100">
+          {{ 'image' | placeholder_svg_tag: 'image-placeholder-svg' }}
+        </div>
+      </a>
+    {% else %}
+      <div class="placeholder-image w-100">
+        {{ 'image' | placeholder_svg_tag: 'image-placeholder-svg' }}
+      </div>
+    {% endif %}
+  {%- endif -%}
+</div>
+
+{% schema %}
+{
+  "name": "t:settings.logo",
+  "tag": null,
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "t:settings.image"
+    },
+    {
+      "type": "url",
+      "id": "link",
+      "label": "t:settings.link"
+    },
+    {
+      "type": "header",
+      "content": "t:content.padding"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start",
+      "label": "t:options.top",
+      "min": 0,
+      "max": 50,
+      "step": 2,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end",
+      "label": "t:options.bottom",
+      "min": 0,
+      "max": 50,
+      "step": 2,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding-inline-start",
+      "label": "t:options.left",
+      "min": 0,
+      "max": 50,
+      "step": 2,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding-inline-end",
+      "label": "t:options.right",
+      "min": 0,
+      "max": 50,
+      "step": 2,
+      "unit": "px",
+      "default": 0
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:settings.logo",
+      "category": "t:categories.basic"
+    }
+  ]
+}
+{% endschema %}

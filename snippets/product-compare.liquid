@@ -1,0 +1,14 @@
+<dtx-compare class="position-relative d-flex compare_button" tabindex="0" {{ block.shopify_attributes }}
+  data-bs-toggle="tooltip"
+  data-bs-placement="top"
+  title="{{ 'products.compare.compare' | t }}"
+>
+  {%- assign product = closest.product -%}
+     <a
+role="link"
+aria-label="{{ 'products.compare.add_to_compare' | t }}"
+class="add-compare"
+data-product_handle="{{ product.handle }}"
+>
+</a>
+  </dtx-compare>

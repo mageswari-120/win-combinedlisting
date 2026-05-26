@@ -1,0 +1,173 @@
+
+{%- liquid
+  assign pick_up_availabilities = product_variant.store_availabilities | where: 'pick_up_enabled', true
+  assign closest_location = pick_up_availabilities.first     
+-%}
+{%- if pick_up_availabilities.size > 0 -%}
+  <product-availability-preview class="product-availability-preview">
+    <div class="gap-2 d-flex">
+      {%- if closest_location.available -%}
+        
+        <span class="text-success">{% render 'icon-success'%}</span>
+        
+        <div class="align-items-baseline  gap-2">
+         <span >{{ 'products.pickup_availability.pick_up_available_at_html' | t: location_name: closest_location.location.name }}</span>
+        <span class="pick_up_time mb-2">{{ closest_location.pick_up_time }}</span>
+        <div>
+        <a href="#" id="ShowPickupAvailabilityDrawer" tabindex="0" class="btn btn-link p-0 " data-bs-toggle="offcanvas" data-bs-target="#pickupDrawer" aria-controls="pickupDrawer">
+          {%- if pick_up_availabilities.size == 1 -%}
+            {{ 'products.pickup_availability.view_store_info' | t }}
+          {%- else -%}
+            {{ 'products.pickup_availability.check_other_stores' | t }}
+          {%- endif -%}
+        </a>
+        </div>
+        </div>
+        
+      {%- else -%}
+       
+          <span class="text-danger d-flex">
+            <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+            viewBox="0 0 100 100" style="enable-background:new 0 0 100 100;" xml:space="preserve">
+            <path d="M94,50c0,24.3-19.7,44-44,44S6,74.3,6,50S25.7,6,50,6S94,25.7,94,50 M35.4,31.6c-1.1-1.1-2.8-1.1-3.9,0
+            s-1.1,2.8,0,3.9L46.1,50L31.6,64.6c-1.1,1.1-1.1,2.8,0,3.9c1.1,1.1,2.8,1.1,3.9,0L50,53.9l14.6,14.6c1.1,1.1,2.8,1.1,3.9,0
+            c1.1-1.1,1.1-2.8,0-3.9L53.9,50l14.6-14.6c1.1-1.1,1.1-2.8,0-3.9c-1.1-1.1-2.8-1.1-3.9,0L50,46.1L35.4,31.6z" fill="#dc3545"/>
+            </svg>
+          </span>
+          <div class="align-items-baseline  gap-2">
+          <span>{{ 'products.pickup_availability.pick_up_unavailable_at_html' | t: location_name: closest_location.location.name }}</span>
+        
+        {%- if pick_up_availabilities.size > 1 -%}
+          <div>
+          <a href="#" id="ShowPickupAvailabilityDrawer" tabindex="0" class="btn btn-link p-0" data-bs-toggle="offcanvas" data-bs-target="#pickupDrawer" aria-controls="pickupDrawer">
+            {{ 'products.pickup_availability.check_other_stores' | t }}
+          </a>
+        </div>
+        {%- endif -%}
+      </div>
+      {%- endif -%}
+    </div>
+  </product-availability-preview>
+
+  <product-availability-details
+    id="pickupDrawer"
+    class="gradient offcanvas offcanvas-end color-{{ settings.offcanvas_color_scheme }} gradient"
+    tabindex="-1"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="PickupAvailabilityHeading"
+  >
+      <div class="offcanvas-header position-relative justify-content-between  border-bottom align-items-start">
+    <div class="pickup-block d-flex gap-3  align-items-start">
+
+  {% if product_variant.featured_image != blank %}
+    <div class="pickup-image flex-shrink-0">
+      <img
+        src="{{ product_variant.featured_image | image_url: width: 800 }}"
+        alt="{{ product_variant.product.title | escape }}"
+        width="70"
+        height="150"
+        loading="lazy"
+        class="img-fluid rounded object-fit-cover"
+      >
+    </div>
+  {% endif %}
+
+  <div class="pickup-content flex-grow-1">
+
+    <h6 class="mb-1" id="PickupAvailabilityHeading">
+      {{ product_variant.product.title | escape }}
+    </h6>
+
+    {%- unless product_variant.product.has_only_default_variant -%}
+      <p class="mb-1 small ">
+        {%- for product_option in product_variant.product.options_with_values -%}
+          {{ product_option.name | escape }}:&nbsp;
+          {%- for value in product_option.values -%}
+            {%- if product_option.selected_value == value -%}
+              <span class="fw-medium">{{ value | escape }}</span>
+            {%- endif -%}
+          {%- endfor -%}
+          {%- unless forloop.last -%},&nbsp;{%- endunless -%}
+        {%- endfor -%}
+      </p>
+    {%- endunless -%}
+
+    <div class="pickup-price fw-semibold mt-2">
+      {{ product_variant.price | money }}
+    </div>
+
+  </div>
+</div>
+
+      <button class="btn-close" type="button" data-bs-dismiss="offcanvas" aria-label="{{ 'accessibility.close' | t }}">    
+      {% render 'cancel.svg' %}   
+      </button>  
+    </div>
+    <div class="offcanvas-body ">
+      <div class="offcanvas_content px-0">
+       
+      <ul class="list-unstyled" role="list" data-store-availability-drawer-content>
+      {%- for availability in pick_up_availabilities -%}
+  <li class="pickup_availability_content ">
+
+    <h6 class="store-details fw-bold">Shop Location</h6>
+
+    <p class="mb-2 d-flex align-items-center gap-2">
+      {%- if availability.available -%}
+        {% render 'icon-success', class:'text-success' %}
+        <span >
+          {{ 'products.pickup_availability.pick_up_available' | t }},
+          {{ availability.pick_up_time | downcase }}
+        </span>
+      {%- else -%}
+        {% render 'icon-error', class:'text-danger' %}
+        <span class="text-danger">
+          {{ 'products.pickup_availability.pick_up_unavailable' | t }}
+        </span>
+      {%- endif -%}
+    </p>
+
+    {%- assign address = availability.location.address -%}
+
+    <div class="pickup-location ">
+
+      {% if address.address1 != blank %}
+        <div class="address-title mb-2"><span>Address:</span> {{ address.address1 }}</div>
+      {% endif %}
+
+      {% if address.city != blank %}
+        <div class="address-title mb-2"><span>City:</span> {{ address.city }}</div>
+      {% endif %}
+
+      {% if address.country != blank %}
+        <div class="address-title mb-2"><span>Country/region:</span> {{ address.country }}</div>
+      {% endif %}
+
+      {% if address.phone != blank %}
+        <div class="address-title mb-2"><span>Phone:</span> {{ address.phone }}</div>
+      {% endif %}
+
+      {% if address.address1 != blank %}
+        <div class="mt-2 pt-1">
+          <a
+            href="https://www.google.com/maps/search/?api=1&query={{ address.address1 | url_encode }} {{ address.city | url_encode }}"
+            target="_blank"
+            rel="noopener"
+            class="text-decoration-none fw-medium d-flex align-items-center gap-2"
+          >
+            {% render 'icon-location' %} Show on google map
+          </a>
+        </div>
+      {% endif %}
+
+    </div>
+
+  </li>
+{%- endfor -%}
+
+    </ul>
+    </div>
+    </div>
+  </product-availability-details>
+{%- endif -%}

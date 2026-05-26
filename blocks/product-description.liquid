@@ -1,0 +1,26 @@
+{% liquid
+  if closest.product != blank
+    assign product = closest.product
+  endif
+%}
+
+<div class="description-block" {{ block.shopify_attributes }}>
+  {{ product.description }}
+</div>
+
+{% schema %}
+{
+  "name":"t:name.product_description",
+  "tag": null,
+  "settings": [  
+  ],
+  "presets": [
+    {
+      "name": "t:name.product_description",
+      "category": "t:categories.product",
+     "settings": {
+      }
+    }
+  ]
+}
+{% endschema %}

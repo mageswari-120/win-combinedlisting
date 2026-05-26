@@ -1,0 +1,87 @@
+<!-- Sorting and product count -->
+
+<div class="d-flex flex-wrap gap-4 search-tool sorting_count align-items-center">
+  {%- if show_product_sorting or search.filters != empty -%}
+    {% if show_product_count and search.results.size != 0 %}
+      <div class="filter_count">
+        <div class="number-of-products-count">
+          {{ 'products.product.count' | t: count: number_of_products }}
+        </div>
+      </div>
+    {% endif %}
+
+    <form class="facets-vertical-form {% unless show_product_sorting  %}d-none{% endunless %}" id="FacetSortForm">
+      <div class="facet-filters sorting caption  d-block d-lg-block d-xl-block">
+        <div class="facet-filters__field d-flex align-items-center {% if search.results.size == 0 %} d-none{% endif %}">
+          <div class="select w-100">
+            {%- assign sort_by = search.sort_by | default: search.default_sort_by -%}
+            <!-- Visual ul li List -->
+            {%- liquid
+              for option in search.sort_options
+                if option.value == sort_by
+                  assign primary_choice = option.name | escape
+                endif
+              endfor
+            %}
+            <product-sorting class="sort-by dropdown">
+              <button
+                class="custom-select-buttons d-flex align-items-center justify-content-center gap-3 dropdown-toggle btn btn-primary w-100"
+                type="button"
+                id="dropdownMenuSorting"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+              >
+                {{ primary_choice }}
+                <svg
+                xmlns="http://www.w3.org/2000/svg"
+                xmlns:xlink="http://www.w3.org/1999/xlink"
+                fill="currentColor"
+                height="14px"
+                width="14px"
+                version="1.1"
+                id="Layer_1"
+                viewBox="0 0 491.996 491.996"
+                xml:space="preserve"
+                class="mt-1 d-block"
+              >
+                <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                <g id="SVGRepo_iconCarrier"> <g> <g> <path d="M484.132,124.986l-16.116-16.228c-5.072-5.068-11.82-7.86-19.032-7.86c-7.208,0-13.964,2.792-19.036,7.86l-183.84,183.848 L62.056,108.554c-5.064-5.068-11.82-7.856-19.028-7.856s-13.968,2.788-19.036,7.856l-16.12,16.128 c-10.496,10.488-10.496,27.572,0,38.06l219.136,219.924c5.064,5.064,11.812,8.632,19.084,8.632h0.084 c7.212,0,13.96-3.572,19.024-8.632l218.932-219.328c5.072-5.064,7.856-12.016,7.864-19.224 C491.996,136.902,489.204,130.046,484.132,124.986z"></path> </g> </g> </g>
+              </svg>
+              </button>
+              
+              <ul
+                class="sort-options dropdown-menu dropdown-menu-light wdt-custom-sorting"
+                aria-labelledby="dropdownMenuSorting"
+              >
+                {%- for option in search.sort_options -%}
+                  <li
+                    data-value="{{ option.value | escape }}"
+                    {% if option.value == sort_by %}
+                      class="selected"
+                    {% endif %}
+                  >
+                    <input
+                      type="radio"
+                      name="sort_by"
+                      id="sort-by-{{ option.value }}"
+                      value="{{ option.value }}"
+                      {% if option.value == sort_by %}
+                        checked
+                      {% endif %}
+                    >
+                    <label class="dropdown-item btn btn-secondary" for="sort-by-{{ option.value }}">
+                      <span>
+                        {{ option.name | escape }}
+                      </span>
+                    </label>
+                  </li>
+                {%- endfor -%}
+              </ul>
+            </product-sorting>
+          </div>
+        </div>
+      </div>
+    </form>
+  {%- endif -%}
+</div>

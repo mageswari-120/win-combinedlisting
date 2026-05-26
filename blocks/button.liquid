@@ -1,0 +1,117 @@
+{% liquid
+  assign link = block.settings.link
+%}
+{%if block.settings.label != blank  %}
+<a
+  {% if link == blank %}
+    role="link" aria-disabled="true"
+  {% else %}
+    href="{{ link }}"
+  {% endif %}
+  class="btn {{ block.settings.btn_style }} size-style-width z-3"
+  {%- if block.settings.open_in_new_tab -%}
+    target="_blank" rel="noopener noreferrer"
+  {%- endif -%}
+  style="{% render 'size-style-width', settings:block.settings %}"
+  {{ block.shopify_attributes }}
+>
+  {{ block.settings.label }}
+</a>
+{% endif %}
+
+{% schema %}
+{
+  "name": "t:name.button",
+  "tag": null,
+  "settings": [
+    {
+      "type": "text",
+      "id": "label",
+      "label": "t:settings.label",
+      "default": "Shop now"
+    },
+    {
+      "type": "url",
+      "id": "link",
+      "label": "t:settings.link",
+      "visible_if": "{{ block.settings.label != blank }}"
+      
+    },
+    {
+      "type": "checkbox",
+      "id": "open_in_new_tab",
+      "label": "t:settings.open_in_new_tab",
+      "visible_if": "{{ block.settings.label != blank }}"
+    },
+    {
+      "type": "select",
+      "id": "btn_style",
+      "label": "t:settings.style",
+      "default": "btn-primary",
+      "options": [
+        {
+          "value": "btn-primary",
+          "label": "t:options.primary"
+        },
+        {
+          "value": "btn-secondary",
+          "label": "t:options.secondary"
+        },
+        {
+          "value": "btn-link",
+          "label": "t:options.link"
+        }
+      ],
+      "visible_if": "{{ block.settings.label != blank }}"
+    },
+    {
+      "type": "header",
+      "content": "t:content.size",
+      "visible_if": "{{ block.settings.label != blank }}"
+    },
+    {
+      "type": "select",
+      "id": "width",
+      "label": "t:settings.desktop-width",
+      "options": [
+        {
+          "value": "fit-content",
+          "label": "t:options.fit"
+        },
+        {
+          "value": "fill",
+          "label": "t:options.fill"
+        }
+      ],
+      "default": "fit-content",
+      "visible_if": "{{ block.settings.label != blank }}"
+    },
+    {
+      "type": "select",
+      "id": "width_mobile",
+      "label": "t:settings.mobile-width",
+      "options": [
+        {
+          "value": "fit-content",
+          "label": "t:options.fit"
+        },
+        {
+          "value": "fill",
+          "label": "t:options.fill"
+        }
+      ],
+      "default": "fit-content",
+      "visible_if": "{{ block.settings.label != blank }}"
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:name.button",
+      "category": "t:categories.basic",
+      "settings": {
+        "link": "shopify://collections/all"
+      }
+    }
+  ]
+}
+{% endschema %}

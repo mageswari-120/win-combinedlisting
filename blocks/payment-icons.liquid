@@ -1,0 +1,57 @@
+ <div
+  class="payment-icons"
+  style="
+  "
+  {{ block.shopify_attributes }}
+>
+  <ul
+    class="payment-icons__list payment-icons__list-{{ block.id }} d-flex align-items-center flex-wrap justify-content-between list-unstyled gap-style"
+    role="list"
+    style="--gap-style: max(calc(var(--space-scale, 1.0) * {{ block.settings.grid_space }}px));"
+  >
+    {%- for type in shop.enabled_payment_types -%}
+      <li class="payment-icons__item lh-1">
+        {{ type | payment_type_svg_tag: class: 'icon icon--full-color' }}
+      </li>
+    {%- endfor -%}
+  </ul>
+</div>
+
+{% style %}
+  .payment-icons__list-{{ block.id }} {
+    font-size:{{  block.settings.icon_size}}px;
+  }
+{% endstyle %}
+{% schema %}
+{
+  "name": "t:name.payment_icons",
+  "tag": null,
+  "settings": [
+        {
+      "type": "range",
+      "id": "icon_size",
+      "label": "t:settings.icon_size",
+      "unit": "px",
+      "min":20,
+      "max": 50,
+      "default":25,
+    },
+    {
+      "type": "range",
+      "id": "grid_space",
+      "label": "t:settings.gap",
+      "min": 0,
+      "max": 50,
+      "step": 1,
+      "unit": "px",
+      "default": 2
+    },
+  ],
+  "presets": [
+    {
+      "name": "t:name.payment_icons",
+      "category": "t:categories.footer"
+    }
+  ]
+}
+{% endschema %}

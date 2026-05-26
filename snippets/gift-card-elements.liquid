@@ -1,0 +1,61 @@
+<gift-card-recipient-form>
+  <input 
+    type="checkbox" 
+    data-recipient-toggle
+  >
+  <label>Send as gift card</label>
+
+  <div class="gift-card-recipient-details" data-recipient-fields hidden>
+    <div class="field">
+      <label for="Recipient-email-{{ section.id }}">
+        {{ 'recipient.form.email_label' | t }}
+      </label>
+      <input
+        id="Recipient-email-{{ section.id }}"
+        type="email"
+        name="properties[Recipient email]"
+        autocomplete="email"
+        data-recipient-email
+        required
+      >
+    </div>
+
+    <div class="field">
+      <label for="Recipient-name-{{ section.id }}">
+        {{ 'recipient.form.name_label' | t }}
+      </label>
+      <input
+        id="Recipient-name-{{ section.id }}"
+        type="text"
+        name="properties[Recipient name]"
+        maxlength="255"
+      >
+    </div>
+
+    <div class="field">
+      <label for="Recipient-message-{{ section.id }}">
+        {{ 'recipient.form.message_label' | t }}
+      </label>
+      <textarea
+        id="Recipient-message-{{ section.id }}"
+        name="properties[Message]"
+        maxlength="200"
+      ></textarea>
+    </div>
+
+    <div class="field">
+      <label for="Recipient-send-on-{{ section.id }}">
+        {{ 'recipient.form.send_on_label' | t }}
+      </label>
+      <input
+        id="Recipient-send-on-{{ section.id }}"
+        type="date"
+        name="properties[Send on]"
+        pattern="\d{4}-\d{2}-\d{2}"
+        min="{{ 'now' | date: '%Y-%m-%d' }}"
+      >
+    </div>
+
+    <input type="hidden" name="properties[__shopify_send_gift_card_to_recipient]" value="true" data-recipient-required-flag >
+  </div>
+</gift-card-recipient-form>

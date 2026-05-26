@@ -1,0 +1,364 @@
+ {% liquid
+  assign show_desktop_slider = false
+  assign layout = block.settings.layout_type
+  if layout == 'carousel'
+    assign layout = true
+    assign show_desktop_slider = true
+  else
+    assign layout = false
+    assign show_desktop_slider = false
+  endif
+
+  if show_desktop_slider
+    assign auto_play = block.settings.auto_play
+    assign loop_slide = block.settings.loop_slider
+    assign dots = block.settings.swiper_pagination
+    assign space = block.settings.horizontal_gap | default: 0
+  endif
+
+  assign slider_desktop = block.settings.columns_desktop | default: 3
+  assign slider_laptop = block.settings.columns_desktop | minus: 1
+
+  if block.settings.columns_desktop == '1'
+    assign slider_laptop = 1
+    assign slider_tablet = 1
+  elsif block.settings.columns_desktop == '2'
+    assign slider_laptop = 1
+    assign slider_tablet = 1
+  elsif block.settings.columns_desktop == '3'
+    assign slider_laptop = 3
+    assign slider_tablet = 2
+  elsif block.settings.columns_desktop == '4'
+    assign slider_laptop = 3
+    assign slider_tablet = 2
+  endif
+  assign slider_mobile = block.settings.columns_mobile | default: 1
+%}
+
+{% render 'swiper-initialization', space: space, slider_desktop: slider_desktop %}
+
+{% capture swiper_controls %}
+    {%- render 'swiper-controls',
+      show_desktop_slider: show_desktop_slider,
+      section: block,
+      settings: block.settings
+    -%}
+  {% endcapture %}
+
+  {% capture blocks %}
+    {%content_for 'blocks' %}
+  {% endcapture %}
+
+<div class="section-{{ block.id }} testimonial_section testimonial_section-{{ block.id }} color-{{ block.settings.color_scheme }} isolate gradient  ">
+    <div
+      class="testimonial_section_carousel top-bottom-spacing  align-items-{{ block.settings.vertical_alignment }}"
+      style="
+        --padding-top:{{ block.settings.padding-top }}px;
+        --padding-bottom:{{ block.settings.padding-bottom }}px;
+      "
+    >
+
+      {% if show_desktop_slider %}
+        <wdt-swiper-slider>
+          <div
+            data-slider-options='
+              {
+                "desktop": {{ slider_desktop }},
+                "laptop": {{ slider_laptop }},
+                "tablet": {{ slider_tablet }},
+                "mobile": {{ slider_mobile }},
+                "loop": {{ loop_slide | json }},
+                "auto_play": "{{ auto_play }}"{% if block.settings.slider_effect != 'fade' %},{% endif %}
+                "auto_play_speed": {{ auto_play_speed | times: 5000 }},
+                "dots": {{ dots | json }},
+                "space": {{ space }}
+              }
+            '
+          >
+            <div class="testimonial_section swiper" data-swiper-slider>
+              <div class="testimonial_section-wrapper swiper-wrapper">
+                {{ blocks }}
+              </div>
+              {{ swiper_controls }}
+            </div>
+          </div>
+        </wdt-swiper-slider>
+      {% else %}
+        <div
+          class="testimonial_section testimonial_section--{{ block.id }} h-auto"
+          style="
+            display:grid; --grid-desktop-columns: repeat({{ slider_desktop }}, 1fr); --grid-laptop-columns: repeat({{ slider_laptop }},1fr); --grid-tablet-column: repeat({{ slider_tablet }},1fr);
+            --grid-mobile-columns: repeat(1, 1fr); row-gap:{{ block.settings.vertical_gap }}px; column-gap:{{ block.settings.horizontal_gap }}px;
+          "
+        >
+          {{ blocks }}
+        </div>
+      {% endif %}
+    </div>
+  </div>
+
+
+{% style %}
+  .placeholder-image svg, media-gallery img{width:100%; height:100%;}
+  wdt-swiper-slider{overflow:hidden;}
+  .testimonial_section {list-style: none; padding-left:0;}
+  .card__inner_wrapper + .shopify-block{height:100%;}
+   .testimonial_section.testimonial_section--{{ block.id }}{
+    grid-template-columns:var(--grid-mobile-columns);
+  }
+  @media screen and (width >= 576px){
+   .testimonial_section.testimonial_section--{{ block.id }}{
+    grid-template-columns:var(--grid-tablet-column);
+  }
+  }
+  @media screen and (width >= 992px){
+   .testimonial_section.testimonial_section--{{ block.id }}{
+    grid-template-columns:var(--grid-laptop-columns);
+  }
+  }
+  @media screen and (width >= 1200px){
+   .testimonial_section.testimonial_section--{{ block.id }}{
+    grid-template-columns:var(--grid-desktop-columns);
+  }
+  }
+{% endstyle %}
+
+{% schema %}
+{
+  "name": "t:settings.content-block",
+  "blocks": [{ "type": "testimonial_card" }],
+  "settings": [
+    
+    {
+      "type": "header",
+      "content": "t:content.layout"
+    },
+    {
+      "type": "select",
+      "id": "layout_type",
+      "label": "t:settings.type",
+      "options": [
+        {
+          "value": "grid",
+          "label": "t:options.grid"
+        },
+        {
+          "value": "carousel",
+          "label": "t:options.carousel"
+        }
+      ],
+      "default": "carousel"
+    },
+    {
+      "type": "range",
+      "id": "horizontal_gap",
+      "label": "t:settings.horizontal_gap",
+      "min": 0,
+      "max": 30,
+      "step": 1,
+      "unit": "px",
+      "default": 8,
+      "visible_if": "{{ block.settings.layout_type == 'grid' or block.settings.layout_type == 'carousel' }}"
+    },
+
+    {
+      "type": "range",
+      "id": "vertical_gap",
+      "label": "t:settings.vertical_gap",
+      "min": 0,
+      "max": 30,
+      "step": 1,
+      "unit": "px",
+      "default": 8,
+      "visible_if": "{{ block.settings.layout_type == 'grid'}}"
+    },
+    {
+      "type": "header",
+      "content": "t:content.column"
+    },
+    {
+      "type": "select",
+      "id": "columns_desktop",
+      "label": "t:settings.columns_desktop",
+      "options": [
+        {
+          "value": "1",
+          "label": "t:options.column_1"
+        },
+        {
+          "value": "2",
+          "label": "t:options.column_2"
+        },
+        {
+          "value": "3",
+          "label": "t:options.column_3"
+        },
+        {
+          "value": "4",
+          "label": "t:options.column_4"
+        }
+      ],
+      "default": "3"
+    },
+    {
+      "type": "header",
+      "content": "t:content.carousel_settings",
+      "visible_if": "{{ block.settings.layout_type == 'carousel' }}"
+    },
+    {
+      "type": "range",
+      "id": "auto_play",
+      "min": 0,
+      "max": 5,
+      "unit": "s",
+      "step": 1,
+      "label": "t:settings.auto_play",
+      "default": 0,
+      "visible_if": "{{ block.settings.layout_type == 'carousel' }}"
+    },
+    {
+      "type": "header",
+      "content": "t:content.navigation",
+      "visible_if": "{{ block.settings.layout_type == 'carousel' }}"
+    },
+    {
+      "type": "select",
+      "id": "style",
+      "label": "t:settings.nav_style",
+      "visible_if": "{{ block.settings.layout_type == 'carousel' }}",
+      "options": [
+        {
+          "value": "arrow",
+          "label": "t:options.arrow"
+        },
+        {
+          "value": "dots",
+          "label": "t:options.dots"
+        },
+        {
+          "value": "none",
+          "label": "t:options.none"
+        }
+      ],
+      "default": "none"
+    },
+    {
+      "type": "select",
+      "id": "border",
+      "label": "t:settings.border",
+      "options": [
+        {
+          "value": "none",
+          "label": "t:options.none"
+        },
+        {
+          "value": "solid",
+          "label": "t:options.solid"
+        }
+      ],
+      "default": "none",
+      "visible_if": "{{ block.settings.style == 'arrow' and block.settings.layout_type == 'carousel' }}"
+    },
+    {
+      "type": "range",
+      "id": "border_width",
+      "min": 1,
+      "max": 5,
+      "step": 1,
+      "unit": "px",
+      "label": "t:settings.thickness",
+      "default": 1,
+      "visible_if": "{{ block.settings.border != 'none' and block.settings.style == 'arrow' and block.settings.layout_type == 'carousel' }}"
+    },
+
+    {
+      "type": "range",
+      "id": "border_opacity",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "label": "t:settings.opacity",
+      "default": 100,
+      "visible_if": "{{ block.settings.border != 'none'  and block.settings.style == 'arrow' and block.settings.layout_type == 'carousel' }}"
+    },
+    {
+      "type": "range",
+      "id": "border_radius",
+      "label": "t:settings.border_radius",
+      "min": 0,
+      "max": 30,
+      "step": 1,
+      "default": 0,
+      "unit":"px",
+      "visible_if": "{{ block.settings.style == 'arrow' and block.settings.layout_type == 'carousel'}}"
+    },
+    {
+      "type": "checkbox",
+      "id": "inherit_color_scheme",
+      "label": "t:settings.inherit_color_scheme",
+      "default": true,
+      "visible_if": "{{ block.settings.style == 'arrow' and block.settings.layout_type == 'carousel' }}"
+    },
+    {
+      "type": "color_scheme",
+      "id": "pagination_color_scheme",
+      "label": "t:settings.color_scheme",
+      "default": "scheme-1",
+      "visible_if": "{{ block.settings.inherit_color_scheme == false }}"
+    },
+    {
+      "type": "header",
+      "content": "t:content.padding"
+    },
+    {
+      "type": "range",
+      "id": "padding-top",
+      "label": "t:settings.top",
+      "min": 0,
+      "max": 100,
+      "step": 2,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "padding-bottom",
+      "label": "t:settings.bottom",
+      "min": 0,
+      "max": 100,
+      "step": 2,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "header",
+      "content": "t:content.custom_class"
+    },
+     
+  ],
+  "presets": [
+    {
+      "name": "t:settings.content-block",
+      "blocks": [
+        {
+          "type": "testimonial_card",
+          "blocks": [{ "type": "text" }, { "type": "custom-rating" }, { "type": "description" }]
+        },
+        {
+          "type": "testimonial_card",
+          "blocks": [{ "type": "text" }, { "type": "custom-rating" }, { "type": "description" }]
+        },
+        {
+          "type": "testimonial_card",
+          "blocks": [{ "type": "text" }, { "type": "custom-rating" }, { "type": "description" }]
+        },
+        {
+          "type": "testimonial_card",
+          "blocks": [{ "type": "text" }, { "type": "custom-rating" }, { "type": "description" }]
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

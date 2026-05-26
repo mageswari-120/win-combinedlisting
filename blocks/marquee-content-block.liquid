@@ -1,0 +1,129 @@
+{%- style -%}
+    @keyframes scroll-left{0%{transform:translateX(-100%);}100%{transform:translateX(0%);}}
+    {% if block.settings.pause_on_hover %}.marquee-section-{{ section.id}} .marquee_container:hover .marquee-list{  animation-play-state:paused;} {% endif %}
+    {% capture animation_direction_speed %}
+    scroll-left {{ block.settings.animation_speed }}s linear infinite {% if block.settings.content_reverse == false %}reverse{% endif %} 
+    {% endcapture %}
+    {% assign marquee_child_gap =  block.settings.marquee_gap %}
+    {% assign marquee_parent_gap =  block.settings.marquee_gap  %}
+
+  .marquee-section-{{ section.id}} .marquee-list{
+   gap:max(5px, calc({{ marquee_child_gap }}px * 1));
+   padding-inline: calc({{marquee_parent_gap}}px / 2) ;
+   animation:{{animation_direction_speed}};
+   overflow: hidden;
+    /* min-width:100%; */
+  }
+  
+  .marquee_container{ position:relative;  }
+  @media (min-width:576px){
+    {% if block.settings.edge_fade %}
+    .marquee-section-{{ section.id}} .marquee_container:before {
+    content: '';
+    position: absolute;
+    width: 80px;
+    height: 100%;
+    background: linear-gradient(90deg, rgba(var(--color-background)), rgba(var(--color-background)), transparent);
+    z-index: 1;
+    left:0;
+    top:0;
+}
+  .marquee-section-{{ section.id}} .marquee_container:after {
+    content: '';
+    position: absolute;
+    width: 80px;
+    height: 100%;
+    background: linear-gradient(270deg, rgba(var(--color-background)), rgba(var(--color-background)), transparent);
+    right:0;
+    top:0;
+    z-index: 1;
+}
+
+
+{% endif %}
+  }
+
+{%- endstyle -%}
+
+      <div id="dt-marquee-section-{{ section.id }}" class="marquee_container">
+        <div class="d-flex align-items-center overflow-hidden text-nowrap">
+          {% comment %} {%- assign block_count = section.blocks.size -%}
+          {%- if block_count == 1 -%}
+            {%- assign loop_limit = 10 -%}
+          {%- elsif block_count == 2 -%}
+            {%- assign loop_limit = 6 -%}
+          {%- else -%}
+            {%- assign loop_limit = 5 -%}
+          {%- endif -%} {% endcomment %}
+          {% for i in (1..9) %}
+            <div class="marquee-list mb-0 d-flex align-items-center flex-shrink-0">
+              {% comment %} {% for block in section.blocks %}
+                {% for i in (1..loop_limit) %} {% endcomment %}
+                  {% content_for 'blocks' %}
+                {% comment %} {% endfor %}
+              {% endfor %} {% endcomment %}
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+
+{% schema %}
+{
+  "name": "t:settings.content-block",
+    "blocks": [{"type": "marquee-text"}, {"type": "marquee_product"}],
+  "settings": [
+    {
+     "type": "header",
+      "content": "t:content.content",
+    },
+    {
+      "type": "range",
+      "id": "marquee_gap",
+      "min": 0,
+      "max": 50,
+      "step": 5,
+      "unit": "px",
+      "label": "t:settings.gap",
+      "default":30
+    },
+    {
+      "type": "checkbox",
+      "id": "content_reverse",
+      "default": true,
+      "label": "t:settings.reverse"
+    },
+    {
+      "type": "checkbox",
+      "id": "pause_on_hover",
+      "default": true,
+      "label": "t:settings.pause_on_hover"
+    },
+    {
+      "type": "checkbox",
+      "id": "edge_fade",
+      "default": true,
+      "label": "t:settings.edge_fade"
+    },
+      {
+      "type": "range",
+      "id": "animation_speed",
+        "min": 20,
+        "max":100,
+        "default": 50,
+        "unit": "s",
+        "label": "t:settings.speed"
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:settings.content-block",
+      "blocks": [
+                {"type": "marquee-text"},{"type": "marquee-text"},{"type": "marquee-text"},{"type": "marquee-text"}
+      ]
+    }
+  ]
+}
+{% endschema %}
+
+
+

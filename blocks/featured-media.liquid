@@ -1,0 +1,218 @@
+{% liquid
+  if closest.product != blank
+    assign card_product = closest.product
+  endif
+  assign show_secondary_image = block.settings.secondary_image
+  assign width = '100%'
+  assign media_width_desktop = '100vw'
+  assign media_width_mobile = '100vw'
+  assign sizes = 'auto, (min-width: 750px) ' | append: media_width_desktop | append: ', ' | append: media_width_mobile
+  assign widths = '300, 450, 600, 750, 900, 1050, 1200, 1350, 1500, 1650, 1800, 1950, 2000, 2500, 3000, 3500, 4000, 5000'
+
+  assign media_aspect_ratio = block.settings.media_aspect_ratio
+%}
+<div class="card-image position-relative">
+  <div
+    class="
+      card__inner_wrapper overflow-hidden position-relative w-100 h-100 ratio
+      {% case media_aspect_ratio -%}
+           {%- when 'square' -%}
+             ratio-1x1
+           {%- when 'portrait' -%}
+             ratio-3x4
+           {%- when 'adapt' -%}
+             ratio-auto
+           {%- when 'landscape' -%}
+             ratio-4x3
+           {%- else -%}
+             ratio-1x1
+         {%- endcase -%}
+    "
+    {% if card_product.featured_media.aspect_ratio == null %}
+      style=" --aspect-ratio:100%"
+    {% else %}
+      style=" --aspect-ratio:{%- if card_product.featured_media -%}{{ 1 | divided_by: card_product.featured_media.aspect_ratio | times: 100 }}% {%- else -%} 100% {%- endif -%};"
+    {% endif %}
+  >
+    <a
+      href="{{ card_product.url }}"
+      class="product_media position-absolute w-100 h-100 border-style spacing-style overflow-hidden z-1"
+      style="{% render 'border-style', settings:block.settings %}  {% render 'spacing-style', settings:block.settings %}"
+    >
+      {%- if card_product.featured_media -%}
+        {{
+          card_product.featured_media
+          | image_url: width: 1280
+          | image_tag:
+            loading: 'lazy',
+            width: width,
+            sizes: sizes,
+            widths: widths,
+            class: 'featured-media media_primary_image w-100 h-100 object-fit-cover',
+            alt: card_product.featured_media.alt
+          | escape
+        }}
+
+        {%- if card_product.media[1] != null and show_secondary_image -%}
+          <span class="card-secondary-image overflow-hidden position-absolute start-0 end-0 w-100 h-100">
+            {{
+              card_product.media[1]
+              | image_url: width: 1280
+              | image_tag:
+                alt: card_product.media[1].alt,
+                aria_hidden: 'true',
+                loading: 'lazy',
+                width: width,
+                sizes: sizes,
+                widths: widths,
+                class: 'featured-media media_secondary_image w-100 h-100'
+              | escape
+            }}
+          </span>
+        {%- endif -%}
+      {% else %}
+        <img
+          src="{{ 'product_placeholder.jpg' | asset_url }}"
+          class="placeholder h-100 w-100"
+          alt="product_placeholder"
+        >
+      {%- endif -%}
+    </a>
+
+    <div class="product_card_icons z-3">
+      {% if settings.enable_wishlist %}
+        {% render 'button-wishlist' %}
+      {% endif %}
+      {% if settings.enable_compare %}
+        {% render 'button-compare' %}
+      {% endif %}
+      {% if settings.enable_quickview %}
+        {% render 'quick-add-button' %}
+      {% endif %}
+    </div>
+
+    {% if settings.enable_quickview %}
+      <div class="quick_view">
+        {% render 'quick-select-button', card_product: product %}
+      </div>
+    {% endif %}
+  </div>
+  <div class="product_card_badge position-absolute z-2">
+    {% if settings.show_new_badge %}
+      <div class="card-information new--tag">
+        {% for tag in card_product.tags %}
+          {% assign tag = tag | handleize %}
+          {% if tag contains 'Tag_New' %}
+            <span
+              class="badge badge--new product_new_badge mb-1"
+              style="border-radius:{{ settings.badge_radius }}px; text-transform:{{ settings.badge_testcase }};"
+            >
+              <span class="badge__text">{{ 'products.product.new' | t }}</span>
+            </span>
+          {% endif %}
+        {% endfor %}
+      </div>
+    {% endif %}
+    {% render 'card-badge', card_product: card_product %}
+  </div>
+  <div class="deal_count position-absolute z-2 start-0 bottom-0 end-0 d-none d-lg-block">
+    {% render 'deal-timer', card_product: card_product %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "t:name.product_media",
+  "tag": null,
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "t:content.product_media"
+    },
+    {
+      "type": "select",
+      "id": "media_aspect_ratio",
+      "label": "t:settings.ratio",
+      "options": [
+        {
+          "value": "portrait",
+          "label": "t:options.portrait"
+        },
+        {
+          "value": "square",
+          "label": "t:options.square"
+        },
+        {
+          "value": "adapt",
+          "label": "t:options.adapt"
+        }
+      ],
+      "default": "portrait"
+    },
+    {
+      "type": "checkbox",
+      "id": "secondary_image",
+      "label": "t:settings.secondaryimage"
+    },
+    {
+      "type": "header",
+      "content": "t:content.borders"
+    },
+    {
+      "type": "select",
+      "id": "border",
+      "label": "t:settings.style",
+      "options": [
+        {
+          "value": "none",
+          "label": "t:options.none"
+        },
+        {
+          "value": "solid",
+          "label": "t:options.solid"
+        }
+      ],
+      "default": "none"
+    },
+    {
+      "type": "range",
+      "id": "border_width",
+      "min": 1,
+      "max": 5,
+      "step": 1,
+      "unit": "px",
+      "label": "t:settings.thickness",
+      "default": 1,
+      "visible_if": "{{ block.settings.border != 'none' }}"
+    },
+    {
+      "type": "range",
+      "id": "border_opacity",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "label": "t:settings.opacity",
+      "default": 100,
+      "visible_if": "{{ block.settings.border != 'none' }}"
+    },
+    {
+      "type": "range",
+      "id": "border_radius",
+      "label": "t:settings.border_radius",
+      "min": 0,
+      "max": 30,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:name.product_media",
+      "category": "t:categories.product",
+      "settings": {}
+    }
+  ]
+}
+{% endschema %}

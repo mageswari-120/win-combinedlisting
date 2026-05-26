@@ -1,0 +1,80 @@
+<div class="{% if section.settings.full_width %} container-fluid {% else %} container {% endif %}{% if section.settings.inherit_color_scheme == false %}color-{{ section.settings.color_scheme }} gradient {% endif %}">
+  <div
+    class="top-bottom-spacing"
+    {% if settings.animation != blank %}
+      data-aos="{{ settings.animation}}"
+    {% endif %}
+    style="
+      --padding-top:{{ section.settings.padding-block-start }}px;
+      --padding-bottom:{{ section.settings.padding-block-end }}px;
+    "
+  >
+    {{ section.settings.custom_liquid }}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "t:name.custom_liquid",
+  "tag": "section",
+  "class": "section",
+ "disabled_on": {
+    "groups": ["custom.overlay", "header", "footer"]
+  },
+  "settings": [
+    {
+      "type": "liquid",
+      "id": "custom_liquid",
+      "label": "t:settings.custom_liquid",
+      "info": "t:info.custom_liquid"
+    },
+    {
+      "type": "checkbox",
+      "id": "full_width",
+      "label": "t:settings.full_width"
+    },
+    {
+      "type": "checkbox",
+      "id": "inherit_color_scheme",
+      "label": "t:settings.inherit_color_scheme",
+      "default": true
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:settings.color_scheme",
+      "default": "scheme-1",
+      "visible_if": "{{ section.settings.inherit_color_scheme == false }}"
+    },
+    {
+      "type": "header",
+      "content": "t:content.padding"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start",
+      "label": "t:options.top",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end",
+      "label": "t:options.bottom",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "default": 0
+    },
+  ],
+  "presets": [
+    {
+      "name": "t:name.custom_liquid"
+    }
+  ]
+}
+{% endschema %}

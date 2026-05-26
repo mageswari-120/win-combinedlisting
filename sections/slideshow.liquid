@@ -1,0 +1,486 @@
+{% liquid
+  assign height = ''
+  case section.settings.height
+    when 'small'
+      assign height = '600px'
+    when 'medium'
+      assign height = '700px'
+    when 'large'
+      assign height = '900px'
+    when 'adapt'
+      assign height = 'auto'
+    else
+      assign height = '900px'
+  endcase
+
+  assign loop_slide = section.settings.loop_slide
+  assign center_mode = section.settings.center_mode
+  assign slide_per_view = section.settings.slidesPerView
+
+  assign dots = false
+  if section.settings.style == 'dots'
+    assign dots = true
+  endif
+  assign auto_play = section.settings.auto_play
+  if section.settings.slider_effect == 'fade'
+    assign fade = true
+  else
+    assign fade = false
+  endif
+%}
+
+{% style %}
+          .swiper-pagination-clickable .swiper-pagination-bullet {
+            cursor: pointer;
+            opacity: 1;
+        }
+
+          {% if section.settings.height == 'adapt' %}
+            .slideshow.section-{{ section.id }}-padding .img-height, .slideshow.section-{{ section.id }}-padding .img-height video{
+            height: auto;
+          }
+            {% endif %}
+          {% if section.settings.height != 'adapt' %}
+             @media (min-width: 576px) {
+          .slideshow.section-{{ section.id }}-padding .swipper_banner{
+            min-height:{{ height | times: 0 | round: 0 }}px;
+          }
+          }
+          @media (max-width: 767px) {
+          .slideshow.section-{{ section.id }}-padding .img-height{
+            min-height:{{ height | times: 0.5 | round: 0 }}px;
+          }
+          }
+           @media (min-width: 768px) {
+          .slideshow.section-{{ section.id }}-padding .img-height{
+            min-height:{{ height | times: 0.7 | round: 0 }}px;
+          }
+          .slideshow.section-{{ section.id }}-padding .img-height video{ height:{{ height | times: 0.7 | round: 0 }}px; }
+          }
+           @media (min-width: 992px) {
+          .slideshow.section-{{ section.id }}-padding .img-height{
+            min-height:{{ height | times: 0.8 | round: 0 }}px;
+          }
+          .slideshow.section-{{ section.id }}-padding .img-height video{ height:{{ height | times: 0.8 | round: 0 }}px; }
+          }
+          @media (min-width: 1200px) {
+          .slideshow.section-{{ section.id }}-padding .img-height{
+            min-height:{{ height | times: 0.9 | round: 0 }}px;
+          }
+          .slideshow.section-{{ section.id }}-padding .img-height video{ height:{{ height | times: 0.9 | round: 0 }}px; }
+          }
+          @media (min-width: 1400px) {
+          .slideshow.section-{{ section.id }}-padding .img-height{
+            min-height:{{ height | times: 1.05 | round: 0 }}px;
+          }
+          .slideshow.section-{{ section.id }}-padding .img-height video{ height:{{ height | times: 1.05 | round: 0 }}px; }
+          }
+          {% endif %}
+        .swipper_banner,.banner-overlay{
+          grid-area:1/-1;
+        }
+         .swipper_banner{width:100%;}
+        @media screen and (max-width:767.98px){
+          {% if section.settings.height != 'adapt' %}
+          .slideshow.content_with_overlay.section-{{ section.id }}-padding .swipper_banner{   height:{{ height | times: 0.6 | round: 0 }}px !important; position:relative;}
+          .slideshow.content_with_overlay.section-{{ section.id }}-padding .slide-item .overlay{height:{{ height | times: 0.6 | round: 0 }}px;}
+        {% endif %}
+        .slideshow.section-{{ section.id }}-padding .img-height video{ height:{{ height | times: 0.6 | round: 0 }}px; min-height: 100%; }
+        }
+       .section-slideshow:has(.slider .swiper-wrapper:empty) {
+        display: none;
+    }
+    /* .slider.slideshow{background:transparent;} */
+      /* Fade slide visibility fix */
+  wdt-slideshow .slider .swiper-slide {
+    /* opacity: 0;
+    visibility: hidden; */
+    transition: opacity 0.6s ease;
+  }
+  wdt-slideshow .slider .swiper-slide.swiper-slide-active,
+  wdt-slideshow .slider .swiper-slide.swiper-slide-duplicate-active {
+    opacity: 1;
+    visibility: visible;
+  }
+  wdt-slideshow .slider .swiper-slide:last-child {
+    z-index: 2;
+    position: relative;
+  }
+  wdt-slideshow .slider .swiper-slide .hover-btn {
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+  wdt-slideshow .slider .swiper-slide.swiper-slide-active .hover-btn {
+    opacity: 1;
+  }
+
+  @media (max-width:575.98px){
+    .slideshow.section-{{ section.id }} .swiper-navigation{
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      left: 0;
+      gap:30px;
+      justify-content:center;
+      padding:10px 0;
+    }
+    .slideshow.section-{{ section.id }} .swiper-pagination{ padding:10px 0; }
+    .slideshow.section-{{ section.id }} .swiper-navigation .navigation_button{ margin:0; left:0; }
+    /* .slideshow .swiper-pagination, .slideshow.section-{{ section.id }} .swiper-navigation{ position:unset !important; } */
+  }
+  .slider.slideshow .swiper.slideshow_swiper  .placeholder-svg{ background: rgb(var(--color-foreground), 1);}
+{% endstyle %}
+
+<wdt-slideshow>
+  <div
+    class="section-{{ section.id }} slider slideshow section-{{ section.id }}-padding spacing-style  color-{{ section.settings.color_scheme }} {% if section.settings.mobile_layout ==  true %} content_with_overlay {% else %} content_without_overlay {% endif %}"
+    style="--padding-top:{{ section.settings.padding-block-start }}px; --padding-bottom:{{ section.settings.padding-block-end }}px;"
+  >
+    <div
+      class="swiper slideshow_swiper position-relative p-0 {% if section.settings.full_width %} container-fluid px-0 {% else %} container {% endif %}"
+      data-swiper-slider
+      data-slider-options='{
+        "loop": "{{ loop_slide }}",
+        "fade":"{{ fade }}",
+        "dots":"{{ dots }}",
+        "auto_play": "{{ auto_play }}"{% if section.settings.slider_effect != 'fade' %},{% endif %}
+        {% if section.settings.slider_effect != 'fade' %}
+        "mode":"{{ center_mode }}",
+        {% if section.settings.slider_effect != 'fade' and section.settings.center_mode %}
+        "slidePerview": {{ slide_per_view }}
+        {% else %}
+         "slidePerview": 1
+        {% endif %}
+        {% endif %}
+      }'
+    >
+      <div class="swiper-wrapper">
+        {% content_for 'blocks' %}
+      </div>
+      {%- if section.settings.style == 'arrow' -%}
+        {% render 'prev-next-controls',
+          settings: section.settings,
+          placement_selector: 'nav-testimonials',
+          nav_style: section.settings.nav_style
+        %}
+      {%- endif -%}
+
+      {%- if section.settings.style == 'dots' -%}
+        <div class="swiper-pagination mx-auto  position-absolute start-0 end-0 m-auto bottom-0"></div>
+      {%- endif -%}
+    </div>
+  </div>
+</wdt-slideshow>
+
+{% schema %}
+{
+  "name": "t:name.slideshow",
+  "tag": "section",
+  "class": "section section-slideshow",
+  "max_blocks": 5,
+  "disabled_on": {
+    "groups": ["header", "footer", "custom.overlay"]
+  },
+  "blocks": [{ "type": "_slide" }],
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "full_width",
+      "label": "t:settings.full_width",
+      "default": true
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:settings.color_scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "select",
+      "id": "height",
+      "label": "t:settings.height",
+      "options": [
+        {
+          "value": "small",
+          "label": "t:options.small"
+        },
+        {
+          "value": "medium",
+          "label": "t:options.medium"
+        },
+        {
+          "value": "large",
+          "label": "t:options.large"
+        },
+        {
+          "value": "adapt",
+          "label": "t:options.adapt"
+        }
+      ],
+      "default": "medium",
+      "info": "t:info.adapt_image"
+    },
+    {
+      "type": "header",
+      "content": "t:content.carousel_settings"
+    },
+    {
+      "type": "select",
+      "id": "slider_effect",
+      "options": [
+        {
+          "value": "slide",
+          "label": "t:options.slide"
+        },
+        {
+          "value": "fade",
+          "label": "t:options.fade_effect"
+        }
+      ],
+      "default": "slide",
+      "label": "t:settings.slider_effect"
+    },
+    {
+      "type": "checkbox",
+      "id": "center_mode",
+      "label": "t:settings.center_mode",
+      "default": false,
+      "visible_if": "{{ section.settings.slider_effect == 'slide' }}"
+    },
+    {
+      "type": "range",
+      "id": "slidesPerView",
+      "min": 1,
+      "max": 2,
+      "unit": "s",
+      "step": 0.1,
+      "label": "t:settings.slidesPerView",
+      "default": 1,
+      "visible_if": "{{ section.settings.center_mode == true and section.settings.slider_effect == 'slide' }}",
+    },
+    {
+      "type": "checkbox",
+      "id": "loop_slide",
+      "label": "t:settings.loop_slide",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "auto_play",
+      "min": 0,
+      "max": 5,
+      "unit": "s",
+      "step": 1,
+      "label": "t:settings.auto_play",
+      "default": 0
+    },
+    {
+      "type": "select",
+      "id": "style",
+      "options": [
+        {
+          "value": "arrow",
+          "label": "t:options.arrow"
+        },
+        {
+          "value": "dots",
+          "label": "t:options.dots"
+        },
+        {
+          "value": "none",
+          "label": "t:options.none"
+        },
+        
+      ],
+      "default": "arrow",
+      "label": "t:settings.style"
+    },
+    {
+      "type": "select",
+      "id": "border",
+      "label": "t:settings.border",
+      "options": [
+        {
+          "value": "none",
+          "label": "t:options.none"
+        },
+        {
+          "value": "solid",
+          "label": "t:options.solid"
+        }
+      ],
+      "default": "none",
+      "visible_if": "{{ section.settings.style == 'arrow' }}"
+    },
+    {
+      "type": "range",
+      "id": "border_width",
+      "min": 1,
+      "max": 5,
+      "step": 1,
+      "unit": "px",
+      "label": "t:settings.thickness",
+      "default": 1,
+      "visible_if": "{{ section.settings.border != 'none' and section.settings.style == 'arrow' }}"
+    },
+    {
+      "type": "range",
+      "id": "border_radius",
+      "label": "t:settings.border_radius",
+      "min": 0,
+      "max": 30,
+      "unit": "px",
+      "step": 1,
+      "default": 0,
+      "visible_if": "{{ section.settings.style == 'arrow' }}"
+    },
+    {
+      "type": "range",
+      "id": "border_opacity",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "label": "t:settings.opacity",
+      "default": 100,
+      "visible_if": "{{ section.settings.border != 'none'  and section.settings.style == 'arrow' }}"
+    },
+    {
+      "type": "checkbox",
+      "id": "inherit_color_scheme",
+      "label": "t:settings.inherit_color_scheme",
+      "default": true,
+      "visible_if": "{{ section.settings.style == 'arrow'  }}"
+    },
+    {
+      "type": "color_scheme",
+      "id": "pagination_color_scheme",
+      "label": "t:settings.color_scheme",
+      "default": "scheme-1",
+      "visible_if": "{{ section.settings.inherit_color_scheme == false and  section.settings.style == 'arrow' }}"
+    },
+    {
+      "type": "header",
+      "content": "t:content.mobile_layout"
+    },
+    {
+      "type": "checkbox",
+      "id": "mobile_layout",
+      "label": "t:settings.mobile_layout",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "t:content.padding"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start",
+      "label": "t:settings.top",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end",
+      "label": "t:settings.bottom",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "default": 0
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:name.slideshow",
+      "blocks": [
+        {
+          "type": "_slide",
+          "blocks": [
+            {
+              "type": "text",
+              "name": "t:name.heading",
+              "settings": {
+                "text": "<h2> Your Headline Goes Here </h2>",
+                "type_preset": "h2"
+              }
+            },
+            {
+              "type": "description",
+              "name": "t:name.text",
+              "settings": {
+                "text": "  Your content goes here  "
+              }
+            },
+            {
+              "type": "button",
+              "settings": {
+                "label": "Button label"
+              }
+            }
+          ]
+        },
+        {
+          "type": "_slide",
+          "blocks": [
+            {
+              "type": "text",
+              "name": "t:name.heading",
+              "settings": {
+                "text": "<h2> Your Headline Goes Here </h2>",
+                "type_preset": "h2"
+              }
+            },
+            {
+              "type": "description",
+              "name": "t:name.text",
+              "settings": {
+                "text": " Your content goes here "
+              }
+            },
+            {
+              "type": "button",
+              "settings": {
+                "label": "Button label"
+              }
+            }
+          ]
+        },
+        {
+          "type": "_slide",
+          "blocks": [
+            {
+              "type": "text",
+              "name": "t:name.heading",
+              "settings": {
+                "text": "<h2> Your Headline Goes Here </h2>",
+                "type_preset": "h2"
+              }
+            },
+            {
+              "type": "description",
+              "name": "t:name.text",
+              "settings": {
+                "text": " Your content goes here  "
+              }
+            },
+            {
+              "type": "button",
+              "settings": {
+                "label": "Button label"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

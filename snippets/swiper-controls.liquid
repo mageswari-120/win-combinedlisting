@@ -1,0 +1,23 @@
+{% if show_desktop_slider -%}
+  {% if settings.full_width %}        
+    {%- if settings.style == 'arrow' -%}
+      {% render 'prev-next-controls',
+        column_alignment: settings.column_alignment,
+        placement_selector: 'nav_right container',
+        title_class: 'container',
+        settings:settings 
+      %}
+    {%- endif -%}
+  {% else %}
+    {%- if settings.style == 'arrow' -%}
+      {% render 'prev-next-controls',
+        placement_selector: 'nav_right container',
+        column_alignment: settings.column_alignment,
+        settings:settings 
+      %}
+    {%- endif -%}
+  {% endif %}
+  {%- if settings.style == 'dots' -%}
+    <div class="swiper-pagination mx-auto mt-3"></div>
+  {%- endif -%}
+{%- endif -%}

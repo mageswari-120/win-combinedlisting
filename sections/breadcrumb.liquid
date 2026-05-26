@@ -1,0 +1,273 @@
+{%- style -%}
+
+.breadcrumb-section .card-img-overlay:before{
+      position: absolute;
+      content: "";
+      display: block;
+      width: 100%;
+      height: 100%;
+      left: 0;
+      top: 0;
+      z-index: 0;
+      background: rgba(var(--color-background));
+      opacity: {{ section.settings.image_overlay_opacity | divided_by: 100.0 }};
+  }
+  .breadcrumb li>a {
+    display:flex;
+    align-items:end;
+  }
+  /* .breadcrumb li>a::after {
+    content:url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-chevron-left" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0"/></svg>');
+    width:0.75em;
+    height:0.75em;
+    rotate:180deg;
+  } */
+{%- endstyle -%}
+
+{% assign breadcrumb_style = section.settings.breadcrumb_style | default: 'center' %}
+{% if breadcrumb_style == 'start' %}
+  {% assign text_alignment_class = 'text-start' %}
+  {% assign breadcrumb_style_class = 'justify-content-start' %}
+{% elsif breadcrumb_style == 'center' %}
+  {% assign text_alignment_class = 'text-center' %}
+  {% assign breadcrumb_style_class = 'justify-content-center' %}
+{% elsif breadcrumb_style == 'end' %}
+  {% assign text_alignment_class = 'text-end' %}
+  {% assign breadcrumb_style_class = 'justify-content-end' %}
+{% else %}
+  {% assign text_alignment_class = '' %}
+  {% assign breadcrumb_style_class = '' %}
+{% endif %}
+
+<div class="breadcrumb-section">
+  <div class="{% if section.settings.full_width %}container-fluid{% else %}container{% endif %} position-relative top-bottom-spacing color-{{ section.settings.color_scheme }} gradient"
+    style="
+      --padding-top:{{ section.settings.padding-block-start }}px;
+      --padding-bottom:{{ section.settings.padding-block-end }}px;
+    "
+     {% if settings.animation != blank %}
+        data-aos="{{ settings.animation}}"
+      {% endif %}
+  >
+    <div class="row {{ text_alignment_class }}">
+      {%- if section.settings.breadcrumb_image != blank -%}
+        <div class="card-img-overlay">
+          {{
+            section.settings.breadcrumb_image
+            | image_url: width: 1640
+            | image_tag: class: 'w-100 h-100 object-fit-cover'
+          }}
+        </div>
+      {%- endif -%}
+      <div class="position-relative ">
+        {% if template contains 'product' %}
+          {% if section.settings.use_breadcrumb_title %}
+            <h2>{{ product.title }}</h2>
+          {% endif %}
+          <ol class="breadcrumb {{ breadcrumb_style_class }} mb-0">
+            {% if collection %}
+              <li class="breadcrumb-item">
+                <a href="/" title="{{ 'general.breadcrumbs.home_link_title' | t }}">
+                  {{- 'general.breadcrumbs.home' | t -}}
+                </a>
+              </li>
+              {% if collection.handle %}
+                {% capture url %}/collections/{{ collection.handle }}{% endcapture %}
+                <li class="breadcrumb-item" aria-current="page">{{ collection.title | link_to: url }}</li>
+              {% endif %}
+            {% else %}
+              {% capture url %}/collections/all{% endcapture %}
+              <li class="breadcrumb-item " aria-current="page">
+                <a href="{{ url }}">{{ 'general.breadcrumbs.all' | t }}</a>
+              </li>
+            {% endif %}
+            <li class="breadcrumb-item active" aria-current="page">{{ product.title }}</li>
+          </ol>
+        {% elsif template contains 'collection' and collection.handle %}
+          {% if template == 'list-collections' %}
+            {% if section.settings.use_breadcrumb_title %}
+              <li class="breadcrumb-item" aria-current="page">{{ 'general.breadcrumbs.all_collections' | t }}</li>
+            {% endif %}
+          {% else %}
+            {% if section.settings.use_breadcrumb_title %}
+              <h2>{{ collection.title }}</h2>
+            {% endif %}
+            <ol class="breadcrumb {{ breadcrumb_style_class }} mb-0">
+              <li class="breadcrumb-item" aria-current="page">
+                <a href="/" title="{{ 'general.breadcrumbs.home_link_title' | t }}">
+                  {{- 'general.breadcrumbs.home' | t -}}
+                </a>
+              </li>
+              <li class="breadcrumb-item" aria-current="page">
+                <a href="/collections" title="{{ 'general.breadcrumbs.home_link_title' | t }}">
+                  {{- 'general.breadcrumbs.all_collections' | t -}}
+                </a>
+              </li>
+              {% if current_tags %}
+                {% capture url %}/collections/{{ collection.handle }}{% endcapture %}
+                <li class="breadcrumb-item active" aria-current="page">{{ collection.title | link_to: url }}</li>
+              {% else %}
+                <li class="breadcrumb-item active" aria-current="page">{{ collection.title }}</li>
+              {% endif %}
+            </ol>
+          {% endif %}
+        {% elsif template == 'blog' %}
+          {% if section.settings.use_breadcrumb_title %}
+            <h2>{{ blog.title }}</h2>
+          {% endif %}
+          <ol class="breadcrumb {{ breadcrumb_style_class }} mb-0">
+            <li class="breadcrumb-item" aria-current="page">
+              <a href="/" title="{{ 'general.breadcrumbs.home_link_title' | t }}">
+                {{- 'general.breadcrumbs.home' | t -}}
+              </a>
+            </li>
+            {% if current_tags %}
+              <li class="breadcrumb-item" aria-current="page">{{ blog.title | link_to: blog.url }}</li>
+            {% else %}
+              <li class="breadcrumb-item" aria-current="page">{{ blog.title }}</li>
+            {% endif %}
+          </ol>
+        {% elsif template == 'article' %}
+          {% if section.settings.use_breadcrumb_title %}
+            <h2>{{ article.title }}</h2>
+          {% endif %}
+          <ol class="breadcrumb {{ breadcrumb_style_class }} mb-0">
+            <li class="breadcrumb-item" aria-current="page">
+              <a href="/" title="{{ 'general.breadcrumbs.home_link_title' | t }}">
+                {{- 'general.breadcrumbs.home' | t -}}
+              </a>
+            </li>
+            <li class="breadcrumb-item" aria-current="page">{{ blog.title | link_to: blog.url }}</li>
+            <li class="breadcrumb-item" aria-current="page">{{ article.title }}</li>
+          </ol>
+        {% elsif template contains 'page' %}
+          {% if section.settings.use_breadcrumb_title %}
+            <h2>{{ page.title }}</h2>
+          {% endif %}
+          <ol class="breadcrumb {{ breadcrumb_style_class }} mb-0">
+            <li class="breadcrumb-item" aria-current="page">
+              <a href="/" title="{{ 'general.breadcrumbs.home_link_title' | t }}">
+                {{- 'general.breadcrumbs.home' | t -}}
+              </a>
+            </li>
+            <li class="breadcrumb-item" aria-current="page">{{ page.title }}</li>
+          </ol>
+        {% else %}
+          {% if template == 'list-collections' %}
+            {% if section.settings.use_breadcrumb_title %}
+              <h1>{{ 'general.breadcrumbs.all_collections' | t }}</h1>
+            {% endif %}
+          {% else %}
+            {% if section.settings.use_breadcrumb_title %}
+              <h2>{{ page_title }}</h2>
+            {% endif %}
+            <ol class="breadcrumb {{ breadcrumb_style_class }} mb-0">
+              <li class="breadcrumb-item" aria-current="page">
+                <a href="/" title="{{ 'general.breadcrumbs.home_link_title' | t }}">
+                  {{- 'general.breadcrumbs.home' | t -}}
+                </a>
+              </li>
+              <li class="breadcrumb-item">{{ page_title }}</li>
+            </ol>
+          {% endif %}
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "t:name.breadcrumb",
+  "disabled_on": {
+    "groups": ["footer", "custom.overlay", "header"]
+  },
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "full_width",
+      "label": "t:settings.full_width",
+      "default": false
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:settings.color_scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "image_picker",
+      "id": "breadcrumb_image",
+      "label": "t:settings.background"
+    },
+    {
+      "type": "checkbox",
+      "id": "use_breadcrumb_title",
+      "label": "t:settings.breadcrumb_title",
+      "default": true
+    },
+
+    {
+      "type": "select",
+      "id": "breadcrumb_style",
+      "label": "t:settings.alignment",
+      "default": "center",
+      "options": [
+        {
+          "value": "start",
+          "label": "t:options.left"
+        },
+        {
+          "value": "center",
+          "label": "t:options.center"
+        },
+        {
+          "value": "end",
+          "label": "t:options.right"
+        }
+      ]
+    },
+    {
+
+      "type": "range",
+      "id":"image_overlay_opacity",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "default": 0,
+      "label": "t:settings.background_overlay",
+    },
+    {
+      "type": "header",
+      "content": "t:content.padding"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start",
+      "label": "t:settings.top",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "default": 120
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end",
+      "label": "t:settings.bottom",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "default": 120
+    }
+  ],
+
+  "presets": [
+    {
+      "name": "t:name.breadcrumb"
+    }
+  ]
+}
+{% endschema %}

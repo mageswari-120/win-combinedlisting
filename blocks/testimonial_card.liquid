@@ -1,0 +1,302 @@
+{% liquid
+  assign vartical_alignment = 'align-items-' | append: block.settings.alignment
+  assign text_alignment = 'text-' | append: block.settings.alignment
+  assign video = block.settings.testimonial_video
+  assign placeholder_video = 'https://cdn.shopify.com/videos/c/o/v/fbb140fd46e3429eba459e1549dbbe38.mp4'
+%}
+
+<div class="swiper-slide h-auto " {{ block.shopify_attributes }}>
+  <div class="testimonial-card h-100 testimonial-card-{{ block.id }}">
+    <div
+      class="testimonial-block_3-0 h-100 overflow-hidden {% if block.settings.inherit_color == false %}color-{{ block.settings.color_scheme }}{% endif %} d-flex {% if block.settings.media == 'image' and block.settings.image_position == 'top' %} flex-column {% endif %} align-items-stretch border-style "
+      style="
+        {% render 'border-style', settings: block.settings %}
+         {% if block.settings.media != 'none' %}
+        gap: max(calc(var(--space-scale, 1.0) * {{ block.settings.grid_space }}px));
+        {% endif %}
+      "
+    >
+      <div class="d-none d-md-block h-100 image-video-card">
+        {% if block.settings.media == 'image' %}
+          <div class="testimonial-profile h-100 w-100 overflow-hidden ">
+            {% if block.settings.testimonial_image != blank %}
+              {{
+                block.settings.testimonial_image
+                | image_url: width: 3000
+                | image_tag: width: block.settings.testimonial_image.width, class: 'object-fit-cover image-block w-100 h-100 '
+              }}
+            {% else %}
+              <div class="placeholder-image h-100 w-100">
+                {{ 'image' | placeholder_svg_tag: 'image-placeholder-svg object-fit-contain' }}
+              </div>
+            {% endif %}
+          </div>
+        {% endif %}
+        {% if block.settings.media == 'video' %}
+          {% if block.settings.testimonial_video != blank %}
+            <div class="testimonial-video">
+              {{ video | video_tag: autoplay: true, loop: true, muted: true, controls: false }}
+            </div>
+          {% else %}
+              <div class=" video-placeholder h-100 w-100">
+                <video
+                  playsinline
+                  autoplay
+                  loop
+                  muted
+                  preload="metadata"
+                  class="w-100 h-100 object-fit-cover"
+                >
+                  <source src="{{ placeholder_video }}" type="video/mp4">
+                </video>
+            </div>
+          {% endif %}
+        {% endif %}
+      </div>
+      <div
+        class=" w-100 d-flex flex-column spacing-style {{ text_alignment }} {{ vartical_alignment }} justify-content-center"
+        style="
+          gap: max(calc(var(--space-scale, 1.0) * {{ block.settings.vertical_gap }}px));
+          {% render 'spacing-style', settings: block.settings %}
+        "
+      >
+        {% content_for 'blocks' %}
+      </div>
+    </div>
+  </div>
+</div>
+
+{% style %}
+  {%if block.settings.media != 'none' and block.settings.image_position != 'top' %}
+    .testimonial-card-{{ block.id }} .testimonial-block_3-0 .image-video-card { width: 80%; }
+    @media (max-width: 992px) {
+      .testimonial-card-{{ block.id }} .testimonial-block_3-0 .image-video-card { width: 50%; }
+    }
+    @media (min-width: 768px) {
+      .testimonial-card-{{ block.id }} .testimonial-block_3-0 { min-height: 420px; }
+    }
+  {%endif %}
+  {% if block.settings.media == 'image' and block.settings.image_position == 'left' %}
+    .testimonial-card-{{ block.id }} .testimonial-profile { max-width: 320px;   object-fit: cover; }
+    .testimonial-card-{{ block.id }} .testimonial-profile img { width: 100%; height: 100%; object-fit: cover; aspect-ratio: 3 / 4; }
+  {% endif %}
+    .testimonial-card-{{ block.id }} .testimonial-video { max-width: 320px;  object-fit: cover; }
+  {% if block.settings.media == 'image' and block.settings.image_position == 'top' %}
+    .testimonial-card-{{ block.id }} .testimonial-block_3-0 { padding-top: 15px; }
+    .testimonial-card-{{ block.id }} .testimonial-profile { height: 100%; width: 100%; }
+    .testimonial-card-{{ block.id }} .image-video-card { width: 80px; height: 80px; }
+    .testimonial-card-{{ block.id }} .testimonial-block_3-0 .image-video-card .testimonial-profile img { width: 100%; border-radius: {{block.settings.radius}}px; }
+  {% endif %}
+  .testimonial-card-{{ block.id }} .testimonial-block_3-0 .author-profile { height: 80px; width: 80px ; border-radius: 50%;  }
+  .testimonial-card-{{ block.id }} .testimonial-block_3-0 .image-video-card .my_video { max-height: 350px; min-width: 200px; }
+  .testimonial-card-{{ block.id }} .testimonial-video video { width: 100%; height: 100%; object-fit: cover; aspect-ratio: 9 / 18; }
+  .testimonial-card-{{ block.id }} .testimonial-video { height: 100%; }
+  .testimonial-card-{{ block.id }} .video-placeholder { aspect-ratio: 9 / 18; max-width: 320px; }
+  .testimonial-card-{{ block.id }} .shopify-block { width: fit-content; }
+  .testimonial-card-{{ block.id }} .testimonial-block_3-0 .image-video-card .testimonial-profile {  border-radius: {{block.settings.radius}}px; }
+{% endstyle %}
+
+{% schema %}
+{
+  "name": "t:name.card",
+  "tag": null,
+  "blocks": [
+    { "type": "text" },
+    { "type": "button" },
+    { "type": "custom-rating" },
+    { "type": "icon" },
+    { "type": "divider" },
+    { "type": "description" },
+    { "type": "testimonial_product" },
+    { "type": "author_name" },
+    { "type": "author-details" }
+  ],
+  "settings": [
+    {
+      "type": "header",
+      "content": "t:content.layout"
+    },
+    {
+      "type": "select",
+      "id": "media",
+      "label": "t:settings.media",
+      "options": [
+        { "value": "none", "label": "t:options.none" },
+        { "value": "image", "label": "t:options.image" },
+        { "value": "video", "label": "t:options.video" }
+      ],
+      "default": "image"
+    },
+    {
+      "type": "image_picker",
+      "id": "testimonial_image",
+      "label": "t:settings.image",
+      "visible_if": "{{block.settings.media == 'image' }}"
+    },
+    {
+      "type": "range",
+      "id": "radius",
+      "label": "t:settings.border_radius",
+      "min": 0,
+      "max": 50,
+      "step": 1,
+      "default": 0,
+      "unit": "px",
+      "visible_if": "{{block.settings.media == 'image' and block.settings.testimonial_image != blank }}"
+    },
+    {
+      "type": "video",
+      "id": "testimonial_video",
+      "label": "t:settings.video",
+      "visible_if": "{{block.settings.media == 'video' }}"
+    },
+    {
+      "type": "checkbox",
+      "id": "inherit_color",
+      "label": "t:settings.inherit_color_scheme",
+      "default": true
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:settings.color_scheme",
+      "visible_if": "{{block.settings.inherit_color == false }}"
+    },
+    {
+      "type": "select",
+      "id": "alignment",
+      "label": "t:settings.alignment",
+      "options": [
+        { "value": "start", "label": "t:options.left" },
+        { "value": "center", "label": "t:options.center" },
+        { "value": "end", "label": "t:options.right" }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "range",
+      "id": "grid_space",
+      "label": "t:settings.horizontal_gap",
+      "min": 0,
+      "max": 30,
+      "step": 1,
+      "default": 15,
+      "unit": "px",
+      "visible_if": "{{ block.settings.media != 'none' }}"
+    },
+    {
+      "type": "range",
+      "id": "vertical_gap",
+      "label": "t:settings.vertical_gap",
+      "min": 0,
+      "max": 30,
+      "step": 1,
+      "default": 15,
+      "unit": "px"
+    },
+    {
+      "type": "header",
+      "content": "t:settings.border"
+    },
+    {
+      "type": "select",
+      "id": "border",
+      "label": "t:settings.style",
+      "options": [
+        {
+          "value": "none",
+          "label": "t:options.none"
+        },
+        {
+          "value": "solid",
+          "label": "t:options.solid"
+        }
+      ],
+      "default": "none"
+    },
+    {
+      "type": "range",
+      "id": "border_width",
+      "min": 1,
+      "max": 5,
+      "step": 1,
+      "unit": "px",
+      "label": "t:settings.thickness",
+      "default": 1,
+      "visible_if": "{{ block.settings.border != 'none' }}"
+    },
+    {
+      "type": "range",
+      "id": "border_opacity",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "label": "t:settings.opacity",
+      "default": 100,
+      "visible_if": "{{ block.settings.border != 'none' }}"
+    },
+    {
+      "type": "range",
+      "id": "border_radius",
+      "label": "t:settings.border_radius",
+      "min": 0,
+      "max": 30,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+
+    {
+      "type": "header",
+      "content": "t:content.padding"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start",
+      "label": "t:settings.top",
+      "min": 0,
+      "max": 50,
+      "step": 1,
+      "unit": "px",
+      "default": 10
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end",
+      "label": "t:settings.bottom",
+      "min": 0,
+      "max": 50,
+      "step": 1,
+      "unit": "px",
+      "default": 10
+    },
+    {
+      "type": "range",
+      "id": "padding-inline-start",
+      "label": "t:settings.left",
+      "min": 0,
+      "max": 50,
+      "step": 1,
+      "unit": "px",
+      "default": 10
+    },
+    {
+      "type": "range",
+      "id": "padding-inline-end",
+      "label": "t:settings.right",
+      "min": 0,
+      "max": 50,
+      "step": 1,
+      "unit": "px",
+      "default": 10
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:name.card",
+      "blocks": [{ "type": "description" }, { "type": "custom-rating" }, { "type": "text" }]
+    }
+  ]
+}
+{% endschema %}

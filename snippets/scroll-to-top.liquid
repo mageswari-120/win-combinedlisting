@@ -1,0 +1,71 @@
+{%- style -%} 
+  .to-top {
+      position: fixed;
+      bottom: 70px;
+      right: 20px;
+      display: none;           
+      padding: 15px;
+      border-radius:50%;
+      cursor: pointer;
+      z-index: 1020;
+      width:60px;
+      height:60px;
+      align-items: center;
+      justify-content: center;
+      font-size: var(--bs-font-h4-size);
+    }
+    .to-top.show {
+      display: flex;
+    }
+ {%- endstyle -%} 
+{%- if settings.enable_scroll_to_top -%}
+  <a href="#header" id="to-top" class="color-scheme-1 to-top btn btn-primary" aria-label="{{ 'accessibility.scroll_to_top' | t }}" title="{{ 'accessibility.scroll_to_top' | t }}">   
+
+
+<svg  xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 100 100" xml:space="preserve">
+<path  d="M84.6,71.1L57.4,19.2c-3.1-5.9-10.3-6-13.5-0.2L15.5,70.2c-3.7,6.8,1.1,15.5,7.9,14.3l25.4-7.9
+	c0.9-0.2,1.7-0.1,2.6,0l25,8.5C83.1,86.5,88.2,77.9,84.6,71.1z" fill="rgb(var(--color-secondary-button-bg))"/>
+<path d="M90,67.8c3,5.8,2.4,12.3-0.4,17c-2.8,4.8-8.1,8.2-14.4,6.9l-0.4-0.1L50,83.2L24.8,91l-0.4,0.1c-6.3,1.1-11.6-2.5-14.3-7.3
+	c-2.7-4.8-3.1-11.3,0-17l28.4-51.2c5.6-10.2,18.9-10,24.3,0.3L90,67.8z M51.4,76.6l25,8.5c6.8,1.4,11.8-7.2,8.2-14.1L57.4,19.2
+	c-3.1-5.9-10.3-6-13.5-0.2L15.5,70.2c-3.7,6.8,1.1,15.5,7.9,14.3l25.4-7.9C49.6,76.4,50.5,76.4,51.4,76.6z"/>
+</svg>
+
+  
+  </a>
+{%- endif -%}  
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  var toTopButton = document.getElementById('to-top');
+
+  if (toTopButton) {
+    toTopButton.addEventListener('click', function (e) {
+      e.preventDefault();
+
+      var target = this.hash;
+      var targetElement = document.querySelector(target);
+
+      if (targetElement) {
+        window.scrollTo({
+          top: targetElement.offsetTop,
+          behavior: 'smooth'
+        });
+      }
+    });
+  }
+
+  window.addEventListener('scroll', function () {
+    var scroll = window.scrollY;
+    var toTopElements = document.querySelectorAll('.to-top');
+
+    toTopElements.forEach(function (element) {
+      if (scroll >= 800) {
+        element.classList.add('show');
+      } else {
+        element.classList.remove('show');
+      }
+    });
+  });
+});
+</script>
+
+

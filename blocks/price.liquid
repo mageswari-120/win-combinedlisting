@@ -1,0 +1,135 @@
+{% style %}
+  .price-block.price-block-{{ block.id }} s{
+    margin-left: 5px;
+    color: rgba(var(--color-heading),.3);
+    font-size: var(--bs-font-sm);
+  }
+{% endstyle %}
+{% liquid
+   
+
+  assign product = closest.product
+  assign current_variant = product.selected_or_first_available_variant
+%}
+
+<div class="price-block price-block-{{ block.id }}  size-style {{ alignment }} {{ block.settings.type_preset }} spacing-style"
+  style="{%- if block.settings.width == 'fit-content' -%} --desktop-style-width:{{- block.settings.width -}};
+    {%- elsif block.settings.width == '100%' -%} --desktop-style-width:100%; {%- endif -%}  {% render 'spacing-style', settings:block.settings %}"  {{ block.shopify_attributes }}>
+  {%- liquid
+    if product != blank
+      assign target = product.selected_or_first_available_variant
+    endif
+    if block.settings.compare_price
+    assign compare_at_price = target.compare_at_price
+    endif  
+    assign price = target.price | default: 1999
+     if settings.currency_code_enabled 
+    assign money_price = price | money_with_currency
+    else
+    assign money_price = price | money
+     endif  
+  -%}
+
+  <div class="d-flex flex-wrap {{ alignment }} align-items-center">
+    {{ money_price }}
+    {%- if compare_at_price -%}
+      {%if settings.currency_code_enabled %}
+      <s>{{ compare_at_price | money_with_currency }}</s>
+      {%else %}
+        <s>{{ compare_at_price | money}}</s>
+      {%endif %}
+    {%- endif -%}
+  </div>
+   <small class="unit-price {% if current_variant.unit_price_measurement == nil %} visually-hidden {% endif %}">
+        <span class="visually-hidden">{{ 'products.product.price.unit_price' | t }}</span>
+        <span class="price-item price-item--last">
+          <span>{{- current_variant.unit_price | money -}}</span>
+          <span aria-hidden="true">/</span>
+          <span class="visually-hidden">&nbsp;{{ 'accessibility.unit_price_separator' | t }}&nbsp;</span>
+          <span>
+            {%- liquid
+              if current_variant.unit_price_measurement.reference_value != 1
+                echo current_variant.unit_price_measurement.reference_value
+              endif
+              echo current_variant.unit_price_measurement.reference_unit
+            %}
+          </span>
+        </span>
+      </small>
+</div>
+
+{% schema %}
+{
+  "name": "t:name.price",
+  "tag": null,
+  "class": "price-block",
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "t:content.product_price"
+    },
+    {
+      "type": "checkbox",
+      "id":"compare_price",
+      "label": "t:settings.compare_price"
+    },
+    {
+      "type": "header",
+      "content": "t:content.appearance"
+    },
+    {
+      "type": "select",
+      "id": "type_preset",
+      "label": "t:content.typography",
+      "options": [
+        {
+          "value": "h5",
+          "label": "t:options.h5"
+        },
+        {
+          "value": "h6",
+          "label": "t:options.h6"
+        },
+        {
+          "value": "p",
+          "label": "t:options.p"
+        },
+       
+      ],
+      "default": "p",
+    },
+    {
+      "type": "header",
+      "content": "t:content.padding"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start",
+      "label": "t:settings.top",
+      "min": 0,
+      "max": 50,
+      "step": 1,
+      "unit": "px",
+      "default": 10
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end",
+      "label": "t:settings.bottom",
+      "min": 0,
+      "max": 50,
+      "step": 1,
+      "unit": "px",
+      "default": 10
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:name.price",
+      "category": "t:categories.product",
+      "settings": {
+      }
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,36 @@
+<div class="author_details author_details-{{ block.id }}  d-flex flex-xl-nowrap flex-wrap gap-3 align-items-start justify-content-start align-items-xl-center justify-content-xl-center" {{ block.shopify_attributes }}> 
+{% if block.settings.author_name != blank %}    
+<h6 class="mb-0">{{ block.settings.author_name }}</h6>
+{% endif %}
+{%if block.settings.verify_badge != blank %}
+    <p class="mb-0">{{ block.settings.verify_badge }}</p>
+    {%endif %}
+</div>
+
+{%style %}
+ .author_details h6 > p, h1, h3, h4, h5, h6 { margin-bottom: 0 !important; }
+{%endstyle %}
+
+{% schema %}
+{
+    "name": "t:name.author_name",
+    "tag": null,
+    "settings": [
+        {
+            "type": "richtext",
+            "id": "author_name",
+            "label": "t:settings.text"
+        },
+        {
+            "type": "inline_richtext",
+            "id": "verify_badge",
+            "label": "t:settings.text"
+        }
+    ],
+    "presets": [
+        {
+            "name": "t:name.author_name"
+        }
+    ]
+}
+{% endschema %}

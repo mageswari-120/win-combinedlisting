@@ -1,0 +1,27 @@
+<style>
+  .fake_counter_p  { align-items: center; display: flex; }
+  span.fake_counter_b i{ color: rgb(var(--color-foreground)); } 
+  span.fake_counter_b { position: relative; margin-right: 4px;display: flex;align-items: center; }
+  .icon svg{width:16px; height:16px;}
+  .fake_counter_b svg.icon.icon-eye { position: relative; top: 5px; bottom: 0; margin: auto;}
+  .fake_counter_p .fake_counter_b { display: flex; align-items: center; gap:10px; }
+  .fake_counter_b .icon {
+    width: 24px;
+    height: 24px;
+    background: rgb(var(--color-secondary-button-bg));
+    color: rgb(var(--color-secondary-button-text));
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: var(--bs-border-radius-3);
+}
+</style>
+<div class="fake_counter_p">
+  <div class="fake_counter_b"> 
+    <span class="icon">{% render 'eye-icon' %}</span> 
+    <div class="visitor_count">
+      <span id="dynamic_counter" class="fake_visitor_count m-0"></span> 
+      <span class="m-0">{{ settings.text | escape }}</span>
+    </div>
+  </div> 
+</div>

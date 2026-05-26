@@ -1,0 +1,51 @@
+<div class="social-proof-sales" 
+     data-minqty="{{ block.settings.minqty | escape }}"
+     data-maxqty="{{ block.settings.maxqty | escape }}"
+     data-item-sold="{{ block.settings.item_sold }}"
+     data-products="{{ block.settings.products }}"
+     data-hours="{{ block.settings.hours }}">
+  {% render 'icon-fire' %}
+  <div class="flash_total_qty"></div>
+  <div class="flash_in_hour"></div>
+</div>
+<script type="text/javascript">
+ function flashSoldBar() {
+  const wrapper = document.querySelector('.social-proof-sales');
+  if (!wrapper) return;
+
+  const minQty = parseInt(wrapper.dataset.minqty, 10);
+  const maxQty = parseInt(wrapper.dataset.maxqty, 10);
+  const itemSold = wrapper.dataset.itemSold;
+  const products = wrapper.dataset.products;
+  const hoursLabel = wrapper.dataset.hours;
+
+  const minTime = 6;
+  const maxTime = 24;
+
+  const qty = Math.floor(Math.random() * (maxQty - minQty + 1)) + minQty;
+  const time = Math.floor(Math.random() * (maxTime - minTime + 1)) + minTime;
+
+  const flashQtyElem = wrapper.querySelector('.flash_total_qty');
+
+  if (flashQtyElem) {
+    const qtyNode = document.createTextNode(qty + ' ');
+
+    const soldSpan = document.createElement('span');
+    soldSpan.textContent = itemSold + ' ';
+
+    const productSpan = document.createElement('span');
+    productSpan.textContent = products;
+
+    flashQtyElem.replaceChildren(qtyNode, soldSpan, productSpan);
+  }
+
+  const flashTimeElem = wrapper.querySelector('.flash_in_hour');
+  if (flashTimeElem) {
+    flashTimeElem.textContent = `${time} ${hoursLabel}`;
+  }
+}
+
+flashSoldBar();
+setInterval(flashSoldBar, 5000);
+</script>
+

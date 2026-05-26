@@ -1,0 +1,73 @@
+<div class="swiper-slide swiper-item">
+  <div
+    class="position-relative"
+    role="region"
+    aria-label="{{ 'sections.header.announcement' | t }}"
+    {{ block.shopify_attributes }}
+  >
+    {%- if block.settings.text != blank -%}
+      <p class="announcemenet_content d-flex justify-content-center flex-wrap gap-1 align-items-center mb-0 text-wrap text-{{ block.settings.text_transform }} {% if block.settings.primary_font == 'heading' %} heading_font{% endif %}">
+        {{ block.settings.text }}
+      </p>
+    {%- endif -%}
+  </div>
+</div>
+
+{% schema %}
+  {
+    "name": "t:name.announcement",
+    "tag":null,
+    "settings": [
+        {
+          "type": "inline_richtext",
+          "id": "text",
+          "default": "Welcome to our store",
+          "label": "t:settings.text"
+        },
+        {
+        "type": "header",
+        "content": "t:content.typography"
+      },
+      {
+        "type": "select",
+        "id": "primary_font",
+        "label": "t:settings.font",
+        "options": [
+          {
+            "value": "body",
+            "label": "t:options.body"
+          },
+          {
+            "value": "heading",
+            "label": "t:options.heading"
+          },
+        ]
+      },
+    {
+      "type": "select",
+      "id": "text_transform",
+      "label": "t:settings.testcase",
+      "options": [
+        {
+          "value": "rte",
+          "label": "t:options.default"
+        },
+        {
+          "value": "uppercase",
+          "label": "t:options.uppercase"
+        },
+        {
+          "value": "capitalize",
+          "label": "t:options.capitalize"
+        },
+        {
+          "value": "lowercase",
+          "label": "t:options.lowercase"
+        }
+      ],
+      "default": "capitalize"
+    },
+    ],
+    "presets": [{"name": "t:name.announcement"}]
+  }
+{% endschema %}

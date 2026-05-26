@@ -1,0 +1,386 @@
+{% liquid
+  assign menu = block.settings.menu
+  assign heading = block.settings.heading
+  assign heading_size = block.settings.heading_font_type
+  assign link_size = block.settings.link_font_type
+
+  if block.settings.inherit_color_scheme == false
+    assign color_scheme = block.settings.color_scheme | prepend: 'color-'
+  else
+    assign color_scheme = ''
+  endif
+
+  assign horizontal_alignment = 'align-items-sm-' | append: block.settings.horizontal_alignment
+  assign text_alignment = 'text-sm-' | append: block.settings.horizontal_alignment
+  assign horizontal_alignment_mobile = 'align-items-' | append: block.settings.horizontal_alignment_mobile
+  assign text_alignment_mobile = 'text-' | append: block.settings.horizontal_alignment_mobile
+%}
+{% style %}
+        .accordion.accordion--{{ block.id }}{
+        {% if block.settings.accordion_dividers %}
+        --bs-accordion-border-width:1px;
+        {% else %}
+          --bs-accordion-border-width:0px;
+        {% endif %}
+        {% if block.settings.accordion_icon == 'caret' %}
+        --bs-accordion-plus-icon:url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="%23000000"><path d="M480-344 240-584l56-56 184 184 184-184 56 56-240 240Z"/></svg>');
+       --bs-accordion-btn-active-icon:url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="%23000000"><path d="M480-528 296-344l-56-56 240-240 240 240-56 56-184-184Z"/></svg>');
+        {% endif %}
+        }
+
+      .menu .accordion.accordion--{{ block.id }} .accordion-item .accordion-header .accordion-button::after{
+         position:absolute;
+         right:0;
+      }
+      .menu .accordion.accordion--{{ block.id }} .accordion-item .accordion-header .accordion-button{
+        position:static;
+      }
+        .menu .link-block li a {
+          text-transform: capitalize;
+      }
+      .menu .link-block.link-block--{{ block.id }}{
+           align-content:{{ block.settings.content_alignment }} !important;
+      }
+
+    @media(max-width:576px){
+        .menu .link-block.link-block--{{ block.id }}, .menu .accordion.accordion--{{ block.id }} .accordion-item{
+           align-content:{{ block.settings.text_alignment_mobile }};
+      }
+    }
+{% endstyle %}
+
+<div class="menu {{ color_scheme }} spacing-style" style="{% render 'spacing-style', settings:block.settings %}">
+  {% if block.settings.show_as_accordion and block.settings.enable_title %}
+    <div class="accordion accordion--{{ block.id }} d-sm-none" id="Footer_menu" {{ block.shopify_attributes }}>
+      <div class="accordion-item  d-flex flex-column bg-transparent flex-wrap {{ horizontal_alignment_mobile }} {{ horizontal_alignment }} {{ text_alignment }} {{ text_alignment_mobile }} ">
+        <div class="accordion-header">
+          <button
+            class="accordion-button bg-transparent {{ heading_size }} p-0 mb-3 mb-md-0"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#footer-menu-{{ block.id }}"
+            aria-expanded="true"
+            aria-controls="collapseOne"
+          >
+            <h2 class="w-100 me-4 {{ heading_size }} {{ text_alignment_mobile }}">{{ heading | default: menu.title }}</h2>
+          </button>
+        </div>
+        <div
+          id="footer-menu-{{ block.id }}"
+          class="accordion-collapse collapse show me-4"
+          data-bs-parent="#Footer_menu"
+        >
+          <ul
+            class="accordion-body list-unstyled d-flex flex-column"
+            style="gap:max(3px, calc({{ block.settings.menu_spacing }}px * 1));"
+          >
+            {% for link in menu.links %}
+              <li>
+                <a href="{{ link.url }}" role="link" class="{{ link_size }}" aria-label="{{ link.title }}">
+                  {{- link.title -}}
+                </a>
+              </li>
+            {% endfor %}
+          </ul>
+        </div>
+      </div>
+    </div>
+  {% endif %}
+  <div
+    class="link-block link-block--{{ block.id }}  d-flex flex-column flex-wrap {{ horizontal_alignment_mobile }} {{ horizontal_alignment }} {{ text_alignment }} {{ text_alignment_mobile }} {% if block.settings.show_as_accordion and block.settings.enable_title %}d-none d-sm-flex {% endif %}"
+    {{ block.shopify_attributes }}
+  >
+    {% if block.settings.enable_title %}
+      <div class="{{ heading_size }} mb-md-3">{{ heading | default: menu.title }}</div>
+    {% endif %}
+    <ul
+      class="list-unstyled d-flex flex-wrap flex-column"
+      style="gap:max(3px, calc({{ block.settings.menu_spacing }}px * 1));"
+    >
+      {% for link in menu.links %}
+        <li>
+          <a href="{{ link.url }}" role="link" class="{{ link_size }}" aria-label="{{ link.title }}">
+            {{- link.title -}}
+          </a>
+        </li>
+      {% endfor %}
+    </ul>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "t:name.menu",
+  "tag": null,
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "inherit_color_scheme",
+      "label": "t:settings.inherit_color_scheme",
+      "default": true
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:settings.color_scheme",
+      "default": "scheme-1",
+      "visible_if": "{{ block.settings.inherit_color_scheme == false }}"
+    },
+    {
+      "type": "link_list",
+      "id": "menu",
+      "label": "t:settings.menu",
+      "default": "main-menu"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_title",
+      "label": "t:settings.enable_heading",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "t:settings.heading",
+      "visible_if": "{{ block.settings.enable_title == true }}",
+      "default": "main-menu"
+    },
+    {
+      "type": "header",
+      "content": "t:content.appearance"
+    },
+    {
+      "type": "select",
+      "id": "heading_font_type",
+      "label": "t:settings.menu-heading",
+      "default": "h4",
+      "options": [
+        {
+          "value": "rte",
+          "label": "t:options.default"
+        },
+        {
+          "label": "t:options.h3",
+          "value": "h3"
+        },
+        {
+          "label": "t:options.h4",
+          "value": "h4"
+        },
+        {
+          "label": "t:options.h5",
+          "value": "h5"
+        },
+        {
+          "label": "t:options.h6",
+          "value": "h6"
+        }
+      ],
+      "visible_if": "{{ block.settings.enable_title == true }}"
+    },
+    {
+      "type": "select",
+      "id": "link_font_type",
+      "label": "t:settings.menu-link",
+      "default": "p",
+      "options": [
+        {
+          "value": "rte",
+          "label": "t:options.default"
+        },
+        {
+          "label": "t:options.h4",
+          "value": "h4"
+        },
+        {
+          "label": "t:options.h5",
+          "value": "h5"
+        },
+        {
+          "label": "t:options.h6",
+          "value": "h6"
+        },
+        {
+          "label": "t:options.p",
+          "value": "p"
+        }
+      ]
+    },
+    {
+      "type": "checkbox",
+      "id": "show_as_accordion",
+      "label": "t:settings.show_as_accordion_mobile",
+      "default": false,
+      "visible_if": "{{ block.settings.enable_title == true }}"
+    },
+    {
+      "type": "select",
+      "id": "accordion_icon",
+      "label": "t:settings.icon",
+      "options": [
+        {
+          "value": "caret",
+          "label": "t:options.caret"
+        },
+        {
+          "value": "plus",
+          "label": "t:options.plus"
+        }
+      ],
+      "default": "caret",
+      "visible_if": "{{ block.settings.show_as_accordion == true and block.settings.enable_title == true }}"
+    },
+    {
+      "type": "checkbox",
+      "id": "accordion_dividers",
+      "label": "t:settings.dividers",
+      "default": false,
+      "visible_if": "{{ block.settings.show_as_accordion == true and block.settings.enable_title == true }}"
+    },
+    {
+      "type": "header",
+      "content": "t:content.layout"
+    },
+    {
+      "type": "select",
+      "id": "content_alignment",
+      "label": "t:settings.content_alignment",
+      "options": [
+        {
+          "value": "start",
+          "label": "t:options.left"
+        },
+        {
+          "value": "center",
+          "label": "t:options.center"
+        },
+        {
+          "value": "end",
+          "label": "t:options.right"
+        }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "select",
+      "id": "text_alignment_mobile",
+      "label": "t:settings.text_alignment_mobile",
+      "options": [
+        {
+          "value": "start",
+          "label": "t:options.left"
+        },
+        {
+          "value": "center",
+          "label": "t:options.center"
+        },
+        {
+          "value": "end",
+          "label": "t:options.right"
+        }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "select",
+      "id": "horizontal_alignment",
+      "label": "t:settings.alignment",
+      "options": [
+        {
+          "value": "start",
+          "label": "t:options.left"
+        },
+        {
+          "value": "center",
+          "label": "t:options.center"
+        },
+        {
+          "value": "end",
+          "label": "t:options.right"
+        }
+      ],
+      "default": "start"
+    },
+    {
+      "type": "select",
+      "id": "horizontal_alignment_mobile",
+      "label": "t:settings.mobile_alignment",
+      "options": [
+        {
+          "value": "start",
+          "label": "t:options.left"
+        },
+        {
+          "value": "center",
+          "label": "t:options.center"
+        },
+        {
+          "value": "end",
+          "label": "t:options.right"
+        }
+      ],
+      "default": "start"
+    },
+    {
+      "type": "range",
+      "id": "menu_spacing",
+      "label": "t:settings.gap",
+      "min": 0,
+      "max": 50,
+      "step": 1,
+      "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "header",
+      "content": "t:content.padding"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start",
+      "label": "t:settings.top",
+      "min": 0,
+      "max": 50,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end",
+      "label": "t:settings.bottom",
+      "min": 0,
+      "max": 50,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding-inline-start",
+      "label": "t:settings.left",
+      "min": 0,
+      "max": 50,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding-inline-end",
+      "label": "t:settings.right",
+      "min": 0,
+      "max": 50,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:name.menu",
+      "category": "t:categories.links"
+    }
+  ]
+}
+{% endschema %}

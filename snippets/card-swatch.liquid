@@ -1,0 +1,92 @@
+{% style %}
+ .card-swatch-block{cursor:pointer;}
+ .variant-swatch span.swatch{
+  transition: all .1s linear;
+ }
+ .variant-swatch:hover span.swatch {
+    transform: scale(.9);
+}
+.variant-option-color li.active .item-swatch{ border:{{ settings.variant_swatch_border_width }}px solid rgba(var(--color-foreground)) !important; }
+{% endstyle %}
+{%- for option in product.options_with_values -%}
+ 
+  {%- liquid
+    assign option_index = forloop.index0
+    assign option_name_handle = option.name | handleize   
+    assign compare_color_label = settings.map_color_option | default: "color" | downcase | split: "," 
+    assign option_count = 0
+-%} 
+
+  {%- if compare_color_label contains option_name_handle -%}
+    <ul class="variant-option-color list-unstyled list-group list-group-horizontal gap-2 flex-wrap {{ alignment }}">
+      {%- assign processed_values = '' -%}
+
+      {%- for variant in product.variants -%}
+        {%- assign variant_value = variant.options[option_index] -%}
+        {%- unless processed_values contains variant_value -%}
+          {%- assign processed_values = processed_values | append: variant_value | append: ',' -%}
+
+          <li class="variant-swatch item-swatch color-values {% if option_count > 4 %}show-on-click{% endif %} {% if forloop.first %}active{% endif %}" {% if option_count > 4 %}style="display:none"{% endif %} {% if settings.currency_code_enabled %} data-variant-price="{{ variant.price | money_with_currency }} {% else %} data-variant-price="{{ variant.price | money_with_currency }} {% endif %}" >
+            <item-swatch class="item-swatch swatch-element"
+              style="{% if settings.variant_swatch_border_width != 0 %}border:{{ settings.variant_swatch_border_width }}px solid rgba(var(--color-border),{{ settings.variant_swatch_border_opacity | divided_by: 100.0  }}); 
+              border-radius: {{ settings.variant_swatch_radius }}px; padding:3px; {% endif %} display:flex; position:relative; "
+              data-bs-toggle="tooltip"
+              data-bs-placement="top"
+              title="{{ variant_value | replace: '-', ' ' }}"
+            >
+            
+
+              {%- if settings.swatches == 'color' -%}               
+                <span
+                  class="swatch swatch--color "
+                  style="
+                    background-color: {{ variant_value.swatch.color }};
+                    width: {{ settings.variant_swatch_width }}px; height: {{ settings.variant_swatch_height }}px; display: flex; align-items:center; justify-content:center;
+                    border-radius: {{ settings.variant_swatch_radius }}px; 
+                    border: 2px solid rgba(var(--bs-border-color),1); 
+                  " 
+                  data-option-value="{{ variant_value | escape }}"
+                  data-image="{% if variant.image %}{{ variant.image | image_url: width: 1280 }}{% else %}{{ product.featured_media | image_url: width: 1280 }}{% endif %}"
+                >
+                </span>
+              {%- elsif settings.swatches == 'image' -%}                                
+                <span
+                  class="swatch swatch--image"
+                  style="
+                    background-image: url('{{ variant_value.variant.image | image_url: width: 50 }}');
+                    background-size: cover; background-position: center;
+                    width: {{ settings.variant_swatch_width }}px; height:  {{ settings.variant_swatch_height }}px; display: flex; align-items:center; justify-content:center;
+                    border-radius: {{ settings.variant_swatch_radius }}px; 
+                  "
+                  data-option-value="{{ variant_value | escape }}"
+                  data-image="{% if variant.image %}{{ variant.image | image_url: width: 1280 }}{% else %}{{ product.featured_media | image_url: width: 1280 }}{% endif %}"
+                >
+                </span>
+              {%- else -%}                
+                <span
+                  class="swatch swatch--default "
+                  style="
+                  width: {{ settings.variant_swatch_width }}px; height:{{ settings.variant_swatch_height }}px; 
+                   display: flex; align-items:center; justify-content:center;
+                  border-radius: {{ settings.variant_swatch_radius }}px; 
+                  background-color:{{ variant_value |handleize }}"
+                  title="{{ variant_value }}"
+                  data-option-value="{{ variant_value | escape }}"
+                  data-image="{% if variant.image %}{{ variant.image | image_url: width: 1280 }}{% else %}{{ product.featured_media | image_url: width: 1280 }}{% endif %}"
+                >
+                </span>
+              {%- endif -%}
+            </item-swatch>
+          </li>
+      {% assign option_count = option_count | plus : 1 %}
+        {%- endunless -%}
+      {%- endfor -%}
+     {% if option_count > 5 %}
+        <li class="color-values-plus" style="display:flex; align-items:center;">
+        <span class="plus-count">+{{option_count | minus: 5 }}</span>
+      </li>
+        {%- endif -%}
+    </ul>
+  {%- endif -%}
+{%- endfor -%}
+

@@ -1,0 +1,194 @@
+{% liquid
+  assign horizontal_alignment = 'align-items-sm-' | append: block.settings.horizontal_alignment
+  assign text_alignment = 'text-sm-' | append: block.settings.horizontal_alignment
+  assign horizontal_alignment_mobile = 'align-items-' | append: block.settings.horizontal_alignment_mobile
+  assign text_alignment_mobile = 'text-' | append: block.settings.horizontal_alignment_mobile
+%}
+<div
+  class="
+    contact-details overflow-hidden position-relative{% if block.settings.inherit_color_scheme != true %} color-{{ block.settings.color_scheme }}{% endif %}"
+  style="
+     {% render 'text-bg-space', settings: block.settings  %} 
+  "
+  {{ block.shopify_attributes }}
+>
+  <div
+    class="position-relative contact-details-block w-100 h-100 d-flex flex-column {{ horizontal_alignment_mobile }} {{ horizontal_alignment }} {{ text_alignment }} {{ text_alignment_mobile }} spacing-style gap-style"
+    style=" --gap-style: max(calc(var(--space-scale, 1.0) * {{ block.settings.grid_space }}px)); {% render 'spacing-style', settings:block.settings %}"
+  >
+
+    {% content_for 'blocks' %}
+  </div>
+</div>
+{% schema %}
+{
+  "name": "t:name.contact-details",
+  "tag": null,
+  "blocks": [{ "type": "text" },{"type": "description"} ,{"type": "icon-with-text"}, {"type": "footer-social-icon"}],
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "inherit_color_scheme",
+      "label": "t:settings.inherit_color_scheme",
+      "default": true
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:settings.color_scheme",
+      "default": "primary",
+      "visible_if": "{{ block.settings.inherit_color_scheme == false }}"
+    },
+    {
+      "type": "header",
+      "content": "t:content.layout"
+    },
+    {
+      "type": "select",
+      "id": "horizontal_alignment",
+      "label": "t:settings.alignment",
+      "options": [
+        {
+          "value": "start",
+          "label": "t:options.left"
+        },
+        {
+          "value": "center",
+          "label": "t:options.center"
+        },
+        {
+          "value": "end",
+          "label": "t:options.right"
+        }
+      ],
+      "default": "start"
+    },
+    {
+      "type": "select",
+      "id": "horizontal_alignment_mobile",
+      "label": "t:settings.mobile_alignment",
+      "options": [
+        {
+          "value": "start",
+          "label": "t:options.left"
+        },
+        {
+          "value": "center",
+          "label": "t:options.center"
+        },
+        {
+          "value": "end",
+          "label": "t:options.right"
+        }
+      ],
+      "default": "start"
+    },
+    {
+      "type": "range",
+      "id": "grid_space",
+      "min": 0,
+      "max": 50,
+      "step": 1,
+      "unit": "px",
+      "label": "t:settings.gap",
+      "default": 0
+    },
+    {
+      "type": "header",
+      "content": "t:content.padding"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start",
+      "label": "t:settings.top",
+      "min": 0,
+      "max": 50,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end",
+      "label": "t:settings.bottom",
+      "min": 0,
+      "max": 50,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding-inline-start",
+      "label": "t:settings.left",
+      "min": 0,
+      "max": 50,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding-inline-end",
+      "label": "t:settings.right",
+      "min": 0,
+      "max": 50,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:name.contact-details",
+      "category": "t:categories.layout",
+      "settings": {
+        "grid_space":12,
+      },
+      "blocks": [
+        {
+          "type": "text",
+          "settings": {
+            "text": "<h4>Contact details</h4>"
+          }
+        },
+        {
+          "type": "icon-with-text",
+          "settings": {
+            "icon":"phone",
+            "icon_text":"<p>Phone number</p>"
+          }
+        },
+        {
+          "type": "icon-with-text",
+          "settings": {
+            "icon":"email",
+            "icon_text":"<p>Email</p>"
+          }
+        },
+        {
+          "type": "icon-with-text",
+          "settings": {
+            "icon":"location",
+            "icon_text":"<p>Location</p>"
+          }
+        },
+        {
+          "type": "footer-social-icon",
+          "blocks": [
+            {
+              "type": "_social-link"
+            },
+            {
+              "type": "_social-link"
+            },
+            {
+              "type": "_social-link"
+            }
+          ]
+        }                        
+      ]
+    }
+  ]
+}
+{% endschema %}

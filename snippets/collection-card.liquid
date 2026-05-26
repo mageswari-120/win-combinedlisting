@@ -1,0 +1,28 @@
+<div class="collection-card position-relative  d-flex  flex-column w-100 h-100 border-style{% if block.settings.inherit_color_scheme == false %} color-{{ block.settings.color_scheme }}{% endif %}" style="{% render 'border-style', settings:block.settings %}">
+  
+  <a href="{{ collection.url }}" class="collection-link position-absolute inset-0"></a>
+ 
+  <div class="colection-image{% if settings.placement == 'on_image' %} position-absolute card-overlay{% endif %} w-100 h-100">
+   {{ collection-image }}
+  </div>
+  <div class="collection-details spacing-style position-relative d-flex flex-column w-100 h-100 {{ horizontal_alignment }} {{ vertical_position }}"
+    style="gap: max(calc(var(--space-scale, 1.0) * {{ block.settings.gap }}px));{% render 'spacing-style', settings: block.settings  %}">
+    
+       {{ blocks }}
+
+
+       <div class="collection_product_count"> 
+        {%- if block.settings.collection_count and collection.all_products_count.size -%}
+         <span> {{ 'sections.collection_list.count' | t: count: collection.all_products_count }}</span> 
+        {% else %}
+        <span> {{ 'sections.collection_list.count' | t: count: 0 }}</span> 
+        {% endif %}
+      </div>
+  </div>
+  
+</div>
+
+
+<style>
+  .collection-card{  aspect-ratio:var(--ratio); }
+</style>

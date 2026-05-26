@@ -1,0 +1,75 @@
+{%  assign product = closest.product %}
+{% assign product_form_id = 'quick-add-' | append: section.id | append: product %}
+<div
+  class="quick-add no-js-hidden d-flex product-varient {% if product.variants.size == 1 %} quick_addtocart {% endif %}"
+  tabindex="-1"
+>
+  {%- if product.variants.size == 1 -%}
+    <add-to-cart-form data-section-id="{{ section.id }}">
+      {%- form 'product',
+        product,
+        id: product_form_id,
+        class: 'form',
+        novalidate: 'novalidate',
+        data-type: 'add-to-cart-form'
+      -%}
+        <input
+          type="hidden"
+          name="id"
+          value="{{ product.selected_or_first_available_variant.id }}"
+          class="product-variant-id"
+          {% if product.selected_or_first_available_variant.available == false %}
+            disabled
+          {% endif %}
+          data-inventory-quantity="{{ product.selected_or_first_available_variant.inventory_quantity }}"
+          data-inventory-management="{{ product.selected_or_first_available_variant.inventory_management }}"
+          data-inventory-policy="{{ product.selected_or_first_available_variant.inventory_policy }}"
+        >
+
+        <button
+          id="{{ product_form_id }}-submit"
+          type="button"
+          name="add"
+          class="quick-add__submit quick-view-btn position-relative btn"
+          aria-haspopup="dialog"
+          aria-label="{{ product_form_id }}-submit"
+          aria-live="polite"
+          {% if product.selected_or_first_available_variant.available == false %}
+            data-sold-out-message="true"
+            disabled
+          {% endif %}
+          data-bs-toggle="tooltip"
+          data-bs-placement="left"
+          title="{{ 'products.product.add_to_cart' | t }}"
+        >
+          
+            {%- if product.selected_or_first_available_variant.available -%}
+              {% render 'cart-icon' %}
+            {%- else -%}
+              {% render 'soldout-icon' %}
+            {%- endif -%}
+         
+          <span class="sold-out-message visually-hidden">
+            {% render 'soldout-icon' %}
+          </span>
+          <span class="loader_icon position-absolute inset-0 m-auto d-flex justify-content-center align-items-center">{% render 'loader' %}</span>
+        </button>
+      {%- endform -%}
+    </add-to-cart-form>
+  {% endif %}
+  {% if product.variants.size > 1 %}
+    <button
+      type="button"
+      class="quick-view-btn position-relative"
+      data-product-url="{{ product.url | split: "?" | first }}"
+      aria-label="quick-buy-{{ product_form_id }}"
+      data-bs-toggle="tooltip"
+      data-bs-placement="left"
+      title="{{ 'products.product.quick_view' | t }}"
+    >
+      {% render 'eye-icon' %}
+      {% render 'cart-bag' %}
+      <span class="loader_icon position-absolute inset-0 m-auto d-flex justify-content-center align-items-center">{% render 'loader' %}</span>
+    </button>
+  {% endif %}
+</div>

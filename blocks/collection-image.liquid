@@ -1,0 +1,232 @@
+{% liquid
+  assign collection = closest.collection
+  assign collection_image = collection.image
+  if collection_image == blank
+    assign collection_image = collection.products.first.featured_image
+  endif
+  assign media_aspect_ratio = block.settings.aspect_ratio
+  assign sizes = '(min-width: 750px) 50vw, 100vw'
+  assign lazy_sizes = 'auto, ' | append: sizes
+  assign sizes = lazy_sizes
+
+  case media_aspect_ratio
+    when 'square'
+      assign media_aspect_ratio = 'ratio-1x1'
+    when 'portrait'
+      assign media_aspect_ratio = 'ratio-3x4'
+    when 'adapt'
+      assign media_aspect_ratio = 'ratio-auto'
+    when 'landscape'
+      assign media_aspect_ratio = 'ratio-4x3'
+    when 'circle'
+      assign media_aspect_ratio = 'ratio-1x1 circle'
+    else
+      assign media_aspect_ratio = 'ratio-1x1'
+  endcase
+%}
+
+{% if collection_image != blank %}
+  <div class="image-block position-relative collection-image-block h-100 border-style{% if block.settings.inherit_color_scheme == false %} color-{{ block.settings.color_scheme }}{% endif %} ratio {{ media_aspect_ratio }} overflow-hidden"
+    {% if collection_image.aspect_ratio == null %}
+      style=" --aspect-ratio:100%; {% render 'border-style', settings: block.settings %}"
+    {% else %}
+      style=" --aspect-ratio:{%- if collection_image -%}{{ 1 | divided_by: collection_image.aspect_ratio | times: 100 }}% {%- else -%} 100% {%- endif -%}; {% render 'border-style', settings: block.settings %}; 
+      --image_offset:{{ block.settings.image_offset }}px";
+    {% endif %}
+  >
+     <a href="{{ collection.url }}" class="collection-link position-absolute inset-0 z-1"></a>
+    {%- if block.settings.toggle_overlay -%}
+      {% render 'overlay', settings: block.settings %}
+    {%- endif -%}
+    {{
+      collection_image
+      | image_url: width: 3840
+      | image_tag:
+        width: block.settings.image.width,
+        widths: '375, 550, 750, 1100, 1500, 1780, 2000, 3000, 3840',
+        class: 'object-fit-cover image-block w-100 h-100',
+        height: block.settings.image.height,
+        class: 'collection-image w-100 h-100 object-fit-cover',
+        loading: 'lazy',
+        sizes: sizes
+    }}
+  </div>
+{% else %}
+  <div
+    class="image-block collection-card__image collection-image-placeholder ratio {{ media_aspect_ratio }} overflow-hidden border-style{% if block.settings.inherit_color_scheme == false %} color-{{ block.settings.color_scheme }}{% endif %}"
+    style="--image_offset:{{ block.settings.image_offset }}px; {% render 'border-style', settings: block.settings %}  --aspect-ratio:{%- if collection_image -%}{{ 1 | divided_by: collection_image.aspect_ratio | times: 100 }}% {%- else -%} 100% {%- endif -%};"
+  >
+    {%- if block.settings.toggle_overlay -%}
+      {% render 'overlay', settings: block.settings %}
+    {%- endif -%}
+    <img
+      src="{{ 'collection_placeholder.jpg' | asset_url }}"
+      class="placeholder w-100 h-100"
+      alt="collection_placeholder"
+    >
+  </div>
+{% endif %}
+
+{% stylesheet %}
+    .collection-image-block .overlay {
+      z-index: 1;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "t:name.collection_media",
+  "tag": null,
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "t:content.collection_image"
+    },
+    {
+      "type": "select",
+      "id": "aspect_ratio",
+      "label": "t:settings.ratio",
+      "options": [
+        {
+          "value": "adapt",
+          "label": "t:options.adapt"
+        },
+        {
+          "value": "portrait",
+          "label": "t:options.portrait"
+        },
+        {
+          "value": "square",
+          "label": "t:options.square"
+        },
+        {
+          "value": "landscape",
+          "label": "t:options.landscape"
+        },
+        {
+          "value": "circle",
+          "label": "Circle"
+        }
+      ],
+      "default": "portrait"
+    },
+    {
+      "type": "checkbox",
+      "id": "toggle_overlay",
+      "label": "t:settings.media_overlay"
+    },
+    {
+      "type": "color",
+      "id": "overlay_color",
+      "label": "t:settings.overlay_color",
+      "alpha": true,
+      "default": "#00000026",
+      "visible_if": "{{ block.settings.toggle_overlay }}"
+    },
+    {
+      "type": "select",
+      "id": "overlay_style",
+      "label": "t:settings.overlay_style",
+      "options": [
+        {
+          "value": "solid",
+          "label": "t:options.solid"
+        },
+        {
+          "value": "gradient",
+          "label": "t:options.gradient"
+        }
+      ],
+      "default": "solid",
+      "visible_if": "{{ block.settings.toggle_overlay }}"
+    },
+    {
+      "type": "select",
+      "id": "gradient_direction",
+      "label": "t:settings.gradient_direction",
+      "options": [
+        {
+          "value": "to top",
+          "label": "t:options.up"
+        },
+        {
+          "value": "to bottom",
+          "label": "t:options.down"
+        }
+      ],
+      "default": "to top",
+      "visible_if": "{{ block.settings.toggle_overlay and block.settings.overlay_style == 'gradient' }}"
+    },
+    {
+      "type": "header",
+      "content": "t:content.borders"
+    },
+    {
+      "type": "select",
+      "id": "border",
+      "label": "t:settings.style",
+      "options": [
+        {
+          "value": "none",
+          "label": "t:options.none"
+        },
+        {
+          "value": "solid",
+          "label": "t:options.solid"
+        }
+      ],
+      "default": "none"
+    },
+    {
+      "type": "range",
+      "id": "border_width",
+      "min": 0,
+      "max": 5,
+      "step": 1,
+      "unit": "px",
+      "label": "t:settings.thickness",
+      "default": 1,
+      "visible_if": "{{ block.settings.border != 'none' }}"
+    },
+    {
+      "type": "range",
+      "id": "border_opacity",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "label": "t:settings.opacity",
+      "default": 100,
+      "visible_if": "{{ block.settings.border != 'none' }}"
+    },
+    {
+      "type": "range",
+      "id": "border_radius",
+      "label": "t:settings.border_radius",
+      "min": 0,
+      "max": 30,
+      "step": 1,
+      "unit": "px",
+      "default": 0,
+      "visible_if": "{{ block.settings.aspect_ratio != 'circle' }}"
+    },
+    {
+      "type": "range",
+      "id": "image_offset",
+      "label": "Image offset",
+      "min": 0,
+      "max": 250,
+      "step": 5,
+      "default": 0,
+      "visible_if": "{{ block.settings.aspect_ratio == 'circle' }}"
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:name.collection_media",
+      "category": "collection",
+      "settings": {}
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,18 @@
+{%- if settings.width == 'fit-content' -%}
+--desktop-style-width: fit-content;
+{%- elsif settings.width == 'fill' -%}
+--desktop-style-width:100%;
+{%- else settings.width == 'custom' -%}
+--desktop-style-width:{{- settings.custom_width -}}%;
+{%- endif -%}
+
+{%- if settings.width_mobile == 'fit-content' -%}
+--mobile-style-width: fit-content;
+{%- elsif settings.width_mobile == 'fill' -%}
+--mobile-style-width:100%;
+{%- else settings.width_mobile == 'custom' -%}
+--mobile-style-width:{{- settings.custom_width_mobile -}}%;
+{%- endif -%}
+
+
+  

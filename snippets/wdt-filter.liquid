@@ -1,0 +1,1922 @@
+<style>
+         {% if collapse %}
+           .filter_item_label, .accordion-button{position:relative; }
+           .filter-item .filter_item_label:not(.collapsed){ padding-bottom: 0 !important; }
+         {% comment %} .filter_item_label:before{
+           content:"";
+           position:absolute;
+           width:10px;
+           height:10px;
+           /* background-image: url('data:image/svg+xml,<svg width="19" height="13" viewBox="0 0 19 13" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M1.15374 1.21571L1.15374 1.21571L1.15438 1.21503C1.5955 0.742834 2.18264 0.5 2.77556 0.5C3.36848 0.5 3.95561 0.742834 4.39673 1.21503L9.50061 6.67839L14.6032 1.21507L14.6039 1.21435C15.0457 0.743209 15.631 0.500001 16.2244 0.500001C16.8174 0.500001 17.4045 0.742834 17.8456 1.21503L17.8463 1.21571C18.2848 1.6869 18.5 2.29665 18.5 2.90062C18.5 3.50401 18.2851 4.11571 17.8457 4.58617C17.8456 4.58618 17.8456 4.58619 17.8456 4.5862L11.1219 11.7849L11.1212 11.7857C10.6794 12.2568 10.0941 12.5 9.50065 12.5C8.90773 12.5 8.3206 12.2572 7.87947 11.785L1.15438 4.5862C0.714876 4.11574 0.5 3.50403 0.5 2.90062C0.5 2.29665 0.715208 1.6869 1.15374 1.21571Z" fill="white" stroke="black"/></svg>'); */
+           /* -webkit-background-image: url('data:image/svg+xml,<svg width="19" height="13" viewBox="0 0 19 13" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M1.15374 1.21571L1.15374 1.21571L1.15438 1.21503C1.5955 0.742834 2.18264 0.5 2.77556 0.5C3.36848 0.5 3.95561 0.742834 4.39673 1.21503L9.50061 6.67839L14.6032 1.21507L14.6039 1.21435C15.0457 0.743209 15.631 0.500001 16.2244 0.500001C16.8174 0.500001 17.4045 0.742834 17.8456 1.21503L17.8463 1.21571C18.2848 1.6869 18.5 2.29665 18.5 2.90062C18.5 3.50401 18.2851 4.11571 17.8457 4.58617C17.8456 4.58618 17.8456 4.58619 17.8456 4.5862L11.1219 11.7849L11.1212 11.7857C10.6794 12.2568 10.0941 12.5 9.50065 12.5C8.90773 12.5 8.3206 12.2572 7.87947 11.785L1.15438 4.5862C0.714876 4.11574 0.5 3.50403 0.5 2.90062C0.5 2.29665 0.715208 1.6869 1.15374 1.21571Z" fill="white" stroke="black"/></svg>'); */
+           mask-image: url("data:image/svg+xml,%3Csvg version='1.1' id='Layer_1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' x='0px' y='0px' viewBox='0 0 100 100' style='enable-background:new 0 0 100 100;' xml:space='preserve'%3E%3Cpath d='M29.9,33c-1.2-1.3-2.9-2-4.5-2c-1.6,0-3.3,0.7-4.5,2c-1.2,1.3-1.9,3-1.9,4.8c0,1.7,0.6,3.5,1.9,4.8L45,68 c1.2,1.3,2.9,2,4.5,2c1.6,0,3.3-0.7,4.5-2l24.1-25.5c1.2-1.3,1.9-3,1.9-4.8c0-1.7-0.6-3.4-1.9-4.8c-1.2-1.3-2.9-2-4.5-2 c-1.6,0-3.3,0.7-4.5,2L49.5,53.7L29.9,33z'/%3E%3C/svg%3E%0A");
+           mask-position: center;
+           mask-repeat: no-repeat;
+           mask-size: contain;
+           background-color:currentcolor;
+           width: 1em;
+           height: 1em;
+           right: 0;
+           top: 10px;
+           /* bottom: 0;
+           margin: auto; */
+           font-size:20px;
+           transform: rotate(180deg);
+           transition:var(--bs-transition);
+           font-size: var(--bs-font-h5-size);
+         } {% endcomment %}
+
+         .filter_item_label:before, .filter_item_label:after, .accordion-button:before, .accordion-button:after{
+             content: "";
+             width: 12px;
+             height: 1px;
+             background-color: currentColor;
+             position: absolute;
+             transition: var(--bs-transition);
+             right: 0;
+             top: 0;
+             bottom: 0;
+             margin: auto;
+         }
+         .filter_item_label:not(.collapsed)::before,
+         .filter_item_label:not(.collapsed)::after{
+            transform: rotate(180deg);
+         }
+         .filter_item_label.collapsed:after{
+           transform: rotate(90deg);
+         }
+
+       {% endif %}
+
+     .filter-layout-vertical .collection_card :is(.card__inner) { width: 80px; }
+     .filter-layout-vertical .collection_card :is(.card-body) { width: calc(100% - 100px); }
+     .filter_layout-drawer .collection_card :is(.card__inner){ width: calc(100% - 140px); }
+     .filter-layout-horizontal .collection_card :is(.card__inner) { width: 70px; }
+     .filter-layout-horizontal .collection_card :is(.card-body) { width: calc(100% - 100px); }
+     .filter-item :is(.product_media) { border-radius: {{ settings.filter_collection_radius }}px; }
+     .dropdown-menu.size_group :is(.count), .filter-options.size_group :is(.count), .swatch_group :is(.count),
+     .filter-options.size_group li.facets__item input[type=checkbox]:checked:after,
+     .filter-options.size_group li.facets__item input[type=checkbox]:checked:before{
+         display: none;
+     }
+       .facets-horizontal .filter-item.dropdown .dropdown-menu.size_group li.dropdown-item:hover label,
+       .filter-options.size_group li.facets__item:hover label,
+       .filter-options.size_group li.facets__item:has(input[type=checkbox]:checked) label{
+           background: rgba(var(--color-secondary-button-bg));
+           color: rgba(var(--color-secondary-button-text));
+       }
+       .filter-options.size_group li.facets__item:has(input[type=checkbox]:disabled) label {
+           background: rgba(var(--color-heading) , .1);
+           color: inherit;
+       }
+       .filter-options.size_group li.facets__item:has(input[type=checkbox]:disabled) label:after {
+           content: '';
+           position: absolute;
+           inset: 0;
+           background: linear-gradient(to bottom right, transparent calc(50% - 1px), rgb(var(--color-heading),.2) 50%, transparent calc(50% + 1px)) no-repeat;
+       }
+
+       .filter-options.size_group, .dropdown-menu.size_group.show{
+       display: flex;
+       flex-direction: row;
+       flex-wrap:wrap;
+       gap:10px;
+       }
+       .dropdown-menu.size_group li{ padding:0 !important; margin:0 !important; }
+       .filter-options.size_group li.facets__item label, .facets-horizontal .filter-item.dropdown .dropdown-menu.size_group li.dropdown-item label{
+           padding: 10px 15px;
+           border: {{ swatch_style.variant_swatch_border_width }}px solid rgba(var(--color-border),{{ swatch_style.variant_swatch_border_opacity | divided_by: 100.0  }});
+           transition: var(--bs-transition);
+           border-radius: var(--bs-border-radius-3);
+           cursor: pointer;
+       }
+       .facets-horizontal .filter-item.dropdown .dropdown-menu.size_group li.dropdown-item input[checked] ~ label {
+       background: rgb(var(--color-secondary-button-bg));
+       color: rgb(var(--color-secondary-button-text));
+   }
+   .facets-horizontal .filter-item.dropdown .dropdown-menu.size_group li.dropdown-item input[type="checkbox"]:checked::after{ display: none; }
+
+
+  .rating-wrapper {
+     width: 100%;
+     gap: var(--gap-xs);
+     flex-wrap: wrap;
+   }
+   .rating-wrapper,
+   .rating {
+     display: flex;
+     align-items: center;
+   }
+   .rating svg {
+       font-size: 10px;
+   }
+   .rating-wrapper.justify-right {
+     flex-direction: row-reverse;
+   }
+
+   .rating {
+     gap: var(--gap-3xs);
+   }
+
+   .rating-wrapper .rating-text,
+   .rating-wrapper .rating-count,
+   .rating-wrapper .rating-count-separator {
+     color: var(--star-fill-color);
+     margin: 0;
+     white-space: nowrap;
+   }
+
+   .rating-count-separator {
+     opacity: 0.2;
+     padding-left: calc(var(--padding-xs) / 2);
+     padding-right: var(--padding-xs);
+   }
+
+   .stars {
+     height: var(--star-size);
+     fill: var(--empty-star-fill-color);
+   }
+
+   .filled-star {
+     fill: var(--star-fill-color);
+   }
+</style>
+
+{% liquid
+  if template == 'search'
+    assign filters = search.filters
+  else
+    assign filters = collection.filters
+  endif
+
+  assign aspect_ratio = ''
+  case settings.aspect_ratio
+    when 'square'
+      assign aspect_ratio = 'ratio-1x1'
+    when 'portrait'
+      assign aspect_ratio = 'ratio-3x4'
+    when 'landscape'
+      assign aspect_ratio = 'ratio-4x3'
+    when 'adapt'
+      assign aspect_ratio = 'ratio-auto'
+    else
+      assign aspect_ratio = 'ratio-1x1'
+  endcase
+
+  
+%}
+
+<product-filters>
+  <div
+    class="facets-container justify-content-between border-0  {% if layout == 'vertical' or layout == 'horizontal' %}filter_layout-canvas-triggered{% endif %} {% if collection.products.size == 0 %}d-none{% endif %}"
+    id="fliter-accordion"
+    tabindex="-1"
+  >
+    {% if layout == 'vertical' or layout == 'horizontal' %}
+      <!-- Offcanvas button for mobile view -->
+      <button
+        class="facts__drawer d-block d-xl-none border-0 {% if settings.inherit_color_scheme %} color-{{ settings.filter_color_scheme }}{% else %} color-{{ settings.offcanvas_color_scheme }} {% endif %} "
+        type="button"
+        data-bs-toggle="offcanvas"
+        data-bs-target="#filtersOffcanvas"
+        aria-controls="filtersOffcanvas"
+        tabindex="0"
+      >
+        {% render 'icon-filter' %}
+        {{ 'products.facets.filter_button' | t }}
+      </button>
+
+      <!-- Offcanvas for mobile view start -->
+      <div
+        class="mobile-canvas offcanvas filter_layout-drawer offcanvas-start {% if block.settings.inherit_color_scheme %}color-{{ block.settings.filter_color_scheme }} {% else %} color-{{ settings.offcanvas_color_scheme }} {% endif %}"
+        tabindex="-1"
+        id="filtersOffcanvas"
+        aria-labelledby="filtersOffcanvasLabel"
+        data-canvas-type="mobile"
+      >
+        <div class="offcanvas-header border-bottom justify-content-between">
+          <h3 class="offcanvas-title h5" id="filtersOffcanvasLabel">{{ 'products.facets.filter_button' | t }}</h3>
+          <button
+            id="filterClose"
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="offcanvas"
+            aria-label="Close"
+          >
+            {% render 'cancel.svg' %}
+          </button>
+        </div>
+        <div class="offcanvas-body">
+    {% endif %}
+    <!-- Filters form (shown in mobile view inside the offcanvas) -->
+    <form id="FacetFiltersFormMobile" class="FacetFiltersForm FacetFiltersFormMobile d-block d-xl-none">
+      {% if template == 'search' %} <input type="hidden" name="q" value="{{ search.terms }}">{% endif %}
+      <div class="filters-container filter-layout-{{ layout }}">
+        {%- for filter in filters -%}
+          {% liquid
+            if filter.presentation == 'image'
+              assign show_more_count = 20
+            else
+              assign show_more_count = 10
+            endif
+
+            assign filter_var = filter.label | handleize
+            assign filter_name = ''
+            case filter_var
+              when 'size'
+                assign filter_name = 'size_group'
+              when 'color'
+                assign filter_name = 'swatch_group'
+            endcase
+          %}
+          <div
+            class="presentation-method-{{ filter.presentation }} filter-panel filter-item"
+            data-filter-label="{{ filter.label | handleize }}"
+          >
+            {% comment %} <h4 class="mb-0" id="{{ filter.label | handleize }}">{{ filter.label }}</h4> {% endcomment %}
+            {% if collapse %}
+              <h4 class="mb-0">
+                <button
+                  class="filter_item_label pe-4 ps-0 h6 m-0 bg-transparent border-0 w-100 d-flex gap-2"
+                  data-bs-toggle="collapse"
+                  data-bs-target="#{{ filter.label | handleize }}"
+                  aria-expanded="false"
+                  aria-controls="{{ filter.label | handleize }}"
+                  type="button"
+                >
+                  {{ filter.label }}
+
+                  {%- assign selected_count = 0 -%}
+                  {%- if filter.type == 'boolean' -%}
+                    {%- if filter.true_value.active -%}
+                      {%- assign selected_count = selected_count | plus: 1 -%}
+                    {%- endif -%}
+                    {%- if filter.false_value.active -%}
+                      {%- assign selected_count = selected_count | plus: 1 -%}
+                    {%- endif -%}
+                  {%- elsif filter.type == 'list' -%}
+                    {%- for value in filter.values -%}
+                      {%- if value.active -%}
+                        {%- assign selected_count = selected_count | plus: 1 -%}
+                      {%- endif -%}
+                    {%- endfor -%}
+                  {%- endif -%}
+
+                  {%- if selected_count > 0 -%}
+                    <span class="total-filter-count">{{ selected_count }}</span>
+                  {%- endif -%}
+                </button>
+              </h4>
+            {% else %}
+              <h4 class="h6" id="{{ filter.label | handleize }}">{{ filter.label }}</h4>
+            {% endif %}
+            <div>
+              {%- case filter.type -%}
+                {%- when 'boolean' -%}
+                  <ul
+                    class="filter-options list-group pt-4 {% if collapse %}collapse show{% endif %} {{ filter_name }}"
+                    aria-labelledby="{{ filter.label | handleize }}"
+                    {%- if collapse %}
+                      id="{{ filter.label | handleize }}"
+                    {% endif -%}
+                  >
+                    <li class="facets__item">
+                      <input
+                        type="checkbox"
+                        name="{{ filter.param_name }}"
+                        value="{{ filter.true_value.value }}"
+                        id="Filter-{{ filter.param_name }}-{{ filter.true_value.value }}"
+                        {% if filter.true_value.active -%}
+                          checked
+                        {%- endif %}
+                        {% if filter.true_value.count == 0 and filter.true_value.active == false -%}
+                          disabled
+                        {%- endif %}
+                        tabindex="0"
+                      >
+                      <label
+                        for="Filter-{{ filter.param_name }}-{{ filter.true_value.value }}"
+                        class="facet-checkbox {% if filter.param_name contains 'tag' %} h6 mb-0{% endif %}"
+                      >
+                        <svg
+                          aria-hidden="true"
+                          class="icon icon-checkmark"
+                          width="1.1rem"
+                          height="0.7rem"
+                          viewBox="0 0 11 7"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path d="M1.5 3.5L2.83333 4.75L4.16667 6L9.5 1" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" />
+                        </svg>
+                        {{- filter.true_value.label }}
+                      </label>
+                    </li>
+                    <li>
+                      <input
+                        type="checkbox"
+                        name="{{ filter.param_name }}"
+                        value="{{ filter.false_value.value }}"
+                        id="Filter-{{ filter.param_name }}-{{ filter.false_value.value }}"
+                        {% if filter.false_value.active -%}
+                          checked
+                        {%- endif %}
+                        {% if filter.false_value.count == 0 and filter.false_value.active == false -%}
+                          disabled
+                        {%- endif %}
+                      >
+                      <label
+                        for="Filter-{{ filter.param_name }}-{{ filter.false_value.value }}"
+                        class="facet-checkbox {% if filter.param_name contains 'tag' %} h6 mb-0{% endif %}"
+                      >
+                        <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <rect x="1" y="1" width="16" height="16" rx="8" stroke="black" stroke-width="2"/>
+                        </svg>
+
+                        <svg
+                          aria-hidden="true"
+                          class="icon icon-checkmark"
+                          width="1.1rem"
+                          height="0.7rem"
+                          viewBox="0 0 11 7"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path d="M1.5 3.5L2.83333 4.75L4.16667 6L9.5 1" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" />
+                        </svg>
+                        {{- filter.false_value.label }}
+                      </label>
+                    </li>
+                  </ul>
+                {%- when 'list' -%}
+                  <div
+                    class="{% if collapse %}collapse show{% endif %} {% if filter.values.size > show_more_count %} show_more_count{% endif %}"
+
+                    {% if collapse %}
+                      id="{{ filter.label | handleize }}"
+                    {% endif %}
+                    aria-labelledby="{{ filter.label | handleize }}"
+                  >
+                    {% liquid
+                      assign filter_var = filter.label | handleize
+                      assign filter_name = ''
+                      case filter_var
+                        when 'size'
+                          assign filter_name = 'size_group'
+                        when 'color'
+                          assign filter_name = 'swatch_group'
+                      endcase
+                    %}
+
+                    <ul
+                      class="filter-options list-group facets-wrap pt-3 {% if show_more_count > 10 %}pb-2{% endif %} {% if filter.presentation == 'swatch' %}swatch{% endif %} {{ filter_name }}"
+                      aria-labelledby="{{ filter.label | handleize }}"
+                    >
+                      {%- for filter_value in filter.values -%}
+                        <li class="facets__item {% if forloop.index > show_more_count %} show-more-item hidden{% endif %}">
+                          <input
+                            type="checkbox"
+                            name="{{ filter_value.param_name }}"
+                            value="{{ filter_value.value }}"
+                            id="Filter-{{ filter.param_name }}-{{ forloop.index }}-mobile"
+                            {% if filter_value.active -%}
+                              checked
+                            {%- endif %}
+                            {% if filter_value.count == 0 and filter_value.active == false -%}
+                              disabled
+                            {%- endif %}
+                          >
+                          <label
+                            for="Filter-{{ filter.param_name }}-{{ forloop.index }}-mobile"
+                            class="facet-checkbox {% if filter.param_name contains 'tag' %} h6 mb-0{% endif %} {% if filter.presentation == 'swatch' %}swatch_group{% endif %} {{ filter_name }}"
+                          >
+                            {% if filter.presentation == 'image' %}
+                              <div class="presentation-image filter-image-wrapper">
+                                {% if filter_value.image %}
+                                  {{
+                                    filter_value.image
+                                    | image_url: width: 50
+                                    | image_tag: class: 'filter-image rounded', alt: filter_value.alt
+                                  }}
+                                {% endif %}
+                              </div>
+                            {% elsif filter.presentation == 'swatch' %}
+                              <span
+                                class="presentation-swatch swatch d-inline-block position-relative"
+                                style="
+                                  width: {{ swatch_style.variant_swatch_width}}px;
+                                  height: {{ swatch_style.variant_swatch_height}}px;
+                                  background-color: {{ filter_value.swatch.color }};
+                                  background-image: {% if filter_value.swatch.image %}url('{{ filter_value.swatch.image | image_url: width: 50 }}'){% endif %};
+                                  background-size: cover;
+                                  background-position: center;
+                                  border: var(--border-width) solid rgba(var(--bs-border-color),1);
+                                  border-radius: {{ swatch_style.variant_swatch_radius }}px;
+                                "
+                              ></span>
+                            {% endif %}
+
+                            <span class="tool_tip label">
+                              {{ filter_value.label }}
+                              {%- if show_filter_count -%}
+                                <span class="count"> ({{ filter_value.count }}) </span>
+                              {%- endif -%}
+                            </span>
+                          </label>
+                        </li>
+                      {%- endfor -%}
+                    </ul>
+                    {%- if filter.values.size > show_more_count -%}
+                      <show-more-button>
+                        <button
+                          class="button-show-more link underlined-link bg-transparent border-0 p-0 mt-1"
+                          id="Show-More-{{ forloop.index }}-{{ section.id }}"
+                          type="button"
+                        >
+                          <span class="label-show-more label-text text-decoration-underline">
+                            {{- 'products.facets.show_more' | t -}}
+                          </span>
+                          <span class="label-show-less label-text text-decoration-underline hidden">
+                            {{- 'products.facets.show_less' | t -}}
+                          </span>
+                        </button>
+                      </show-more-button>
+                    {%- endif %}
+                  </div>
+                {%- when 'price_range' -%}
+                  <price-range
+                    class="filter-options list-group {% if collapse %}collapse show{% endif %}"
+                    aria-labelledby="{{ filter.label | handleize }}"
+                    {% if collapse %}
+                      id="{{ filter.label | handleize }}"
+                    {% endif %}
+                  >
+                    <div class="pt-3">
+                      {%- assign prices = collection.products | map: 'price' | sort -%}
+                      {%- assign max_price_raw = prices | last -%}
+                      {%- if uses_comma_decimals -%}
+                        {%- assign max_price_boundary = max_price_raw
+                          | money_without_currency
+                          | replace: '.', ''
+                          | replace: ',', '.'
+                          | strip
+                        -%}
+                      {%- else -%}
+                        {%- assign max_price_boundary = max_price_raw
+                          | money_without_currency
+                          | replace: ',', ''
+                          | strip
+                        -%}
+                      {%- endif -%}
+                      {%- if filter.min_value.value -%}
+                        {%- assign current_min_handle = filter.min_value.value
+                          | money_without_currency
+                          | replace: ',', '.'
+                          | strip
+                        -%}
+                      {%- else -%}
+                        {%- assign current_min_handle = 0 -%}
+                      {%- endif -%}
+
+                      {%- if filter.max_value.value -%}
+                        {%- assign current_max_handle = filter.max_value.value
+                          | money_without_currency
+                          | replace: ',', '.'
+                          | strip
+                        -%}
+                      {%- else -%}
+                        {%- assign current_max_handle = max_price_boundary -%}
+                      {%- endif -%}
+                      <div class="facets__selected">
+                        <span>{{ cart.currency.iso_code }}</span>
+                      </div>
+
+                      <div class="default-fields d-flex align-items-center gap-2 w-100">
+                        <div class="field_input border overflow-hidden d-flex w-100">
+                          <span class="field-currency align-self-center ms-3">{{ cart.currency.symbol }}</span>
+                          <input
+                            name="{{ filter.min_value.param_name }}"
+                            id="Filter-{{ filter.label | escape }}-GTE"
+                            class="form-control shadow-none field__input_min border-0"
+                            type="number"
+                            placeholder="0"
+                            min="0"
+                            max="{{ max_price_boundary }}"
+                          >
+                          <label for="Filter-{{ filter.label | escape }}-GTE" class="visually-hidden">
+                            {{- 'products.facets.from' | t -}}
+                          </label>
+                        </div>
+
+                        <svg width="10" height="2" viewBox="0 0 10 2" fill="none">
+                          <path d="M10 0.5L10 1.5L-4.37114e-08 1.5L0 0.5L10 0.5Z" fill="#666"></path>
+                        </svg>
+
+                        <div class="field_input border overflow-hidden d-flex w-100">
+                          <span class="field-currency align-self-center ms-3">{{ cart.currency.symbol }}</span>
+                          <input
+                            name="{{ filter.max_value.param_name }}"
+                            id="Filter-{{ filter.label | escape }}-LTE"
+                            class="form-control shadow-none field__input_max border-0 "
+                            type="number"
+                            placeholder="{{ current_max_handle }}"
+                            min="1"
+                            max="{{ max_price_boundary }}"
+                          >
+                          <label for="Filter-{{ filter.label | escape }}-LTE" class="visually-hidden">
+                            {{- 'products.facets.to' | t -}}
+                          </label>
+                        </div>
+                      </div>
+
+                      <div class="range_filter position-relative">
+                        <input
+                          class="range min_price"
+                          id="fromSlider"
+                          data="min-price"
+                          {% if current_min_handle %}
+                            value="{{ current_min_handle }}"
+                          {% else %}
+                            value="0"
+                            min="0"
+                            step="0.5"
+                            max="{{ max_price_boundary }}"
+                          {% endif %}
+                          type="range"
+                        >
+                        <label for="fromSlider" class="visually-hidden">{{ 'products.facets.from' | t }}</label>
+                        <output class="bubble"></output>
+
+                        <input
+                          id="toSlider"
+                          class="range max_price position-absolute top-0 end-0"
+                          data="max-price"
+                          step="0.5"
+
+                          value="{{ current_max_handle }}"
+                          type="range"
+                          max="{{ max_price_boundary }}"
+                        >
+                        <label for="toSlider" class="visually-hidden">{{ 'products.facets.to' | t }}</label>
+                        <output class="bubble"></output>
+                      </div>
+
+                      <div class="d-flex gap-2 align-items-center">
+                        <div>Price:</div>
+                        <div class="price_value d-flex gap-2">
+                          <div class="min_value">
+                            <span>{{ cart.currency.symbol }}</span>{{ current_min_handle }}
+                          </div>
+                          <div class="min_value">-</div>
+                          <div class="max_value">
+                            <span>{{ cart.currency.symbol }}</span>{{ current_max_handle }}
+                          </div>
+                        </div>
+                      </div>
+                      <div
+                        tabindex="0"
+                        aria-label="{{ 'products.facets.apply' | t }}"
+                        id="applyPriceFilter"
+                        class="apply-price-filter btn btn-secondary w-100"
+                        style="display: none;"
+                      >
+                        {{- 'products.facets.apply' | t -}}
+                      </div>
+                    </div>
+                  </price-range>
+              {%- endcase -%}
+            </div>
+          </div>
+        {%- endfor -%}
+
+        {% comment %} mobile drawer collection & promo banner start {% endcomment %}
+
+        {% comment %} sidebar featured collection  {% endcomment %}
+
+        {% if settings.show_collection %}
+          <div class="collection_block pt-4 filter-item">
+            {% if settings.enable_collection_title %}
+              {% if collapse %}
+                <button
+                  type="button"
+                  class="sidebar_title h6 filter_item_label pe-4 ps-0 h6 m-0 bg-transparent border-0 w-100 d-flex justify-content-between"
+                  data-bs-toggle="collapse"
+                  data-bs-target="#filter_collection"
+                  aria-expanded="false"
+                >
+                  {{ settings.collection_title | default: collection_item.title }}
+                </button>
+              {% else %}
+                <h4 class="h6">{{ settings.collection_title | default: collection_item.title }}</h4>
+              {% endif %}
+            {% endif %}
+
+            <div class="product-carousel position-relative collapse show" id="filter_collection">
+              <div class="product-carousel-wrapper d-grid gap-4 pt-3">
+                {% for product in settings.collection.products limit: settings.collection_limit %}
+                  {% assign card_product = product %}
+                  <div class="collection_card">
+                    {% assign product_form_id = 'quick-add-' | append: section_id | append: card_product.id %}
+                    <div class="card-wrapper product-card-wrapper h-100">
+                      <div
+                        class="card-main h-100 card flex-row align-items-center gap-3 overflow-hidden {% if settings.card_inherit_color_scheme == false and settings.card_style != 'on_image' %}color-{{ settings.collection_color_scheme }}{% endif %} gradient"
+                        {% if settings.card_style == 'card' %}
+                          style="
+                            border-width: {{ settings.card_border_width }}px;
+                            border-style: {{ settings.card_border }};
+                            border-color: rgba(var(--color-border), {{ settings.card_border_opacity | divided_by: 100.0 }});
+                            border-radius:{{ settings.card_border_radius }}px;
+                             {% if card_product.featured_media.aspect_ratio == null %}
+                                   --aspect-ratio:100%;
+                                   {% else %}
+                                  --aspect-ratio:{%- if card_product.featured_media -%}{{ 1 | divided_by: card_product.featured_media.aspect_ratio | times: 100 }}% {%- else -%} 100% {%- endif -%};
+                                  {% endif %}
+                          "
+                        {% endif %}
+                      >
+                        <div
+                          class="card__inner overflow-hidden position-relative ratio {{ aspect_ratio }}"
+                          style="
+                            border-width: {{ settings.card_border_width }}px;
+                            border-style: {{ settings.card_border }};
+                            border-color: rgba(var(--color-border), {{ settings.card_border_opacity | divided_by: 100.0 }});
+                            border-radius:{{ settings.card_border_radius }}px;
+                             {% if card_product.featured_media.aspect_ratio == null %}
+                                 --aspect-ratio:100%;
+                                 {% else %}
+                                --aspect-ratio:{%- if card_product.featured_media -%}{{ 1 | divided_by: card_product.featured_media.aspect_ratio | times: 100 }}% {%- else -%} 100% {%- endif -%};
+                                {% endif %}
+                          "
+                        >
+                          <div class="card__inner_wrapper">
+                            {%- if card_product.featured_media -%}
+                              <a href="{{ card_product.url }}" class="card--image product_media">
+                                {{
+                                  card_product.featured_media
+                                  | image_url: width: 280
+                                  | image_tag:
+                                    loading: 'lazy',
+                                    width: 150,
+                                    height: 140,
+                                    class: 'motion-reduce featured-media',
+                                    alt: card_product.featured_media.alt
+                                  | escape
+                                }}
+
+                                {%- if card_product.media[1] != null and settings.secondary_image -%}
+                                  <span class="card-secondary-image overflow-hidden position-absolute start-0 end-0 w-100 h-100">
+                                    {{
+                                      card_product.media[1]
+                                      | image_url: width: 280
+                                      | image_tag:
+                                        alt: card_product.media[1].alt,
+                                        aria_hidden: 'true',
+                                        loading: 'lazy',
+                                        width: 150,
+                                        height: 140,
+                                        sizes: '(min-width: 1200px) 600px, (min-width: 992px) calc((100vw - 130px) / 3), (min-width: 768px) calc((100vw - 120px) / 2), calc((100vw - 35px) / 2)',
+                                        widths: '540, 600, 713, 823, 990, 1100, 1206, 1346, 1426, 1646, 1946',
+                                        class: 'motion-reduce'
+                                      | escape
+                                    }}
+                                  </span>
+                                {%- endif -%}
+                              </a>
+                            {% else %}
+                              <img
+                                src="{{ 'product_placeholder.jpg' | asset_url }}"
+                                class="placeholder h-100 w-100"
+                                alt="product_placeholder"
+                              >
+                            {%- endif -%}
+
+                            <div class="product_card_icons z-3">
+                              {% if enable_wishlist %}
+                                {% render 'button-wishlist' %}
+                              {% endif %}
+
+                              {% if enable_compare %}
+                                {% render 'button-compare' %}
+                              {% endif %}
+
+                              {% if enable_quickview %}
+                                {% render 'quick-add-button' %}
+                              {% endif %}
+                            </div>
+                          </div>
+                        </div>
+                        <div class="card-body {{ text_alignment }} {% if settings.card_style == 'card' %}p-3{% else %} p-0{% endif %}">
+                          <div class="card-body-information">
+                            <h3 class="card-title h6" id="title-{{ section_id }}-{{ card_product.id }}">
+                              <a
+                                href="{{ card_product.url }}"
+                                id="CardLink-{{ section_id }}-{{ card_product.id }}"
+                                aria-labelledby="CardLink-{{ section_id }}-{{ card_product.id }}"
+                              >
+                                {{ card_product.title | escape }}
+                              </a>
+                            </h3>
+
+
+                             {% liquid 
+                              
+                                assign product = card_product
+                                assign rating = product.metafields.custom.rating.value.rating
+                                assign scale_max = product.metafields.custom.rating.value.scale_max
+                                assign rating_count = product.metafields.custom.rating.rating_count
+
+                                if request.visual_preview_mode and product == blank
+                                  assign product = collections.all.products.first
+                                  assign rating = product.metafields.reviews.rating.value | default: 4
+                                  assign scale_max = product.metafields.reviews.rating.value.scale_max | default: 5
+                                  assign rating_count = product.metafields.reviews.rating_count | default: 3
+                                endif
+                              
+                              %}
+
+
+                            {% if collectionshow_rating %}
+                                {%- if rating != blank -%}
+                                  {% liquid
+                                    assign star_count_rating = scale_max
+                                    assign decimal_rating = 0
+                                    assign decimal = rating | modulo: 1
+
+                                    if decimal >= 0.3 and decimal <= 0.7
+                                      assign decimal_rating = 0.5
+                                    elsif decimal > 0.7
+                                      assign decimal_rating = 1
+                                    endif
+
+                                    # this is used so I can tell how many stars I need to fill. When the decimal rating above is 0.5 or 1 I count it as one as the half star is dealt with with a SVG linear gradient.
+                                    assign decimal_rounded = decimal_rating | ceil
+
+                                    assign svg_filled_stars = rating | floor | plus: decimal_rounded
+                                  %}
+
+                                  <div
+                                    class="rating-wrapper justify-content-{{ block.settings.alignment }} rating-color {{ stars_style }}"
+                                    style="--star-fill-color: {{ collection_rating_color }};"
+                                    {{ shopify_attribute }}
+                                  >
+                                    <svg
+                                      class="visually-hidden"
+                                      style="width: 0; height: 0;"
+                                      xmlns="http://www.w3.org/2000/svg"
+                                      viewBox="0 0 32 32"
+                                      role="presentation"
+                                    >
+                                      <defs>
+                                        <linearGradient id="half" x1="0" x2="100%" y1="0" y2="0">
+                                          <stop offset="50%" stop-color="var(--star-fill-color)"></stop>
+                                          <stop offset="50%" stop-color="{% if collection_stars_style == "outline" %}transparent{% else %}rgb(from var(--star-fill-color) r g b/ 0.2){% endif %}"></stop>
+                                        </linearGradient>
+
+                                        <symbol xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" id="star">
+                                          <path d="M31.547 12a.848.848 0 00-.677-.577l-9.427-1.376-4.224-8.532a.847.847 0 00-1.516 0l-4.218 8.534-9.427 1.355a.847.847 0 00-.467 1.467l6.823 6.664-1.612 9.375a.847.847 0 001.23.893l8.428-4.434 8.432 4.432a.847.847 0 001.229-.894l-1.615-9.373 6.822-6.665a.845.845 0 00.214-.869z" />
+                                        </symbol>
+                                      </defs>
+                                    </svg>
+                                    <div
+                                      class="rating"
+                                      style="--star-size: 20;"
+                                      aria-label="{{ 'accessibility.rating' | t: rating: rating }}"
+                                    >
+                                      {%- for star in (1..star_count_rating) -%}
+                                        <svg
+                                          class="stars {% if star <= svg_filled_stars %}filled-star{% endif %}"
+                                          viewBox="0 0 32 32"
+                                          style="--empty-star-fill-color:{% if collection_stars_style == 'outline' %}transparent{% else %}rgb(from var(--star-fill-color) r g b/ 0.2){% endif %}"
+                                          role="presentation"
+                                        >
+                                          <use xlink:href="#star"{% if decimal_rating == 0.5 and star == svg_filled_stars %} fill="url(#half)"{% endif %}></use>
+                                          {% if collection_stars_style == "outline" %}
+                                            <use xlink:href="#star" fill="none" stroke="var(--star-fill-color)" stroke-width="var(--icon-stroke-width)" ></use>
+                                          {% endif %}
+                                        </svg>
+                                      {%- endfor -%}
+                                    </div>
+                                  </div>
+                                {%- endif -%}
+                              {% endif %}
+
+                            {% render 'price',
+                              product: card_product,
+                              price_class: '',
+                              show_compare_at_price: true,
+                              text_align: text_alignment,
+                              class: 'mt-2'
+                            %}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                {% endfor %}
+              </div>
+            </div>
+          </div>
+        {% endif %}
+
+        {% comment %} sidebar promo banner  {% endcomment %}
+
+        {%- if settings.show_promo -%}
+          <div class="pt-4">
+            <div
+              class="promo-banner d-flex flex-column align-items-center position-relative border-style"
+              style="
+                --border-width: {{ settings.promo_border_width }}px;
+                --border-style: {{ settings.promo_border }};
+                --border-color: rgba(var(--color-border), {{ settings.promo_border_opacity | divided_by: 100.0 }});
+                --border-radius:{{ settings.promo_border_radius }}px;
+              "
+            >
+              {% if settings.enable_promo_title %}
+                {% if settings.promo_title != blank %}
+                  <h5 class="text-start h5 w-100 mb-3">{{ settings.promo_title }}</h5>
+                {% else %}
+                  <h5 class="text-start h5 w-100 mb-3">{{ 'blogs.article.promo' | t }}</h5>
+                {% endif %}
+              {% endif %}
+
+              {% if settings.promo_image != blank %}
+                <img
+                  src="{{ settings.promo_image | image_url: width: 1200 }}"
+                  alt="{{ settings.promo_image.alt | escape }}"
+                  loading="lazy"
+                  class="w-100 h-auto promo_img"
+                >
+
+              {% else %}
+                {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
+              {% endif %}
+              {% if settings.promo_btn != blank %}
+                <div class="position-absolute bottom-0 start-0 end-0 w-100 m-auto p-4">
+                  <a
+                    {% if settings.promo_link == blank %}
+                      role="link" aria-disabled="true"
+                    {% else %}
+                      href="{{ settings.promo_link }}"
+                    {% endif %}
+                    class="btn w-100 {{ settings.btn_style }} {% if settings.btn_animation %}d-inline-flex align-items-center justify-content-center gap-3 position-relative btn-hover-animate hover-animate {% endif %}"
+                    {%- if settings.open_in_new_tab -%}
+                      target="_blank" rel="noopener noreferrer"
+                    {%- endif -%}
+                  >
+                    <span>{{ settings.promo_btn }} </span>
+                    {% if settings.btn_animation -%}
+                      <span class="btn-arrow"> {% render 'btn-arrow' %}</span>
+                    {%- endif %}
+                  </a>
+                </div>
+              {% endif %}
+            </div>
+          </div>
+        {%- endif -%}
+
+        {% comment %} mobile drawer featured collection & promo banner end {% endcomment %}
+      </div>
+    </form>
+
+    <!-- Offcanvas for mobile view end -->
+
+    {% if layout == 'vertical' or layout == 'horizontal' %}
+      {% liquid
+        if template == 'search'
+          assign terms = search.terms | escape
+          assign results_url = '?q=' | append: terms | append: '&options%5Bprefix%5D=last&sort_by=' | append: sort_by
+        else
+          assign results_url = ''
+        endif
+      %}
+
+      </div>
+      <div class="offcanvas-footer border-top">
+        <div class="select_filter_group d-flex justify-content-between flex-wrap">
+          <button class="btn btn-link clear-all-filters" type="button" data-bs-dismiss="offcanvas">
+            {{ 'products.facets.remove_all' | t }}
+          </button>
+          <button class="btn btn-secondary btn-filters-view-results" type="button" data-bs-dismiss="offcanvas">
+            {% if template == 'collection' %}
+              {{ 'products.facets.view_results' | t: count: collection.products_count }}
+            {% else %}
+              {{ 'products.facets.view_results' | t: count: search.results.size }}
+            {% endif %}
+          </button>
+          <button class="btn btn-secondary btn-filters-view-results d-none" type="button" data-bs-dismiss="offcanvas">
+            {{ 'products.facets.apply' | t }}
+          </button>
+        </div>
+      </div>
+      </div>
+    {%- endif %}
+    <!-- Filters form (shown directly in desktop view) -->
+    <form id="FacetFiltersFormDesktop" class="FacetFiltersForm filter__form d-none d-xl-block">
+      {% if template == 'search' %} <input type="hidden" name="q" value="{{ search.terms }}">{% endif %}
+      <div class="filters-container filter-layout-{{ layout }}">
+        {%- for filter in filters -%}
+          {% liquid
+            if filter.presentation == 'image'
+              assign show_more_count = 20
+            else
+              assign show_more_count = 10
+            endif
+          %}
+          <div
+            class="presentation-method-{{ filter.presentation }} filter-panel filter-item{% if layout == 'horizontal' %} dropdown{% endif %}"
+            data-filter-label="{{ filter.label | handleize }}"
+          >
+            {%- if layout == 'horizontal' %}
+              <button
+                class="mb-0 btn bg-transparent dropdown-toggle shadow-none gap-2 mb-0 d-flex gap-2 align-items-center justify-content-between border-bottom-0"
+                type="button"
+                id="{{ filter.label | handleize }}-heading"
+                data-bs-toggle="dropdown"
+                aria-haspopup="true"
+                aria-expanded="false"
+              >
+                {%- assign selected_count = 0 -%}
+                {%- if filter.type == 'boolean' -%}
+                  {%- if filter.true_value.active -%}
+                    {%- assign selected_count = selected_count | plus: 1 -%}
+                  {%- endif -%}
+                  {%- if filter.false_value.active -%}
+                    {%- assign selected_count = selected_count | plus: 1 -%}
+                  {%- endif -%}
+                {%- elsif filter.type == 'list' -%}
+                  {%- for value in filter.values -%}
+                    {%- if value.active -%}
+                      {%- assign selected_count = selected_count | plus: 1 -%}
+                    {%- endif -%}
+                  {%- endfor -%}
+                {%- endif -%}
+
+                <div class="d-flex gap-2 align-items-center justify-content-center">
+                  {{ filter.label }}
+                  {%- if selected_count > 0 -%}
+                    <span class="total-filter-count">{{ selected_count }}</span>
+                  {%- endif -%}
+                </div>
+                {% render 'arrow-svg' %}
+              </button>
+            {%- else -%}
+              {% if collapse %}
+                <button
+                  class="filter_item_label pe-4 ps-0 h6 m-0 bg-transparent border-0 w-100 d-flex gap-2"
+                  data-bs-toggle="collapse"
+                  data-bs-target="#{{ filter.label | handleize }}"
+                  aria-expanded="false"
+                  aria-controls="{{ filter.label | handleize }}"
+                  type="button"
+                >
+                  {{ filter.label }}
+
+                  {%- assign selected_count = 0 -%}
+                  {%- if filter.type == 'boolean' -%}
+                    {%- if filter.true_value.active -%}
+                      {%- assign selected_count = selected_count | plus: 1 -%}
+                    {%- endif -%}
+                    {%- if filter.false_value.active -%}
+                      {%- assign selected_count = selected_count | plus: 1 -%}
+                    {%- endif -%}
+                  {%- elsif filter.type == 'list' -%}
+                    {%- for value in filter.values -%}
+                      {%- if value.active -%}
+                        {%- assign selected_count = selected_count | plus: 1 -%}
+                      {%- endif -%}
+                    {%- endfor -%}
+                  {%- endif -%}
+
+                  {%- if selected_count > 0 -%}
+                    <span class="total-filter-count">{{ selected_count }}</span>
+                  {%- endif -%}
+                </button>
+              {% else %}
+                <h4 class="h6">{{ filter.label }}</h4>
+
+                {%- if selected_count > 0 -%}
+                  <span class="total-filter-count">{{ selected_count }}</span>
+                {%- endif -%}
+              {% endif %}
+
+              <!--
+                <h4
+                  class="mb-0{% if collapse %} filter_item_label pe-4 {% endif %}"
+                  id="{{ filter.label | handleize }}-heading"
+                  {% if collapse %}
+                    data-bs-toggle="collapse" href="#{{ filter.label | handleize }}" role="button" aria-expanded="false"
+                    aria-controls="{{ filter.label | handleize }}"
+                  {% endif %}
+                >
+                  {{ filter.label }}
+                </h4>
+              -->
+            {%- endif -%}
+            {%- case filter.type -%}
+              {%- when 'boolean' -%}
+                <ul
+                  class="{% if layout == 'drawer' or layout == 'vertical' %}{% if collapse %}collapse show{% endif %}{% endif %} {% if layout == 'horizontal' %}dropdown-menu mt-3{% else %}filter-options list-group{% endif -%}"
+                  aria-labelledby="{{ filter.label | handleize }}"
+                  {% if layout == 'drawer' or layout == 'vertical' %}
+                    {%- if collapse %} id="{{ filter.label | handleize }}"{% endif -%}
+                  {% endif %}
+                >
+                  <li class="facets__item {% if layout == 'horizontal' %}dropdown-item{% endif %}">
+                    <input
+                      type="checkbox"
+                      name="{{ filter.param_name }}"
+                      value="{{ filter.true_value.value }}"
+                      id="Filter-{{ filter.param_name }}"
+                      {% if filter.true_value.active -%}
+                        checked
+                      {%- endif %}
+                      {% if filter.true_value.count == 0 and filter.true_value.active == false -%}
+                        disabled
+                      {%- endif %}
+                      tabindex="0"
+                    >
+                    <label
+                      for="Filter-{{ filter.param_name }}-{{ filter.true_value.value }}"
+                      class="facet-checkbox {% if layout != 'horizontal' %} {% if filter.param_name contains 'tag' %} h6 mb-0{% endif %} {% endif %}"
+                    >
+                      <!-- <div class="filter_checkbox" tabindex="0"></div> -->
+                      <svg
+                        aria-hidden="true"
+                        class="icon icon-checkmark"
+                        width="1.1rem"
+                        height="0.7rem"
+                        viewBox="0 0 11 7"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path d="M1.5 3.5L2.83333 4.75L4.16667 6L9.5 1" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" />
+                      </svg>
+                      {{- filter.true_value.label }}
+                    </label>
+                  </li>
+                  <li class="facets__item">
+                    <input
+                      type="checkbox"
+                      name="{{ filter.param_name }}"
+                      value="{{ filter.false_value.value }}"
+                      id="Filter-{{ filter.param_name }}"
+                      {% if filter.false_value.active -%}
+                        checked
+                      {%- endif %}
+                      {% if filter.false_value.count == 0 and filter.false_value.active == false -%}
+                        disabled
+                      {%- endif %}
+                      tabindex="0"
+                    >
+                    <label
+                      for="Filter-{{ filter.param_name }}-{{ filter.false_value.value }}"
+                      class="facet-checkbox{% if layout != 'horizontal' %} {% if filter.param_name contains 'tag' %} h6 mb-0{% endif %} {% endif %}"
+                    >
+                      <!-- <div class="filter_checkbox" tabindex="0"></div> -->
+                      <svg
+                        aria-hidden="true"
+                        class="icon icon-checkmark"
+                        width="1.1rem"
+                        height="0.7rem"
+                        viewBox="0 0 11 7"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path d="M1.5 3.5L2.83333 4.75L4.16667 6L9.5 1" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" />
+                      </svg>
+                      {{- filter.false_value.label }}
+                    </label>
+                  </li>
+                </ul>
+              {%- when 'list' -%}
+                {% if layout != 'horizontal' %}
+                  <div
+                    class="{% if layout == 'drawer' or layout == 'vertical' %}{% if collapse %}collapse show{% endif %}{% endif %}{% if filter.values.size > show_more_count %} show_more_count{% endif %}"
+                    {% if layout == 'drawer' or layout == 'vertical' %}
+                      {% if collapse %} id="{{ filter.label | handleize }}"{% endif %}
+                    {% endif %}
+                    aria-labelledby="{{ filter.label | handleize }}"
+                  >
+                {% endif %}
+
+                {% assign filter_var = filter.label | handleize %}
+
+                {% liquid
+                  assign filter_name = ''
+                  case filter_var
+                    when 'size'
+                      assign filter_name = 'size_group'
+                    when 'color'
+                      assign filter_name = 'swatch_group'
+                  endcase
+                %}
+
+                <ul
+                  class="{% if layout == 'horizontal' %}dropdown-menu {% else %}filter-options list-group pt-3 {% if show_more_count > 10 %}pb-2{% endif %}{% endif %} facets-wrap {% if filter.presentation == 'swatch' %}swatch{% endif %} {{ filter_name }}"
+                  role="list"
+                >
+                  {%- for filter_value in filter.values -%}
+                    <li
+                      class="{% if layout == 'horizontal' %}dropdown-item p-0 pb-2 mb-2{% else %}facets__item{% endif %}{% if forloop.index > show_more_count %} show-more-item hidden{% endif %}"
+                      role="listitem"
+                      {% if filter.presentation == 'swatch' %}
+                        data-bs-toggle="tooltip"
+                        data-bs-placement="top"
+                        title="{{ filter_value.label }}"
+                      {% endif %}
+                    >
+                      <input
+                        type="checkbox"
+                        name="{{ filter_value.param_name }}"
+                        value="{{ filter_value.value }}"
+                        id="Filter-{{ filter.param_name }}-{{ forloop.index }}"
+                        {% if filter_value.active -%}
+                          checked
+                        {%- endif %}
+                        {% if filter_value.count == 0 and filter_value.active == false -%}
+                          disabled
+                        {%- endif %}
+                      >
+                      <label
+                        for="Filter-{{ filter.param_name }}-{{ forloop.index }}"
+                        class="facet-checkbox {% if filter.param_name contains 'tag' %} h6 mb-0{% endif %} {{ filter_name }}"
+                      >
+                        {% if filter.presentation == 'image' %}
+                          <div class="presentation-image filter-image-wrapper">
+                            {% if filter_value.image %}
+                              {{
+                                filter_value.image
+                                | image_url: width: 50
+                                | image_tag: class: 'filter-image rounded', alt: filter_value.alt
+                              }}
+                            {% endif %}
+                          </div>
+                        {% elsif filter.presentation == 'swatch' %}
+                          <span
+                            class="presentation-swatch swatch d-inline-block position-relative"
+                            style="
+                              width: {{ swatch_style.variant_swatch_width}}px;
+                                  height: {{ swatch_style.variant_swatch_height}}px;
+                              border: var(--border-width) solid rgba(var(--bs-border-color),1);
+                              background-color: {{ filter_value.swatch.color }};
+                              background-image: {% if filter_value.swatch.image %}url('{{ filter_value.swatch.image | image_url: width: 50 }}'){% endif %};
+                              background-size: cover;
+                              background-position: center;
+                              border-radius: {{ swatch_style.variant_swatch_radius }}px;
+                            "
+                          ></span>
+                        {% endif %}
+                        <div class="filter_values d-flex gap-1">
+                          <span class="tool_tip label">
+                            {{ filter_value.label }}
+                          </span>
+                          <span class="count text-nowrap">
+                            {%- if show_filter_count -%}({{ filter_value.count }}){%- endif -%}
+                          </span>
+                        </div>
+                      </label>
+                    </li>
+                  {%- endfor -%}
+                </ul>
+                {% if layout != 'horizontal' %}
+                  {% if filter.values.size > show_more_count %}
+                    <show-more-button>
+                      <button
+                        class="button-show-more link underlined-link  border-0 p-0 bg-transparent mt-1"
+                        id="Show-More-{{ forloop.index }}-{{ section.id }}"
+                        type="button"
+                      >
+                        <span class="label-show-more label-text text-decoration-underline">
+                          {{- 'products.facets.show_more' | t -}}
+                        </span>
+                        <span class="label-show-less label-text text-decoration-underline hidden">
+                          {{- 'products.facets.show_less' | t -}}
+                        </span>
+                      </button>
+                    </show-more-button>
+                  {% endif %}
+                {%- endif %}
+                {% if layout != 'horizontal' %}</div>{% endif %}
+              {%- when 'price_range' -%}
+                <price-range
+                  class="filter-options {% if layout == 'drawer' or layout == 'vertical' %}list-group{% endif %} {% if layout == 'horizontal' %}dropdown-menu p-3{% endif %} {% if layout == 'drawer' or layout == 'vertical' %}{% if collapse %}collapse show{% endif %}{% endif %}"
+                  aria-labelledby="{{ filter.label | handleize }}"
+                  {% if collapse %}
+                    id="{{ filter.label | handleize }}"
+                  {% endif %}
+                >
+                  <div class="pt-3">
+                    {%- assign prices = collection.products | map: 'price' | sort -%}
+                    {%- assign max_price_raw = prices | last -%}
+                    {%- if uses_comma_decimals -%}
+                      {%- assign max_price_boundary = max_price_raw
+                        | money_without_currency
+                        | replace: '.', ''
+                        | replace: ',', '.'
+                        | strip
+                      -%}
+                    {%- else -%}
+                      {%- assign max_price_boundary = max_price_raw
+                        | money_without_currency
+                        | replace: ',', ''
+                        | strip
+                      -%}
+                    {%- endif -%}
+                    {%- if filter.min_value.value -%}
+                      {%- assign current_min_handle = filter.min_value.value
+                        | money_without_currency
+                        | replace: ',', '.'
+                        | strip
+                      -%}
+                    {%- else -%}
+                      {%- assign current_min_handle = 0 -%}
+                    {%- endif -%}
+
+                    {%- if filter.max_value.value -%}
+                      {%- assign current_max_handle = filter.max_value.value
+                        | money_without_currency
+                        | replace: ',', '.'
+                        | strip
+                      -%}
+                    {%- else -%}
+                      {%- assign current_max_handle = max_price_boundary -%}
+                    {%- endif -%}
+                    <div class="facets__selected">
+                      <span>{{ cart.currency.iso_code }}</span>
+                    </div>
+                    <div class="default-fields d-flex align-items-center gap-2 w-100">
+                      <div class="field_input border overflow-hidden d-flex w-100">
+                        <span class="field-currency align-self-center ms-3">{{ cart.currency.symbol }}</span>
+                        <input
+                          name="{{ filter.min_value.param_name }}"
+                          id="Filter-{{ filter.label | escape }}-GTE"
+                          class="form-control shadow-none field__input_min border-0"
+                          type="number"
+                          placeholder="0"
+                          min="0"
+                          max="{{ max_price_boundary }}"
+                        >
+                        <label for="Filter-{{ filter.label | escape }}-GTE" class="visually-hidden">
+                          {{- 'products.facets.from' | t -}}
+                        </label>
+                      </div>
+
+                      <svg width="10" height="2" viewBox="0 0 10 2" fill="none">
+                        <path d="M10 0.5L10 1.5L-4.37114e-08 1.5L0 0.5L10 0.5Z" fill="#666"></path>
+                      </svg>
+                      <div class="field_input border overflow-hidden d-flex w-100">
+                        <span class="field-currency align-self-center ms-3">{{ cart.currency.symbol }}</span>
+                        <input
+                          name="{{ filter.max_value.param_name }}"
+                          id="Filter-{{ filter.label | escape }}-LTE"
+                          class="form-control shadow-none field__input_max border-0 "
+                          type="number"
+                          placeholder="{{ current_max_handle }}"
+                          min="1"
+                          max="{{ max_price_boundary }}"
+                        >
+                        <label for="Filter-{{ filter.label | escape }}-LTE" class="visually-hidden">
+                          {{- 'products.facets.to' | t -}}
+                        </label>
+                      </div>
+                    </div>
+
+                    <div
+                      class="range_filter position-relative"
+                      style="--from-value: {{ current_min_handle }}; --to-value: {{ current_max_handle }}"
+                    >
+                      <input
+                        class="range min_price"
+                        id="fromSlider"
+                        data="min-price"
+                        {% if current_min_handle %}
+                          value="{{ current_min_handle }}"
+                        {% else %}
+                          value="0"
+                          min="0"
+                          step="0.5"
+                          max="{{ max_price_boundary }}"
+                        {% endif %}
+                        type="range"
+                      >
+                      <label for="fromSlider" class="visually-hidden">{{ 'products.facets.from' | t }}</label>
+                      <output class="bubble d-none"></output>
+
+                      <input
+                        id="toSlider"
+                        class="range  position-absolute top-0 end-0"
+                        data="max-price"
+                        step="0.5"
+
+                        value="{{ current_max_handle }}"
+                        type="range"
+                        max="{{ max_price_boundary }}"
+                      >
+                      <label for="toSlider" class="visually-hidden">{{ 'products.facets.to' | t }}</label>
+                      <output class="bubble d-none"></output>
+                    </div>
+                    <div class="d-flex gap-2 align-items-center">
+                      <div>Price:</div>
+                      <div class="price_value d-flex gap-2">
+                        <div class="min_value">
+                          <span>{{ cart.currency.symbol }}</span>{{ current_min_handle }}
+                        </div>
+                        <div class="min_value">-</div>
+                        <div class="max_value">
+                          <span>{{ cart.currency.symbol }}</span>{{ current_max_handle }}
+                        </div>
+                      </div>
+                    </div>
+                    <div
+                      tabindex="0"
+                      aria-label="{{ 'products.facets.apply' | t }}"
+                      id="applyPriceFilter"
+                      class="apply-price-filter btn btn-secondary w-100 d-none"
+                    >
+                      {{- 'products.facets.apply' | t -}}
+                    </div>
+                  </div>
+                </price-range>
+            {%- endcase -%}
+          </div>
+        {%- endfor -%}
+
+        {% comment %} desktop featured collection & promo banner start {% endcomment %}
+
+        {% if layout != 'horizontal' %}
+          {% comment %} sidebar featured collection  {% endcomment %}
+
+          {% if settings.show_collection %}
+            <div class="collection_block pt-4 filter-item">
+              {% if settings.enable_collection_title %}
+                {% if collapse %}
+                  <button
+                    type="button"
+                    class="sidebar_title h6 filter_item_label pe-4 ps-0 h6 m-0 bg-transparent border-0 w-100 d-flex justify-content-between"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#filter_collection"
+                    aria-expanded="false"
+                  >
+                    {{ settings.collection_title | default: collection_item.title }}
+                  </button>
+                {% else %}
+                  <h4 class="h6">{{ settings.collection_title | default: collection_item.title }}</h4>
+                {% endif %}
+              {% endif %}
+
+              <div class="product-carousel position-relative collapse show" id="filter_collection">
+                <div class="product-carousel-wrapper d-grid gap-4 pt-3">
+                  {% for product in settings.collection.products limit: settings.collection_limit %}
+                    {% assign card_product = product %}
+                    <div class="collection_card">
+                      {% assign product_form_id = 'quick-add-' | append: section_id | append: card_product.id %}
+                      <div class="card-wrapper product-card-wrapper h-100">
+                        <div
+                          class="card-main h-100 card flex-row align-items-center gap-3 overflow-hidden {% if settings.card_inherit_color_scheme == false and settings.card_style != 'on_image' %}color-{{ settings.collection_color_scheme }}{% endif %} gradient"
+                          {% if settings.card_style == 'card' %}
+                            style="
+                              border-width: {{ settings.card_border_width }}px;
+                              border-style: {{ settings.card_border }};
+                              border-color: rgba(var(--color-border), {{ settings.card_border_opacity | divided_by: 100.0 }});
+                              border-radius:{{ settings.card_border_radius }}px;
+                               {% if card_product.featured_media.aspect_ratio == null %}
+                                     --aspect-ratio:100%;
+                                     {% else %}
+                                    --aspect-ratio:{%- if card_product.featured_media -%}{{ 1 | divided_by: card_product.featured_media.aspect_ratio | times: 100 }}% {%- else -%} 100% {%- endif -%};
+                                    {% endif %}
+                            "
+                          {% endif %}
+                        >
+                          <div
+                            class="card__inner overflow-hidden position-relative ratio {{ aspect_ratio }}"
+                            style="
+                              border-width: {{ settings.card_border_width }}px;
+                              border-style: {{ settings.card_border }};
+                              border-color: rgba(var(--color-border), {{ settings.card_border_opacity | divided_by: 100.0 }});
+                              border-radius:{{ settings.card_border_radius }}px;
+                               {% if card_product.featured_media.aspect_ratio == null %}
+                                   --aspect-ratio:100%;
+                                   {% else %}
+                                  --aspect-ratio:{%- if card_product.featured_media -%}{{ 1 | divided_by: card_product.featured_media.aspect_ratio | times: 100 }}% {%- else -%} 100% {%- endif -%};
+                                  {% endif %}
+                            "
+                          >
+                            <div class="card__inner_wrapper">
+                              {%- if card_product.featured_media -%}
+                                <a href="{{ card_product.url }}" class="card--image product_media">
+                                  {{
+                                    card_product.featured_media
+                                    | image_url: width: 280
+                                    | image_tag:
+                                      loading: 'lazy',
+                                      width: 150,
+                                      height: 140,
+                                      class: 'motion-reduce featured-media',
+                                      alt: card_product.featured_media.alt
+                                    | escape
+                                  }}
+
+                                  {%- if card_product.media[1] != null and settings.secondary_image -%}
+                                    <span class="card-secondary-image overflow-hidden position-absolute start-0 end-0 w-100 h-100">
+                                      {{
+                                        card_product.media[1]
+                                        | image_url: width: 280
+                                        | image_tag:
+                                          alt: card_product.media[1].alt,
+                                          aria_hidden: 'true',
+                                          loading: 'lazy',
+                                          width: 150,
+                                          height: 140,
+                                          sizes: '(min-width: 1200px) 600px, (min-width: 992px) calc((100vw - 130px) / 3), (min-width: 768px) calc((100vw - 120px) / 2), calc((100vw - 35px) / 2)',
+                                          widths: '540, 600, 713, 823, 990, 1100, 1206, 1346, 1426, 1646, 1946',
+                                          class: 'motion-reduce'
+                                        | escape
+                                      }}
+                                    </span>
+                                  {%- endif -%}
+                                </a>
+                              {% else %}
+                                <img
+                                  src="{{ 'product_placeholder.jpg' | asset_url }}"
+                                  class="placeholder h-100 w-100"
+                                  alt="product_placeholder"
+                                >
+                              {%- endif -%}
+
+                              <div class="product_card_icons z-3">
+                                {% if enable_wishlist %}
+                                  {% render 'button-wishlist' %}
+                                {% endif %}
+
+                                {% if enable_compare %}
+                                  {% render 'button-compare' %}
+                                {% endif %}
+
+                                {% if enable_quickview %}
+                                  {% render 'quick-add-button' %}
+                                {% endif %}
+                              </div>
+                            </div>
+                          </div>
+                          <div class="card-body {{ text_alignment }} {% if settings.card_style == 'card' %}p-3{% else %} p-0{% endif %}">
+                            <div class="card-body-information">
+                              <h3 class="card-title h6" id="title-{{ section_id }}-{{ card_product.id }}">
+                                <a
+                                  href="{{ card_product.url }}"
+                                  id="CardLink-{{ section_id }}-{{ card_product.id }}"
+                                  aria-labelledby="CardLink-{{ section_id }}-{{ card_product.id }}"
+                                >
+                                  {{ card_product.title | escape }}
+                                </a>
+                              </h3>
+
+
+                              {% liquid 
+                              
+                                assign product = card_product
+                                assign rating = product.metafields.custom.rating.value.rating
+                                assign scale_max = product.metafields.custom.rating.value.scale_max
+                                assign rating_count = product.metafields.custom.rating.rating_count
+
+                                if request.visual_preview_mode and product == blank
+                                  assign product = collections.all.products.first
+                                  assign rating = product.metafields.reviews.rating.value | default: 4
+                                  assign scale_max = product.metafields.reviews.rating.value.scale_max | default: 5
+                                  assign rating_count = product.metafields.reviews.rating_count | default: 3
+                                endif
+                              
+                              %}
+
+                              {% if collectionshow_rating %}
+                                {%- if rating != blank -%}
+                                  {% liquid
+                                    assign star_count_rating = scale_max
+                                    assign decimal_rating = 0
+                                    assign decimal = rating | modulo: 1
+
+                                    if decimal >= 0.3 and decimal <= 0.7
+                                      assign decimal_rating = 0.5
+                                    elsif decimal > 0.7
+                                      assign decimal_rating = 1
+                                    endif
+
+                                    # this is used so I can tell how many stars I need to fill. When the decimal rating above is 0.5 or 1 I count it as one as the half star is dealt with with a SVG linear gradient.
+                                    assign decimal_rounded = decimal_rating | ceil
+
+                                    assign svg_filled_stars = rating | floor | plus: decimal_rounded
+                                  %}
+
+                                  <div
+                                    class="rating-wrapper justify-content-{{ block.settings.alignment }} rating-color {{ stars_style }}"
+                                    style="--star-fill-color: {{ collection_rating_color }};"
+                                    {{ shopify_attribute }}
+                                  >
+                                    <svg
+                                      class="visually-hidden"
+                                      style="width: 0; height: 0;"
+                                      xmlns="http://www.w3.org/2000/svg"
+                                      viewBox="0 0 32 32"
+                                      role="presentation"
+                                    >
+                                      <defs>
+                                        <linearGradient id="half" x1="0" x2="100%" y1="0" y2="0">
+                                          <stop offset="50%" stop-color="var(--star-fill-color)"></stop>
+                                          <stop offset="50%" stop-color="{% if collection_stars_style == "outline" %}transparent{% else %}rgb(from var(--star-fill-color) r g b/ 0.2){% endif %}"></stop>
+                                        </linearGradient>
+
+                                        <symbol xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" id="star">
+                                          <path d="M31.547 12a.848.848 0 00-.677-.577l-9.427-1.376-4.224-8.532a.847.847 0 00-1.516 0l-4.218 8.534-9.427 1.355a.847.847 0 00-.467 1.467l6.823 6.664-1.612 9.375a.847.847 0 001.23.893l8.428-4.434 8.432 4.432a.847.847 0 001.229-.894l-1.615-9.373 6.822-6.665a.845.845 0 00.214-.869z" />
+                                        </symbol>
+                                      </defs>
+                                    </svg>
+                                    <div
+                                      class="rating"
+                                      style="--star-size: 20;"
+                                      aria-label="{{ 'accessibility.rating' | t: rating: rating }}"
+                                    >
+                                      {%- for star in (1..star_count_rating) -%}
+                                        <svg
+                                          class="stars {% if star <= svg_filled_stars %}filled-star{% endif %}"
+                                          viewBox="0 0 32 32"
+                                          style="--empty-star-fill-color:{% if collection_stars_style == 'outline' %}transparent{% else %}rgb(from var(--star-fill-color) r g b/ 0.2){% endif %}"
+                                          role="presentation"
+                                        >
+                                          <use xlink:href="#star"{% if decimal_rating == 0.5 and star == svg_filled_stars %} fill="url(#half)"{% endif %}></use>
+                                          {% if collection_stars_style == "outline" %}
+                                            <use xlink:href="#star" fill="none" stroke="var(--star-fill-color)" stroke-width="var(--icon-stroke-width)" ></use>
+                                          {% endif %}
+                                        </svg>
+                                      {%- endfor -%}
+                                    </div>
+                                  </div>
+                                {%- endif -%}
+                              {% endif %}
+
+                              {% render 'price',
+                                product: card_product,
+                                price_class: '',
+                                show_compare_at_price: true,
+                                text_align: text_alignment,
+                                class: 'mt-2'
+                              %}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  {% endfor %}
+                </div>
+              </div>
+            </div>
+          {% endif %}
+
+          {% comment %} sidebar promo banner  {% endcomment %}
+
+          {%- if settings.show_promo -%}
+            <div class="pt-4">
+              <div
+                class="promo-banner d-flex flex-column align-items-center position-relative border-style"
+                style="
+                  --border-width: {{ settings.promo_border_width }}px;
+                  --border-style: {{ settings.promo_border }};
+                  --border-color: rgba(var(--color-border), {{ settings.promo_border_opacity | divided_by: 100.0 }});
+                  --border-radius:{{ settings.promo_border_radius }}px;
+                "
+              >
+                {% if settings.enable_promo_title %}
+                  {% if settings.promo_title != blank %}
+                    <h5 class="text-start h5 w-100 mb-3">{{ settings.promo_title }}</h5>
+                  {% else %}
+                    <h5 class="text-start h5 w-100 mb-3">{{ 'blogs.article.promo' | t }}</h5>
+                  {% endif %}
+                {% endif %}
+
+                {% if settings.promo_image != blank %}
+                  <img
+                    src="{{ settings.promo_image | image_url: width: 1200 }}"
+                    alt="{{ settings.promo_image.alt | escape }}"
+                    loading="lazy"
+                    class="w-100 h-auto promo_img"
+                  >
+
+                {% else %}
+                  {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
+                {% endif %}
+                {% if settings.promo_btn != blank %}
+                  <div class="position-absolute bottom-0 start-0 end-0 w-100 m-auto p-4">
+                    <a
+                      {% if settings.promo_link == blank %}
+                        role="link" aria-disabled="true"
+                      {% else %}
+                        href="{{ settings.promo_link }}"
+                      {% endif %}
+                      class="btn w-100 {{ settings.btn_style }} {% if settings.btn_animation %}d-inline-flex align-items-center justify-content-center gap-3 position-relative btn-hover-animate hover-animate {% endif %}"
+                      {%- if settings.open_in_new_tab -%}
+                        target="_blank" rel="noopener noreferrer"
+                      {%- endif -%}
+                    >
+                      <span>{{ settings.promo_btn }} </span>
+                      {% if settings.btn_animation -%}
+                        <span class="btn-arrow"> {% render 'btn-arrow' %}</span>
+                      {%- endif %}
+                    </a>
+                  </div>
+                {% endif %}
+              </div>
+            </div>
+          {%- endif -%}
+        {% endif %}
+
+        {% comment %} horizondal sidebar featured collection  {% endcomment %}
+
+        {% if layout == 'horizontal' %}
+          <div class="filter_collection filter-panel filter-item{% if layout == 'horizontal' %} dropdown{% endif %} collection_block filter-item">
+            <button
+              type="button"
+              class="mb-0 btn bg-transparent dropdown-toggle shadow-none gap-2 mb-0 d-flex gap-2 align-items-center justify-content-between"
+              data-bs-target="#filter_collection"
+              aria-expanded="false"
+              data-bs-toggle="dropdown"
+              aria-haspopup="true"
+              aria-expanded="false"
+            >
+              <span>
+                {% if settings.enable_collection_title %}
+                  {{ settings.collection_title | default: collection_item.title }}
+                {% else %}
+                  {{ settings.collection_title | default: collection_item.title }}
+                {% endif %}
+              </span>
+              {% render 'arrow-svg' %}
+            </button>
+
+            <div class="product-carousel pt-2 dropdown-menu" id="filter_collection">
+              <div class="product-carousel-wrapper d-grid gap-3">
+                {% for product in settings.collection.products limit: settings.collection_limit %}
+                  {% assign card_product = product %}
+                  <div class="collection_card dropdown-item">
+                    {% assign product_form_id = 'quick-add-' | append: section_id | append: card_product.id %}
+                    <div class="card-wrapper product-card-wrapper h-100">
+                      <div
+                        class="card-main h-100 card flex-row align-items-center gap-3 overflow-hidden {% if settings.card_inherit_color_scheme == false and settings.card_style != 'on_image' %}color-{{ settings.collection_color_scheme }}{% endif %} gradient"
+                        {% if settings.card_style == 'card' %}
+                          style="
+                            border-width: {{ settings.card_border_width }}px;
+                            border-style: {{ settings.card_border }};
+                            border-color: rgba(var(--color-border), {{ settings.card_border_opacity | divided_by: 100.0 }});
+                            border-radius:{{ settings.card_border_radius }}px;
+                             {% if card_product.featured_media.aspect_ratio == null %}
+                                   --aspect-ratio:100%;
+                                   {% else %}
+                                  --aspect-ratio:{%- if card_product.featured_media -%}{{ 1 | divided_by: card_product.featured_media.aspect_ratio | times: 100 }}% {%- else -%} 100% {%- endif -%};
+                                  {% endif %}
+                          "
+                        {% endif %}
+                      >
+                        <div
+                          class="card__inner overflow-hidden position-relative ratio {{ aspect_ratio }}"
+                          style="
+                            border-width: {{ settings.card_border_width }}px;
+                            border-style: {{ settings.card_border }};
+                            border-color: rgba(var(--color-border), {{ settings.card_border_opacity | divided_by: 100.0 }});
+                            border-radius:{{ settings.card_border_radius }}px;
+                             {% if card_product.featured_media.aspect_ratio == null %}
+                                 --aspect-ratio:100%;
+                                 {% else %}
+                                --aspect-ratio:{%- if card_product.featured_media -%}{{ 1 | divided_by: card_product.featured_media.aspect_ratio | times: 100 }}% {%- else -%} 100% {%- endif -%};
+                                {% endif %}
+                          "
+                        >
+                          <div class="card__inner_wrapper">
+                            {%- if card_product.featured_media -%}
+                              <a href="{{ card_product.url }}" class="card--image product_media">
+                                {{
+                                  card_product.featured_media
+                                  | image_url: width: 180
+                                  | image_tag:
+                                    loading: 'lazy',
+                                    width: 150,
+                                    height: 140,
+                                    class: 'motion-reduce featured-media',
+                                    alt: card_product.featured_media.alt
+                                  | escape
+                                }}
+
+                                {%- if card_product.media[1] != null and settings.secondary_image -%}
+                                  <span class="card-secondary-image overflow-hidden position-absolute start-0 end-0 w-100 h-100">
+                                    {{
+                                      card_product.media[1]
+                                      | image_url: width: 180
+                                      | image_tag:
+                                        alt: card_product.media[1].alt,
+                                        aria_hidden: 'true',
+                                        loading: 'lazy',
+                                        width: 150,
+                                        height: 140,
+                                        sizes: '(min-width: 1200px) 600px, (min-width: 992px) calc((100vw - 130px) / 3), (min-width: 768px) calc((100vw - 120px) / 2), calc((100vw - 35px) / 2)',
+                                        widths: '540, 600, 713, 823, 990, 1100, 1206, 1346, 1426, 1646, 1946',
+                                        class: 'motion-reduce'
+                                      | escape
+                                    }}
+                                  </span>
+                                {%- endif -%}
+                              </a>
+                            {% else %}
+                              <img
+                                src="{{ 'product_placeholder.jpg' | asset_url }}"
+                                class="placeholder h-100 w-100"
+                                alt="product_placeholder"
+                              >
+                            {%- endif -%}
+
+                            <div class="product_card_icons z-3">
+                              {% if enable_wishlist %}
+                                {% render 'button-wishlist' %}
+                              {% endif %}
+
+                              {% if enable_compare %}
+                                {% render 'button-compare' %}
+                              {% endif %}
+
+                              {% if enable_quickview %}
+                                {% render 'quick-add-button' %}
+                              {% endif %}
+                            </div>
+                          </div>
+                        </div>
+                        <div class="card-body {{ text_alignment }} {% if settings.card_style == 'card' %}p-3{% else %} p-0{% endif %}">
+                          <div class="card-body-information">
+                            <h3 class="card-title h6" id="title-{{ section_id }}-{{ card_product.id }}">
+                              <a
+                                href="{{ card_product.url }}"
+                                id="CardLink-{{ section_id }}-{{ card_product.id }}"
+                                aria-labelledby="CardLink-{{ section_id }}-{{ card_product.id }}"
+                              >
+                                {{ card_product.title | escape }}
+                              </a>
+                            </h3>
+
+
+                             {% liquid 
+                              
+                                assign product = card_product
+                                assign rating = product.metafields.custom.rating.value.rating
+                                assign scale_max = product.metafields.custom.rating.value.scale_max
+                                assign rating_count = product.metafields.custom.rating.rating_count
+
+                                if request.visual_preview_mode and product == blank
+                                  assign product = collections.all.products.first
+                                  assign rating = product.metafields.reviews.rating.value | default: 4
+                                  assign scale_max = product.metafields.reviews.rating.value.scale_max | default: 5
+                                  assign rating_count = product.metafields.reviews.rating_count | default: 3
+                                endif
+                              
+                              %}
+
+
+                            {% if collectionshow_rating %}
+                                {%- if rating != blank -%}
+                                  {% liquid
+                                    assign star_count_rating = scale_max
+                                    assign decimal_rating = 0
+                                    assign decimal = rating | modulo: 1
+
+                                    if decimal >= 0.3 and decimal <= 0.7
+                                      assign decimal_rating = 0.5
+                                    elsif decimal > 0.7
+                                      assign decimal_rating = 1
+                                    endif
+
+                                    # this is used so I can tell how many stars I need to fill. When the decimal rating above is 0.5 or 1 I count it as one as the half star is dealt with with a SVG linear gradient.
+                                    assign decimal_rounded = decimal_rating | ceil
+
+                                    assign svg_filled_stars = rating | floor | plus: decimal_rounded
+                                  %}
+
+                                  <div
+                                    class="rating-wrapper justify-content-{{ block.settings.alignment }} rating-color {{ stars_style }}"
+                                    style="--star-fill-color: {{ collection_rating_color }};"
+                                    {{ shopify_attribute }}
+                                  >
+                                    <svg
+                                      class="visually-hidden"
+                                      style="width: 0; height: 0;"
+                                      xmlns="http://www.w3.org/2000/svg"
+                                      viewBox="0 0 32 32"
+                                      role="presentation"
+                                    >
+                                      <defs>
+                                        <linearGradient id="half" x1="0" x2="100%" y1="0" y2="0">
+                                          <stop offset="50%" stop-color="var(--star-fill-color)"></stop>
+                                          <stop offset="50%" stop-color="{% if collection_stars_style == "outline" %}transparent{% else %}rgb(from var(--star-fill-color) r g b/ 0.2){% endif %}"></stop>
+                                        </linearGradient>
+
+                                        <symbol xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" id="star">
+                                          <path d="M31.547 12a.848.848 0 00-.677-.577l-9.427-1.376-4.224-8.532a.847.847 0 00-1.516 0l-4.218 8.534-9.427 1.355a.847.847 0 00-.467 1.467l6.823 6.664-1.612 9.375a.847.847 0 001.23.893l8.428-4.434 8.432 4.432a.847.847 0 001.229-.894l-1.615-9.373 6.822-6.665a.845.845 0 00.214-.869z" />
+                                        </symbol>
+                                      </defs>
+                                    </svg>
+                                    <div
+                                      class="rating"
+                                      style="--star-size: 20;"
+                                      aria-label="{{ 'accessibility.rating' | t: rating: rating }}"
+                                    >
+                                      {%- for star in (1..star_count_rating) -%}
+                                        <svg
+                                          class="stars {% if star <= svg_filled_stars %}filled-star{% endif %}"
+                                          viewBox="0 0 32 32"
+                                          style="--empty-star-fill-color:{% if collection_stars_style == 'outline' %}transparent{% else %}rgb(from var(--star-fill-color) r g b/ 0.2){% endif %}"
+                                          role="presentation"
+                                        >
+                                          <use xlink:href="#star"{% if decimal_rating == 0.5 and star == svg_filled_stars %} fill="url(#half)"{% endif %}></use>
+                                          {% if collection_stars_style == "outline" %}
+                                            <use xlink:href="#star" fill="none" stroke="var(--star-fill-color)" stroke-width="var(--icon-stroke-width)" ></use>
+                                          {% endif %}
+                                        </svg>
+                                      {%- endfor -%}
+                                    </div>
+                                  </div>
+                                {%- endif -%}
+                              {% endif %}
+
+                            {% render 'price',
+                              product: card_product,
+                              price_class: '',
+                              show_compare_at_price: true,
+                              text_align: text_alignment,
+                              class: 'mt-2'
+                            %}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                {% else %}
+                  {% for i in (1..section.settings.collection_limit) %}
+                    <div class="swiper-slide h-auto desk-{{ slider_desktop }} laptop-{{ slider_laptop }} tablet-{{ slider_tablet }} mobile-{{ slider_mobile }}">
+                      <div class="card-wrapper product-card-wrapper">
+                        <div
+                          class="card card-main h-100 overflow-hidden {% if settings.card_inherit_color_scheme == false and settings.card_style != 'on_image' %}color-{{ settings.collection_color_scheme }}{% endif %}"
+                          {% if settings.card_style == 'card' %}
+                            style="
+                              border-width: {{ settings.card_border_width }}px;
+                              border-style: {{ settings.card_border }};
+                              border-color: rgba(var(--color-border), {{ settings.card_border_opacity | divided_by: 100.0 }});
+                              border-radius:{{ settings.card_border_radius }}px;
+                               {% if card_product.media.aspect_ratio == null %}
+                                   --aspect-ratio:100%;
+                                   {% else %}
+                                  --aspect-ratio:{%- if card_product.media -%}{{ 1 | divided_by: card_product.media.aspect_ratio | times: 100 }}% {%- else -%} 100% {%- endif -%};
+                                  {% endif %}
+                            "
+                          {% endif %}
+                        >
+                          <div
+                            class="card__inner overflow-hidden position-relative ratio {{ aspect_ratio }} color-{{ card_background }} gradient"
+                            {% if settings.card_style == 'on_image' %}
+                              style="
+                                border-width: {{ settings.card_border_width }}px;
+                                border-style: {{ settings.card_border }};
+                                border-color: rgba(var(--color-border), {{ settings.card_border_opacity | divided_by: 100.0 }});
+                                border-radius:{{ settings.card_border_radius }}px;
+                                {% if card_product.media.aspect_ratio == null %}
+                                 --aspect-ratio:100%;
+                                 {% else %}
+                                --aspect-ratio:{%- if card_product.media -%}{{ 1 | divided_by: card_product.media.aspect_ratio | times: 100 }}% {%- else -%} 100% {%- endif -%};
+                                {% endif %}
+                              "
+                            {% endif %}
+                          >
+                            <div class="card__inner_wrapper">
+                              {%- if placeholder_image -%}
+                                {{ placeholder_image | placeholder_svg_tag: 'placeholder-svg' }}
+                              {%- else -%}
+                                {{ 'product-2' | placeholder_svg_tag: 'placeholder-svg' }}
+                              {% endif %}
+                            </div>
+                          </div>
+                          <div class="card-body {{ text_alignment }} {% if settings.card_style == 'card' %}p-3{% else %} px-0 py-3{% endif %}">
+                            <div class="card-body-information">
+                              <h3 class="card-title h6" id="title-{{ section_id }}-{{ card_product.id }}">
+                                <a role="link" aria-disabled="true" class="full-unstyled-link">
+                                  {{ 'onboarding.product_title' | t }}
+                                </a>
+                              </h3>
+                              <div class="placeholder-price">{{ 0.00 | money }}</div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  {% endfor %}
+                {% endfor %}
+              </div>
+            </div>
+          </div>
+        {% endif %}
+
+        {% comment %} desktop featured collection & promo banner end {% endcomment %}
+      </div>
+    </form>
+  </div>
+</product-filters>

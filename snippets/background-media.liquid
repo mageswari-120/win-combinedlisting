@@ -1,0 +1,44 @@
+<style>
+  video{
+    object-fit:cover;
+  }
+</style>
+
+{% liquid
+    assign media_width_desktop = '100vw'
+    assign media_width_mobile = '100vw'
+    assign sizes = '(min-width: 750px) ' | append: media_width_desktop | append: ', ' | append: media_width_mobile
+    assign widths = '300, 450, 600, 750, 900, 1050, 1200, 1350, 1500, 1650, 1800, 1950, 2000, 2500, 3000, 3500, 4000, 5000' 
+     assign image_class = 'object-fit-cover'
+  %}
+
+{% if background_media == 'image' %}
+<div class="background_media"> 
+  {%- if background_image != blank -%}
+    {{
+      background_image
+      | image_url: width: 3840
+      | image_tag: height: height,
+       sizes: sizes, 
+       widths: widths, 
+       loading: 'eager',
+       class:image_class
+    }}
+  {%- else -%}
+    {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
+  {%- endif -%}
+</div>
+{% elsif background_media == 'video' %}
+  <div class="background_media"> 
+  {{
+     background_video
+     | video_tag:
+     image_size: '1920x',
+     width: "100%",
+     autoplay: true,
+     loop: true,
+     controls: false,
+     muted: true
+  }}
+  </div>
+{% endif %}

@@ -1,0 +1,123 @@
+<div class="article-card-details spacing-style" style="{% render 'spacing-style', settings: block.settings %};" {{ block.shopify_attributes }}>
+  
+  <div class="d-flex flex-wrap column-gap-3 row-gap-1 {% if block.settings.tag %}mb-2{% endif %} {{ alignment }} justify-content-{{ alignment }}">
+    {% if block.settings.show_date %}
+      <div  class="published-date text-{{ block.settings.text_transform }} {{ block.settings.heading_size }} text-{{ block.settings.alignment }}"{{ block.shopify_attributes }}>
+          <p class=" m-0">{{ article.published_at | time_tag: format: 'date' }}</p> 
+      </div>
+    {% endif %}
+    {% if block.settings.show_author %}
+      <div class="article-author-block text-{{ block.settings.text_transform }} {{ block.settings.heading_size }} text-{{ block.settings.alignment }}"
+        {{ block.shopify_attributes }}>
+        {{ article.author }}
+      </div>
+    {% endif %}
+    {% if block.settings.comments %}
+       <div class="comments text-{{ block.settings.text_transform }}">
+        {% assign count = article.comments_count %}
+        <span class="comment">
+          {% if count == 1 -%}
+            {{- 'blogs.article.comments.one' | t: count: count }}
+             {% else %}
+            {{ 'blogs.article.comments.other' | t: count: count }}
+          {%- endif %}
+        </span>
+      </div>
+    {% endif %} 
+  </div>
+  {% if block.settings.tag %}
+    {%- if article.tags.size > 0 -%}
+    <ul class="categories tag-container d-flex flex-wrap row-gap-2 column-gap-2 list-unstyled text-{{ block.settings.text_transform }} {{ block.settings.alignment }} {{ alignment }} justify-content-{{ alignment }}">
+      {% for tag in article.tags %}
+        {% if current_tags contains tag %}
+          <li class="active tag">{{ tag | link_to_tag: tag }}</li>
+        {% else %}
+          <li class="tag">{{ tag | link_to_tag: tag }}</li>
+        {% endif %}
+      {% endfor %}
+    </ul>
+  {% endif %}
+{% endif %}
+   
+</div>
+
+
+
+
+{% schema %}
+{
+  "name": "t:name.details",
+  "tag": null,
+  "settings": [   
+    {
+      "type": "checkbox",
+      "id": "show_author",
+      "label": "t:settings.show_author",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "comments",
+      "label": "t:settings.comments",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "tag",
+      "label": "t:settings.tag",
+      "default": false
+    },
+    {
+      "type": "select",
+      "id": "text_transform",
+      "label": "t:settings.testcase",
+      "options": [
+        {
+          "value": "lowercase",
+          "label": "t:options.default"
+        },
+        {
+          "value": "uppercase",
+          "label": "t:options.uppercase"
+        },
+        {
+          "value": "capitalize",
+          "label": "t:options.capitalize"
+        },
+      ],
+      "default": "capitalize",
+      "visible_if": "{{ block.settings.tag == true }}"
+    },
+    {
+      "type": "header",
+      "content": "t:content.padding"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start",
+      "label": "t:settings.top",
+      "min": 0,
+      "max": 50,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end",
+      "label": "t:settings.bottom",
+      "min": 0,
+      "max": 50,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+  ],
+  "presets": [
+    {
+      "name": "t:name.details",
+      "category": "t:categories.blog"
+    }
+  ]
+}
+{% endschema %}

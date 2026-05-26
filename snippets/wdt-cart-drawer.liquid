@@ -1,0 +1,614 @@
+<style>
+ .loader {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border: 2px solid rgba(0,0,0,0.3);
+  border-radius: 50%;
+  border-top-color: currentColor;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* .cart-note-wrapper button{color: rgb(var(--color-foreground));} */
+.cart-items-list :is(.card .card-body h5 a){ color: var(--color-heading); }
+.card .cart-item__image-container{width:100px !important; height:100px !important; }
+.cart-item .cart-item__quantity .quantity{ width: 120px; background:transparent; padding: 3px;}
+.cart-item__properties ul> li.custom_propertites:last-child{display:none;}
+.cartDrawer{border-radius: var(--wdt-border-radius-xl) 0 0 var(--wdt-border-radius-xl);}
+.drawer-empty .offcanvas-body { display: flex; align-items: center; justify-content: center;} 
+.drawer-empty .drawer__footer {display:none;} 
+.drawer-cart-message .pro_error { font-size: 14px; }
+.drawer-cart-message .error_icon svg { width: 12px;  height: 12px;}
+.cart-items-list .multiplied-price,
+.cart-item__totals { font-size: 1rem;font-weight: var(--font-body-weight-bold);}
+.discount-exists .discount-text{ font-size: calc(var(--bs-body-font-size) - 4px );}
+.remove .cart-remove-button{ font-size: calc(var(--bs-body-font-size) - 2px ); text-decoration: underline;}
+.cart-items-list .cart-item:not(:last-child){ border-bottom: var(--wdt-border-width) solid var(--wdt-border-color);}  
+.cart-items-list .cart-item:last-child{ padding-bottom:0px !important }  
+.details > * { margin-bottom: .3rem; }
+.cart-items-list :is(.card .card-body){ width: calc(100% - 37%); }
+.cart-remove-button{color:rgb(var(--color-foreground));}  
+#CartDrawer-Note.text-area { height: 130px; background: var(--color-input-bg);}
+#CartDrawer-Note.text-area::placeholder { color: rgb(var(--color-foreground));}
+#CartDrawer-Note.text-area:focus-visible { outline: none;}  
+@media (max-width:399px){
+  .cart-items-list :is(.card) { flex-direction:column !important;align-items: flex-start !important; }
+  .cart-items-list :is(.card .card-body){ width: 100%; }
+  .cart__ctas{    flex-direction: column;}
+  .cart__checkout-button, .cart__view_cart-button{width:100% !important;}
+}
+.cart-remove-button{transition:all .3s linear;}  
+/* .cart-remove-button:hover{text-decoration:underline;}    */
+.drawer-empty .drawer__footer{display:none;}
+.cart-drawer__footer .totals {font-weight: var(--font-body-weight-bold);}
+.cart-item__quantity{margin-bottom:0;}
+.cart-items-list .cart-item:not(:last-child) .card{border-bottom: 1px solid rgba(var(--color-heading), 0.5) !important;padding-bottom: 15px;}
+.cart-drawer__footer .tax-note{font-size: 0.875rem;}
+</style>
+
+<div class="offcanvas offcanvas-end cartDrawer color-{{ settings.offcanvas_color_scheme }} gradient" data-bs-scroll="true" tabindex="-1" id="cartOffCanvas" aria-labelledby="cartDrawer">
+  <div class="offcanvas-header text-center justify-content-between  border-bottom">
+    <h3 class="offcanvas-title" id="cartDrawer">{{ 'sections.cart.cart_drawer_title' | t }}</h3>
+    <div class="icon-close">   
+      <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close">{% render 'cancel.svg' %} </button>
+    </div>
+  </div>
+  <div class="offcanvas-body ">
+    <div id="custom-div1" style="display: block;">
+      <div id="cart-details1" style="display: block;">
+        <!-- Cart Items List -->
+        <div id="cart-items-list" class="cart-items-list">
+          <!-- Cart items will be dynamically inserted here -->
+        </div>
+        <!-- Section to show empty cart message -->
+        <div id="cart-message" class="text-center" style="display:none;">
+          <h3 class="cart__empty-text">{{ 'sections.cart.empty' | t }}</h3>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Cart total and checkout button -->
+  
+    <div class="drawer__footer offcanvas-footer border-top" id="cartFooter">
+
+
+      <div class="cart-note-wrapper">
+            <button class="w-100 p-0 text-start  collapsed dropdown-toggle summary__title mb-2 border-0 bg-transparent text-decoration-underline d-flex align-items-center gap-2 w-auto d-inline-flex" type="button" data-bs-toggle="collapse" data-bs-target="#cartDiscount" aria-expanded="false" aria-controls="cartDiscount">
+              {% render 'icon-pencil-square' %}
+              Discount
+            </button>
+              <div class="cart__note collapse" id="cartDiscount">
+               <div class="cart__discount d-flex mb-2">
+              <!-- <label for="discount-code">Discount Code:</label> -->
+              <input type="text" id="discount-code" class="form-control " placeholder="Enter code">
+              <button type="button" id="apply-discount" class="btn btn-primary text-nowrap d-inline-flex align-items-center justify-content-center gap-3 position-relative btn-hover-animate hover-animate " >Apply</button>
+            </div>
+            <p id="discount-message" style="color: red; display: none;"></p>
+              
+              </div>
+         </div>
+ 
+      
+      {% if settings.show_cart_note %}
+          <div class="cart-note-wrapper">
+            <button class="w-100 p-0 text-start  collapsed dropdown-toggle summary__title mb-2 border-0 bg-transparent text-decoration-underline d-flex align-items-center gap-2 w-auto d-inline-flex" type="button" data-bs-toggle="collapse" data-bs-target="#cartNote" aria-expanded="false" aria-controls="cartNote">
+              {% render 'icon-pencil-square' %}
+              {{ 'sections.cart.order_note' | t }}
+            </button>
+              <div class="cart__note collapse" id="cartNote">
+                <label class="visually-hidden" for="CartDrawer-Note">{{ 'sections.cart.order_note' | t }}</label>
+                <textarea  id="CartDrawer-Note" class="CartDrawer-Note text-area field__input w-100 p-3 form-control rounded-3 mb-3" rows="3" name="note" placeholder="{{ 'sections.cart.note' | t }}">{{ cart.note }}</textarea>
+              </div>
+         </div>
+        {% endif %}
+   
+        <!-- Start blocks -->
+        <!-- Subtotals -->
+        <div class="cart-drawer__footer">
+          <div class="totals d-flex align-items-center justify-content-between h5" id="cartSubTotal">
+            {{ 'sections.cart.sub_total' | t }} : <span  id="cartSubTotal_span">{{ cart.total_price | money_with_currency }} </span>
+          </div>
+          <div id="discount_codes">
+              {% for item in cart.items %}
+                  <div class="cart-item" data-variant-id="{{ item.variant_id }}">                     
+                    {% if item.line_level_discount_allocations.size > 0 %}
+                      <div class="discount-exists">                       
+                        {% for discount in item.line_level_discount_allocations %}
+                          <div class="discount-text">
+                            <svg class="icon icon-discount" viewBox="0 0 12 12">
+                              <path fill="currentColor" fill-rule="evenodd" d="M7 0h3a2 2 0 0 1 2 2v3a1 1 0 0 1-.3.7l-6 6a1 1 0 0 1-1.4 0l-4-4a1 1 0 0 1 0-1.4l6-6A1 1 0 0 1 7 0m2 2a1 1 0 1 0 2 0 1 1 0 0 0-2 0" clip-rule="evenodd"/>
+                            </svg>
+                            {{ discount.discount_application.title }}
+                            <button class="remove-discount" aria-label="Remove discount">
+                            <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+                              <path d="M1 1L11 11M1 11L11 1" stroke="currentColor" stroke-width="2"/>
+                            </svg>
+                          </button>
+                          </div>
+                        {% endfor %}
+                      </div>
+                    {% endif %}
+                  </div>
+                {% endfor %}
+ 
+          </div>
+          
+          <div id="cart-discounts-data"></div>           
+          <p class="mb-2"> <small class="tax-note rte">
+          {%- if cart.duties_included and cart.taxes_included -%}
+          {%- if shop.shipping_policy.body == blank -%}
+          {{ 'sections.cart.duties_and_taxes_included_shipping_at_checkout_without_policy' | t }}
+          {%- else -%}
+          {{ 'sections.cart.duties_and_taxes_included_shipping_at_checkout_with_policy_html' | t: link: shop.shipping_policy.url }}
+          {%- endif -%}  
+          {%- elsif cart.duties_included == false and cart.taxes_included -%}
+          {%- if shop.shipping_policy.body == blank -%}
+          {{ 'sections.cart.taxes_included_shipping_at_checkout_without_policy' | t }}
+          {%- else -%}
+          {{ 'sections.cart.taxes_included_shipping_at_checkout_with_policy_html' | t: link: shop.shipping_policy.url }}
+          {%- endif -%}  
+          {%- elsif cart.duties_included and cart.taxes_included == false -%}
+          {%- if shop.shipping_policy.body == blank -%}
+          {{ 'sections.cart.duties_included_taxes_at_checkout_shipping_at_checkout_without_policy' | t }}
+          {%- else -%}
+          {{ 'sections.cart.duties_included_taxes_at_checkout_shipping_at_checkout_with_policy_html' | t: link: shop.shipping_policy.url }}
+          {%- endif -%}
+          {%- elsif cart.duties_included == false and cart.taxes_included == false -%}
+          {%- if shop.shipping_policy.body == blank -%}
+          {{ 'sections.cart.taxes_at_checkout_shipping_at_checkout_without_policy' | t }}
+          {%- else -%}
+          {{ 'sections.cart.taxes_at_checkout_shipping_at_checkout_with_policy_html' | t: link: shop.shipping_policy.url }}
+          {%- endif -%}
+          {%- endif -%}
+          </small></p>
+          
+        </div>
+
+     
+        <!-- CTAs -->
+        <div class="cart__ctas w-100  gap-3 d-flex ">
+          <a
+            href="{{ routes.cart_url }}"
+            type="submit"
+            id="view-cart"
+            class="cart__view_cart-button btn btn-secondary w-50"
+            name="viewcart"            
+            {% if cart == empty %}
+              disabled
+            {% endif %}
+          >           
+           <span>{{ 'general.cart.view_empty_cart' | t }}</span>
+          </a>
+          <button
+            type="submit"
+            id="checkout-button"
+            class="cart__checkout-button btn btn-primary w-50"
+            name="checkout"
+            formaction="/checkout"
+            {% if cart == empty %}
+              disabled
+            {% endif %}
+          >
+            <span>{{ 'sections.cart.checkout' | t }}</span>
+          </button>
+        </div>
+      </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const applyBtn = document.getElementById('apply-discount');
+    const discountInput = document.getElementById('discount-code');
+    const discountMessage = document.getElementById('discount-message');
+
+    async function applyDiscount() {
+      const discountCode = discountInput.value.trim();
+
+      try {
+        const checkResponse = await fetch('/discount/' + encodeURIComponent(discountCode));
+        if (!checkResponse.ok) {
+          showMessage('Discount code does not exist', true);
+          return;
+        }
+
+        // 2. Apply discount
+        const updateResponse = await fetch('/cart/update.js', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-Requested-With': 'XMLHttpRequest', // Important for some themes
+          },
+          body: JSON.stringify({
+            discounts: discountCode,
+            attributes: { discount_attempt: discountCode }, // For tracking
+          }),
+        });
+
+        const cartAfter = await updateResponse.json();
+        if (cartAfter.discount_codes.some((d) => d.code === discountCode)) {
+          // showMessage(`Discount applied! -${Shopify.formatMoney(cartAfter.total_discount)}`, false);
+          updateCartDisplay(cartAfter);
+        } else {
+          const error = await analyzeDiscountError(cartAfter, discountCode);
+          showMessage(error, true);
+        }
+      } catch (error) { 
+        showMessage('System error - please contact support', true);
+      }
+    }
+
+    async function analyzeDiscountError(cart, code) {
+      const discount = await fetchDiscountDetails(code);
+
+      if (!discount) return 'Code not valid';
+
+      if (discount.minimum_requirement && cart.items_subtotal_price < discount.minimum_requirement.amount) {
+        return `Minimum order: ${Shopify.formatMoney(discount.minimum_requirement.amount)}`;
+      }
+
+      if (discount.usage_limit && discount.usage_limit <= discount.usage_count) {
+        return 'Discount usage limit reached';
+      }
+
+      return 'Discount cannot be applied to current cart';
+    }
+
+    function updateCartDisplay(cartData) {
+     
+
+      // updatePriceDisplays(cartData);
+
+      const discountContainer = document.getElementById('discount_codes');
+      if (!discountContainer) return;
+
+      const inputPreserve = discountContainer.querySelector('input[name="discount"]');
+      if (discountContainer) {
+        discountContainer.replaceChildren();
+      }
+      if (inputPreserve) discountContainer.appendChild(inputPreserve);
+
+      const discount = findAppliedDiscount(cartData);
+      const subtotalDiv = document.getElementById('cartSubTotal');
+      if (subtotalDiv) {
+        subtotalDiv.replaceChildren();
+        const label = document.createTextNode(
+          "{{ 'sections.cart.sub_total' | t }} : "
+        );
+         const amountSpan = document.createElement('span');
+        amountSpan.id = 'cartSubTotal_span';
+        amountSpan.textContent = Shopify.formatMoney(cartData.total_price);
+
+        subtotalDiv.append(label, amountSpan);
+      }
+
+      
+
+      if (discount) {
+        createDiscountDisplay(discountContainer, discount, cartData.total_discount);
+
+        updateDiscountBadges(cartData); 
+      } else {
+       if (!inputPreserve) { 
+        discountContainer.replaceChildren(); 
+        const noDiscountEl = document.createElement('p');
+        noDiscountEl.className = 'cart_nodiscount';
+        noDiscountEl.textContent = 'No discount';
+
+        discountContainer.appendChild(noDiscountEl);
+
+        const applyBtn = document.getElementById('apply-discount');
+        if (applyBtn) {
+          applyBtn.addEventListener('click', applyDiscountFromUI);
+        }
+      }
+      }
+    }
+
+    async function applyDiscountFromUI() {
+      const discountInput = document.querySelector('#discount_codes input[name="discount"]');
+      if (!discountInput) return;
+
+      const discountCode = discountInput.value.trim();
+      if (!discountCode) return;
+
+      try {
+        const applyBtn = document.getElementById('apply-discount');
+        applyBtn.disabled = true;
+        applyBtn.textContent = 'Applying...';
+
+        const response = await fetch('/cart/update.js', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ discounts: discountCode }),
+        });
+
+        const updatedCart = await response.json();
+        updateCartDisplay(updatedCart);
+      } catch (error) {
+        showErrorMessage('Failed to apply discount. Please try again.');
+      } finally {
+        const applyBtn = document.getElementById('apply-discount');
+        if (applyBtn) {
+          applyBtn.disabled = false;
+          applyBtn.textContent = 'Apply';
+        }
+      }
+    }
+
+  function updateDiscountBadges(cartData) {
+      cartData.items.forEach((item) => {
+        const itemElement = document.querySelector(
+          `[data-variant-id="${item.id}"]`
+        );
+
+        if (!itemElement) return;
+
+        let discountBadge = itemElement.querySelector('.item-discount-badge'); 
+        if (!item.line_level_discount_allocations?.length) {
+          if (discountBadge) discountBadge.remove();
+          return;
+        } 
+        if (!discountBadge) {
+          discountBadge = document.createElement('div');
+          discountBadge.className = 'item-discount-badge';
+          itemElement.appendChild(discountBadge);
+        }
+    
+        discountBadge.replaceChildren();
+    
+        const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+        svg.classList.add('discount-icon');
+
+        const use = document.createElementNS('http://www.w3.org/2000/svg', 'use');
+        use.setAttribute('href', '#icon-discount');
+
+        svg.appendChild(use); 
+        const titleText = document.createTextNode(
+          item.line_level_discount_allocations[0].discount_application.title
+        );
+
+        discountBadge.append(svg, titleText);
+      });
+    }
+
+    function updatePriceDisplays(cartData) {
+      const priceSpan = document.getElementById('cartSubTotal_span');
+      if (priceSpan) {
+        priceSpan.textContent = Shopify.formatMoney(cartData.total_price, '{{ shop.money_with_currency }}');
+      }
+
+      const elementsToUpdate = {
+        cartTotal: cartData.total_price - cartData.total_discount,
+        cartDiscount: cartData.total_discount,
+      };
+
+      Object.entries(elementsToUpdate).forEach(([id, value]) => {
+        const el = document.getElementById(id);
+        if (el) el.textContent = Shopify.formatMoney(value);
+      });
+    }
+    function findAppliedDiscount(cartData) {
+      return (
+        cartData.discount_applications?.[0] ||
+        cartData.cart_level_discount_applications?.[0] ||
+        (cartData.total_discount > 0
+          ? {
+              code: 'Discount',
+              value: cartData.total_discount,
+            }
+          : null)
+      );
+    }
+
+    function createDiscountDisplay(container, discount, totalDiscount) {
+      if (!container) return;
+      const discountName = discount.title || discount.code || 'Discount';
+      const discountValue = discount.value || discount.total_allocated_amount || totalDiscount;
+
+      const discountElement = document.createElement('div');
+      discountText.className = 'discount-text';
+
+      // SVG icon
+      const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+      svg.classList.add('icon', 'icon-discount');
+      svg.setAttribute('viewBox', '0 0 12 12');
+
+      const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+      path.setAttribute('fill', 'currentColor');
+      path.setAttribute('fill-rule', 'evenodd');
+      path.setAttribute(
+        'd',
+        'M7 0h3a2 2 0 0 1 2 2v3a1 1 0 0 1-.3.7l-6 6a1 1 0 0 1-1.4 0l-4-4a1 1 0 0 1 0-1.4l6-6A1 1 0 0 1 7 0m2 2a1 1 0 1 0 2 0 1 1 0 0 0-2 0'
+      );
+      path.setAttribute('clip-rule', 'evenodd');
+
+      svg.appendChild(path); 
+      const nameText = document.createTextNode(discountName);
+
+      discountText.append(svg, nameText); 
+      const removeBtn1 = document.createElement('button');
+      removeBtn1.className = 'remove-discount';
+      removeBtn1.setAttribute('aria-label', 'Remove discount');
+      removeBtn1.type = 'button';
+
+      const closeSvg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+      closeSvg.setAttribute('width', '12');
+      closeSvg.setAttribute('height', '12');
+      closeSvg.setAttribute('viewBox', '0 0 12 12');
+      closeSvg.setAttribute('fill', 'none');
+
+      const closePath = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+      closePath.setAttribute('d', 'M1 1L11 11M1 11L11 1');
+      closePath.setAttribute('stroke', 'currentColor');
+      closePath.setAttribute('stroke-width', '2');
+
+      closeSvg.appendChild(closePath);
+      removeBtn1.appendChild(closeSvg);
+
+      /* -------- Assemble -------- */
+      discountElement.append(discountText, removeBtn1);
+      container.appendChild(discountElement);
+
+      var removeBtn = discountElement.querySelector('.remove-discount');
+      if (removeBtn) {
+        removeBtn.addEventListener('click', async (e) => {
+          e.preventDefault();
+          removeDiscount();
+        });
+      }
+
+      async function restoreCart(originalCart) {
+        const updates = {};
+        originalCart.items.forEach((item) => {
+          updates[item.key] = item.quantity;
+        });
+
+        await fetch('/cart/update.js', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ updates }),
+        });
+      }
+
+      async function restoreCartItems(originalCart) {
+        const updates = originalCart.items.map((item) => ({
+          id: item.key,
+          quantity: item.quantity,
+        }));
+
+        await fetch('/cart/update.js', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ updates }),
+        });
+
+        if (originalCart.discount_applications?.length > 0) {
+          await fetch('/cart/update.js', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              discounts: originalCart.discount_applications[0].code,
+            }),
+          });
+        }
+      }
+
+      container.appendChild(discountElement);
+    }
+
+    var removeBtn = document.querySelector('.remove-discount');
+
+    async function removeDiscount() {
+      const removeBtn = document.querySelector('.remove-discount');
+
+      try {
+        if (removeBtn) {
+          removeBtn.disabled = true;
+          removeBtn.textContent = 'Removing...';
+        }
+        let response = await fetch('/cart/update.js', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-Requested-With': 'XMLHttpRequest',
+          },
+          body: JSON.stringify({ discounts: '' }),
+        });
+
+        let cart = await response.json();
+        if (cart.total_discount > 0) {
+          response = await fetch('/cart/update.js', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/x-www-form-urlencoded',
+              'X-Requested-With': 'XMLHttpRequest',
+            },
+            body: 'discount=',
+          });
+
+          cart = await response.json();
+        }
+
+        if (cart.total_discount === 0) {
+           if (removeBtn) {
+            const discountCodesEl = document.querySelector('#discount_codes');
+            const discountTextEl = document.querySelector('.discount-text');
+
+            if (discountCodesEl) {
+              discountCodesEl.replaceChildren(); 
+            }
+
+            if (discountTextEl) {
+              discountTextEl.replaceChildren();  
+            }
+          }
+          window.dispatchEvent(new Event('cart:refresh'));
+        } else {
+          if (removeBtn) {
+            removeBtn.textContent = 'Remove Discount';
+          }
+        }
+      } catch (error) {
+        if (removeBtn) {
+          removeBtn.textContent = 'Error - Try Again';
+        }
+      } finally {
+        if (removeBtn) {
+          removeBtn.disabled = false;
+        }
+      }
+    }
+
+    document.querySelector('.remove-discount')?.addEventListener('click', function (e) {
+      e.preventDefault();
+      removeDiscount();
+    });
+
+    //
+
+    const removeIcon = `
+  <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+    <path d="M1 1L11 11M1 11L11 1" stroke="currentColor" stroke-width="2"/>
+  </svg>
+`; 
+    function showMessage(text, isError) {
+      if (!discountMessage) return;
+
+      discountMessage.textContent = text;
+      discountMessage.style.color = isError ? '#ff0000' : '#00aa00';
+      discountMessage.style.display = 'block';
+    }
+
+    function toggleLoading(isLoading) {
+      if (!applyBtn) return;
+
+      applyBtn.disabled = isLoading; 
+      applyBtn.replaceChildren();
+
+      if (isLoading) {
+        const loader = document.createElement('span');
+        loader.className = 'loader';
+
+        const text = document.createTextNode(' Applying...');
+
+        applyBtn.append(loader, text);
+      } else {
+        applyBtn.textContent = 'Apply Discount';
+      }
+    }
+
+    
+
+    if (applyBtn) applyBtn.addEventListener('click', applyDiscount);
+    if (discountInput) {
+      discountInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') applyDiscount();
+      });
+    }
+  });
+</script>

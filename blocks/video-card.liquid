@@ -1,0 +1,235 @@
+{% liquid
+  assign product = block.settings.shop_product
+  assign video = block.settings.shoppable_video
+  assign placeholder_video = 'https://cdn.shopify.com/videos/c/o/v/fbb140fd46e3429eba459e1549dbbe38.mp4'
+%}
+
+<div class="swiper-slide h-auto shop-video-{{ block.id }}">
+  <div
+    class="shop-video h-100 position-relative border-style   overflow-hidden"
+    style="{% render 'border-style', settings: block.settings %} "
+  >
+    {% if block.settings.shoppable_video != blank %}
+      <div class="shop-bg-video {% if block.settings.shop_product == blank %}h-100{% endif %} ">
+        {{ video | video_tag: autoplay: true, loop: true, muted: true, controls: false }}
+      </div>
+    {% else %}
+      <div class=" video-placeholder h-100 w-100">
+                <video
+                  playsinline
+                  autoplay
+                  loop
+                  muted
+                  preload="metadata"
+                  class="w-100 h-100 object-fit-cover"
+                >
+                  <source src="{{ placeholder_video }}" type="video/mp4">
+                </video>
+            </div>
+    {% endif %}
+    {% if block.settings.shop_product != blank %}
+      <div
+        class="shop-product spacing-style {% if block.settings.product_position == 'on_video' %}start-0 end-0 mx-auto{% endif %} d-flex align-items-center justify-content-start gap-3 position-{{ block.settings.product_position }}"
+        style="{% render 'spacing-style', settings: block.settings %}"
+      >
+        <div class="shop-product-img overflow-hidden">
+          <a href="{{ product.url }}">
+            <img
+              src="{{ product.featured_image | image_url: width: 400 }}"
+              alt="{{ product.title }}"
+              loading="lazy"
+              height="400"
+              width="400"
+            >
+          </a>
+        </div>
+        <div
+          class="shop-product-info  d-flex flex-column gap-2 align-items-start justify-content-center "
+        >
+          <h5 class="m-0">
+            <a href="{{ product.url }}">{{ product.title }}</a>
+          </h5>
+          <p class="m-0">{{ product.price | money }}</p>
+        </div>
+      </div>
+    {% endif %}
+  </div>
+</div>
+
+{% style %}
+  .shop-video-{{ block.id }} .shop-product-img img { width: 80px; height: 100%; object-fit: cover;  }
+  .shop-video-{{ block.id }} .shop-product-img {   border-radius: {{block.settings.radius}}px; width: 80px; height: auto !important; }
+  .shop-video-{{ block.id }} .shop-product-info{ width: calc(100% - 80px); }
+  .shop-video-{{ block.id }} .shop-bg-video video { width: 100%; height: 100%; object-fit: cover;  aspect-ratio: 3 / 4; }
+  {% if block.settings.product_position == 'on_video' %}
+    .shop-video-{{ block.id }} .shop-video { height: 100% !important; }
+    .shop-video-{{ block.id }} .shop-product { position: absolute; overflow: hidden; bottom: 20px; height: 130px; width: 90%; border-radius: {{block.settings.radius_body }}px; background: {{ block.settings.product_background }}; }
+    .shop-video-{{ block.id }} .shop-product-img, .shop-video-{{ block.id }} .shop-bg-video { height: 100%; }
+  {% endif %}
+{% endstyle %}
+
+{% schema %}
+{
+  "name": "t:name.video_card",
+  "tag": null,
+  "settings": [
+    {
+      "type": "video",
+      "id": "shoppable_video",
+      "label": "t:settings.video"
+    },
+    {
+      "type": "product",
+      "id": "shop_product",
+      "label": "t:settings.product"
+    },
+    {
+      "type": "select",
+      "id": "product_position",
+      "label": "t:settings.product_position",
+      "options": [
+        { "value": "on_video", "label": "t:options.on_video" },
+        { "value": "below_video", "label": "t:options.on_card" }
+      ],
+      "default": "below_video",
+      "visible_if": "{{ block.settings.shop_product != blank }}"
+    },
+    {
+      "type": "range",
+      "id": "radius",
+      "label": "t:settings.product-radius",
+      "min": 0,
+      "max": 30,
+      "unit": "px",
+      "step": 1,
+      "default": 0,
+      "visible_if": "{{ block.settings.shop_product != blank  }}"
+    },
+    {
+      "type": "range",
+      "id": "radius_body",
+      "label": "t:settings.product-body",
+      "min": 0,
+      "max": 30,
+      "unit": "px",
+      "step": 1,
+      "default": 0,
+      "visible_if": "{{ block.settings.shop_product != blank  and block.settings.product_position == 'on_video'}}"
+    },
+    {
+      "type": "color",
+      "id": "product_background",
+      "label": "t:settings.background_color",
+      "alpha": true,
+      "visible_if": "{{ block.settings.product_position == 'on_video' and block.settings.shop_product != blank   }}"
+    },
+    {
+      "type": "header",
+      "content": "t:settings.border"
+    },
+    {
+      "type": "select",
+      "id": "border",
+      "label": "t:settings.style",
+      "options": [
+        {
+          "value": "none",
+          "label": "t:options.none"
+        },
+        {
+          "value": "solid",
+          "label": "t:options.solid"
+        }
+      ],
+      "default": "none"
+    },
+    {
+      "type": "range",
+      "id": "border_width",
+      "min": 1,
+      "max": 5,
+      "step": 1,
+      "unit": "px",
+      "label": "t:settings.thickness",
+      "default": 1,
+      "visible_if": "{{ block.settings.border != 'none' }}"
+    },
+    {
+      "type": "range",
+      "id": "border_opacity",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "label": "t:settings.opacity",
+      "default": 100,
+      "visible_if": "{{ block.settings.border != 'none' }}"
+    },
+    {
+      "type": "range",
+      "id": "border_radius",
+      "label": "t:settings.border_radius",
+      "min": 0,
+      "max": 30,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "header",
+      "content": "t:content.padding",
+      "info": "t:info.padding-for",
+      "visible_if": "{{ block.settings.shop_product != blank }}"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start",
+      "label": "t:settings.top",
+      "min": 0,
+      "max": 50,
+      "step": 1,
+      "unit": "px",
+      "default": 10,
+      "visible_if": "{{ block.settings.shop_product != blank }}"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end",
+      "label": "t:settings.bottom",
+      "min": 0,
+      "max": 50,
+      "step": 1,
+      "unit": "px",
+      "default": 10,
+      "visible_if": "{{ block.settings.shop_product != blank }}"
+    },
+    {
+      "type": "range",
+      "id": "padding-inline-start",
+      "label": "t:settings.left",
+      "min": 0,
+      "max": 50,
+      "step": 1,
+      "unit": "px",
+      "default": 10,
+      "visible_if": "{{ block.settings.shop_product != blank }}"
+    },
+    {
+      "type": "range",
+      "id": "padding-inline-end",
+      "label": "t:settings.right",
+      "min": 0,
+      "max": 50,
+      "step": 1,
+      "unit": "px",
+      "default": 10,
+      "visible_if": "{{ block.settings.shop_product != blank }}"
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:name.video_card"
+    }
+  ]
+}
+{% endschema %}

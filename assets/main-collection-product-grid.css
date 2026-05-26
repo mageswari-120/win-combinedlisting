@@ -1,0 +1,238 @@
+/*product-icons*/
+.product-icons.card-img-overlay {
+  left: unset;
+  bottom: unset;
+  width: auto;
+  height: auto;
+}
+.card__badge:empty {
+  display: none;
+}
+/* Sidebar Filter CSS */
+.sort-options input[type="radio"] {
+  display: none; /* Hide the radio button */
+}
+.sort-options li {
+  cursor: pointer;
+}
+.product-grid-container
+  > .facets.facets-vertical-sort
+  .facet-filters__field
+  .custom-select-button
+  ~ .sort-options.show {
+  margin: 10px 0 30px !important;
+  border: var(--bs-border-width) solid rgb(var(--bs-border-color));
+  /* min-width: 220px; */
+    min-width:100%;
+  max-height: 300px;
+  overflow-y: scroll;
+  scrollbar-width: none;
+  scrollbar-gutter: stable;
+  -webkit-overflow-scrolling: touch;
+   background-color: rgb(var(--color-background));
+  border-radius: var(--bs-border-radius-lg);
+  padding:0;  
+}
+/* General Styling */
+.filter-options.list-group {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  border-radius:0;
+}
+.facets__item {
+  margin-bottom: 10px;
+  cursor: pointer;
+}
+
+/* Hide the native checkbox input */
+.facet-checkbox input[type="checkbox"] {
+  display: none;
+}
+/* Styling the checkmark SVG */
+.icon-checkmark {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0);
+  transition: transform 0.2s ease;
+  stroke: white;
+  visibility: hidden;
+}
+
+/*list-view-filter*/
+.list-view-filter .card {
+  display: flex;
+  flex-direction: row;
+}
+.list-view-filter .card__inner {
+  width: 40%;
+  max-width: 60%;
+}
+.list-view-filter .card-body {
+  width: 60%;
+  max-width: 60%;
+}
+/*secondary image*/
+.card--image > img + .card-secondary-image img {
+  opacity: 0;
+  overflow: hidden;
+  border-radius: inherit;
+  transition: var(--bs-transition);
+}
+.card .card__inner:hover .card--image > img:first-child:not(:only-child) {
+  opacity: 0;
+  transition: var(--bs-transition);
+}
+.card .card__inner:hover .card--image > img + .card-secondary-image img {
+  opacity: 1;
+}
+.card-secondary-image {
+  padding: 0;
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  margin: auto;
+  margin: auto;
+}
+
+/*collection-flex*/
+.collection .slick-track {
+  display: flex;
+}
+.collection .slick-slide {
+  height: auto !important;
+}
+.collection .card .price {
+  margin-bottom: var(--bs-card-title-spacer-y);
+}
+.product-variant-select.visibility-hidden {
+  position: absolute;
+  width: 0;
+  height: 0;
+}
+.product-varient ul#variantList li {
+  cursor: pointer;
+  color: rgb(var(--color-secondary-button-text));
+  transition: all 0.3s linear;
+  padding: 0.5rem 1rem;
+  font-size: 1.4rem;
+  font-weight: 400;
+  font-family: var(--font-heading-family);
+  text-align: left;
+  border-bottom: 2px solid rgb(var(--bs-border-color));
+  padding: 0.5em 1.2em;
+}
+
+@-moz-document url-prefix() {
+  .product-varient ul#variantList {
+    scrollbar-color: red;
+    scrollbar-width: thin;
+  }
+}
+
+.product-varient ul#variantList li:last-child {
+  border: none !important;
+}
+.product-varient ul#variantList li:hover {
+  cursor: pointer;
+  background: rgb(var(--color-primary-button-bg));
+}
+.product-varient ul#variantList {
+  position: absolute;
+  list-style: none;
+  padding: 0;
+  width: 100%;
+  transition: all ease-out var(--duration-short);
+  opacity: 0;
+  visibility: hidden;
+  -webkit-overflow-scrolling: touch;
+  margin: 10px 0 0;
+  z-index: 99;
+  background: rgb(var(--color-secondary-button-bg));
+  height: auto;
+  scrollbar-width: none;
+  overflow: hidden;
+}
+.product-varient ul#variantList.overflow-y-scroll {
+  max-height: 200px;
+}
+.product-varient ul#variantList.active {
+  opacity: 1;
+  visibility: visible;
+}
+.collection .tab-pane .swiper {
+  clip-path: inset(0 0 -100vmax 0);
+  overflow: visible;
+  overflow-x: clip;
+}
+.collection .tab-pane .swiper:not(.swiper-initialized) .product-varient {
+  display: none;
+}
+.dropdown-menu .dropdown-item span {
+  color: var(--bs-heading-color);
+  text-wrap: wrap;
+}
+label.choose-variant.btn.btn-secondary {
+  padding: clamp(10px, 4vw, 15px) clamp(5px, 5vw, 20px);
+}
+
+/* Styling the ul li to mimic the select box */
+/* Style the custom select button */
+.custom-select-button {
+  margin-bottom: 10px;
+  padding: 10px 20px;
+  cursor: pointer;
+  border: 1px solid #ccc;
+}
+
+/* Styling the ul li to mimic the select box */
+.custom-select-list {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+  border: 1px solid #ccc;
+  display: none; /* Initially hidden */
+}
+
+.custom-select-list li {
+  padding: 10px;
+  cursor: pointer;
+  border-bottom: 1px solid #eee;
+  transition: background-color 0.2s ease;
+}
+
+.custom-select-list li:hover {
+  background-color: #f0f0f0;
+}
+
+.custom-select-list li.selected {
+  background-color: #007bff;
+  color: white;
+}
+
+/*ajax*/
+
+.pagination-method-scroll .progress-bar {
+  width: 100%;
+  height: 10px;
+  border-radius: 10px;
+  max-width: 300px;
+  margin: 15px auto;
+  background-color: rgb(var(--color-secondary-button-bg));
+  position: relative;
+  overflow: hidden;
+}
+.pagination-method-scroll .progress-bar .active-bar {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  background-color: rgb(var(--color-primary-button-bg));
+}
+
+/*horizontal*/
+
+

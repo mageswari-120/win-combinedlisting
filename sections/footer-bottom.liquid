@@ -1,0 +1,107 @@
+<div
+  class="size-style-width overflow-hidden position-relative w-100 color-{{ section.settings.color_scheme }}"
+  style="
+    {% render 'size-style-width', settings: section.settings %} {% render 'text-bg-space', settings: section.settings  %} {% render 'size-style-height', settings: section.settings %}
+    {% if section.settings.border_radius > 0 %} overflow: hidden; {% endif %}
+  "
+  {{ section.shopify_attributes }}
+>
+  <div
+    class="position-relative footer-bottom-block w-100 h-100 d-flex spacing-style gap-style {% if section.settings.full_width %}container-fluid {% else %}container{% endif %}"
+    style="
+      --gap-style: max(calc(var(--space-scale, 1.0) * {{ section.settings.grid_space }}px)); {% render 'spacing-style', settings:section.settings %}
+      {% render 'size-style-width', settings: section.settings %} {% render 'size-style-height', settings: section.settings %}
+    "
+  >
+    {% content_for 'block', type: 'footer-utilities', id: 'footer-utilities' %}
+    {% content_for 'block', type: 'follow_on_shop', id: 'follow_on_shop' %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "t:name.footer-bottom",
+  "enabled_on": {
+    "groups": ["footer"]
+  },
+  "settings": [
+    {
+      "type": "header",
+      "content": "t:content.appearance"
+    },
+    {
+      "type": "checkbox",
+      "id": "full_width",
+      "label": "t:settings.full_width"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:settings.color_scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "header",
+      "content": "t:content.padding"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start",
+      "label": "t:settings.top",
+      "min": 0,
+      "max": 50,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end",
+      "label": "t:settings.bottom",
+      "min": 0,
+      "max": 50,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:name.footer-bottom",
+      "category": "t:categories.footer",
+      "settings": {
+        "color_scheme": "scheme-3"
+      },
+      "blocks": [
+        {
+          "type": "footer-utilities",
+          "id": "footer-utilities",
+          "static": true,
+          "name": "t:name.footer_utilities",
+          "settings": {},
+          "blocks": [
+            {
+              "type": "_footer-copyright"
+            },
+            {
+              "type": "_footer-policies"
+            },
+            {
+              "type": "footer-social-icon",
+              "blocks": [{ "type": "_social-link" }, { "type": "_social-link" }, { "type": "_social-link" }]
+            },
+            {
+              "type": "payment-icons"
+            }
+          ]
+        },
+        {
+          "type": "follow_on_shop",
+          "id": "follow_on_shop",
+          "static": true
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

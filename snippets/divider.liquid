@@ -1,0 +1,41 @@
+
+{% style %}
+{% capture shape_color %}
+      {% if block.settings.inherit_color_scheme %} rgba(var(--color-foreground), 1) {% else %} {{block.settings.shape_color}} {% endif %}
+{% endcapture %}
+  
+  /* {% if block.settings.shape =="circle" %}
+      .divider-{{ block.id }} .divider__line {
+      height:{{block.settings.density }}px;
+      width:{{block.settings.density}}px;
+      border-radius:50%;
+      background:{{shape_color}};
+  }
+  {% elsif block.settings.divider_direction =="row"  %}
+  
+  {% elsif block.settings.divider_direction =="column"  %}
+ .d-flex.flex-row .divider-{{ block.id }} .divider__line { 
+      border:{{block.settings.bar_width }}px solid  {{shape_color}};
+      height:{{block.settings.bar_height}}%;
+      width:0;
+      background:none;
+   }
+  .divider-{{ block.id }} .divider__line {
+     height:{{block.settings.vertical_height}}%;
+     width:{{block.settings.vertical_width}}px;
+     background: {{shape_color}};
+  }
+  {% endif %} */
+
+  .d-flex.flex-column .divider-{{ block.id }} .divider__line{ 
+      border-bottom:{{block.settings.bar_height }}px solid  {{shape_color}};
+      width:{{block.settings.bar_width}}%;
+      height:0;
+      background:none;
+   }
+
+{% endstyle %}
+
+<div class="divider-{{ block.id }} d-flex  {% if block.settings.shape !="circle" %} justify-content-center  {% endif %}align-items-center align-self-stretch " {{- block.shopify_attributes -}} >
+  <span class="divider__line d-flex  justify-content-center align-items-center">  </span>
+</div>

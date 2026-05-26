@@ -1,0 +1,146 @@
+
+<div
+  class="position-relative z-1 d-flex justify-content-{{ block.settings.horizontal_alignment }} header-content-block"
+  style="
+    {% render 'text-bg-space', settings: block.settings  %}  {% render 'border-style',  settings: block.settings %}
+    {% if block.settings.border_radius > 0 %} overflow: hidden; {% endif %}
+  "
+ 
+>
+  <div
+class="position-relative header-block h-100 size-style-width d-flex flex-column align-items-{{ block.settings.horizontal_alignment_mobile }} align-items-sm-{{ block.settings.horizontal_alignment }} text-{{ block.settings.horizontal_alignment_mobile }} text-sm-{{ block.settings.horizontal_alignment }} align-items-sm-{{ block.settings.horizontal_alignment }} spacing-style gap-style"    style="
+      --gap-style: max(calc(var(--space-scale, 1.0) * {{ block.settings.grid_space }}px)); {% render 'spacing-style', settings:block.settings %}
+      {% render 'size-style-width', settings: block.settings %} {% render 'size-style-height', settings: block.settings %}
+    "  {{ block.shopify_attributes }}
+  >
+    {% content_for 'blocks' %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "t:name.header-block",
+  "tag": null,
+  "blocks": [{ "type": "text" },{"type": "description"},{"type": "button"}],
+  "settings": [
+    {
+      "type": "select",
+      "id": "width",
+      "label": "t:settings.desktop_width",
+      "options": [
+        {
+          "value": "fit-content",
+          "label": "t:options.fit"
+        },
+        {
+          "value": "fill",
+          "label": "t:options.fill"
+        },
+        {
+          "value": "custom",
+          "label": "t:options.custom"
+        }
+      ],
+      "default": "fill"
+    },
+    {
+      "type": "range",
+      "id": "custom_width",
+      "label": "t:settings.custom_width",
+      "min": 50,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "default": 88,
+      "visible_if": "{{ block.settings.width == 'custom' }}"
+    },
+    {
+      "type": "select",
+      "id": "horizontal_alignment",
+      "label": "t:settings.desktop_alignment",
+      "options": [
+        {
+          "value": "start",
+          "label": "t:options.left"
+        },
+        {
+          "value": "center",
+          "label": "t:options.center"
+        },
+        {
+          "value": "end",
+          "label": "t:options.right"
+        }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "select",
+      "id": "horizontal_alignment_mobile",
+      "label": "t:settings.mobile_alignment",
+      "options": [
+        {
+          "value": "start",
+          "label": "t:options.left"
+        },
+        {
+          "value": "center",
+          "label": "t:options.center"
+        },
+        {
+          "value": "end",
+          "label": "t:options.right"
+        }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "header",
+      "content": "t:content.padding"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start",
+      "label": "t:settings.top",
+      "min": 0,
+      "max": 50,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end",
+      "label": "t:settings.bottom",
+      "min": 0,
+      "max": 50,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:categories.header",
+      "category": "t:categories.layout",
+      "blocks": [
+        {
+          "type": "text",
+          "name": "t:options:heading",
+          "settings": {
+          "text":"<h3>Collapsible content</h3>"
+          }
+        },
+        {
+          "type": "description",
+          "name": "t:settings.description"
+        },
+        {
+          "type": "button",
+          "name": "t:settings.button"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

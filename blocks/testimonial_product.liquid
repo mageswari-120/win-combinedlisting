@@ -1,0 +1,100 @@
+{% liquid
+  assign product = closest.product
+  assign direction = 'flex-' | append: block.settings.direction
+  assign alignment = 'align-items-' | append: block.settings.alignment
+  assign position = 'justify-content-' | append: block.settings.alignment
+  assign text_align = 'text-' |append: block.settings.alignment
+%}
+
+<div class="product-{{ block.id }} w-100" {{ block.shopify_attributes }}>
+  <div
+    class="card_body d-flex  {{ direction }} {% if block.settings.direction == 'column' %} {{ alignment }} justify-content-start {% endif %} {% if block.settings.direction == 'row' %} {{ position }} align-items-center {% endif %} gap-3 spacing-style"
+    style="{% render 'spacing-style', settings: block.settings  %} gap: {{ block.settings.gap }}px;"
+  >
+    <div class="testimonial-product-img overflow-hidden">
+      <a href="{{ product.url }}">
+        <img
+          src="{{ product.featured_image | image_url: width: 400 }}"
+          alt="{{ product.title }}"
+          loading="lazy"
+          height="400"
+          width="400"
+        >
+      </a>
+    </div>
+    <div
+      class="testimonial-product-info  d-flex flex-column gap-2 {% if block.settings.direction == 'column' %} {{ alignment }} {{ text_align }} justify-content-center {% else %} {{ position }} {{ text_align }} {{ alignment }} {% endif %}  "
+    >
+      <h5 class="m-0">
+        <a href="{{ product.url }}">{{ product.title }}</a>
+      </h5>
+      <p class="m-0">{{ product.price | money }}</p>
+    </div>
+  </div>
+</div>
+
+{% style %}
+  .product-{{ block.id }} .testimonial-product-img { min-width: 60px; width: 60px; height: 100%; object-fit: cover; border-radius: {{ block.settings.radius }}px; }
+  .product-{{ block.id }} .testimonial-product-img img { width: 100%; height: 100%; object-fit: cover;}
+  .product-{{ block.id }} .product-media .product_card_badge { display: none; }
+{% endstyle %}
+
+{% schema %}
+{
+  "name": "t:name.testimonial-product",
+  "tag": null,
+  "settings": [
+    {
+      "type": "product",
+      "id": "product",
+      "label": "t:settings.product"
+    },
+    {
+      "type": "select",
+      "id": "direction",
+      "label": "t:settings.direction",
+      "options": [
+        { "value": "row", "label": "t:options.vertical" },
+        { "value": "column", "label": "t:options.horizontal" }
+      ],
+      "default": "row"
+    },
+    {
+      "type": "select",
+      "id": "alignment",
+      "label": "t:settings.alignment",
+      "options": [
+        { "value": "start", "label": "t:options.left" },
+        { "value": "center", "label": "t:options.center" },
+        { "value": "end", "label": "t:options.right" }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "range",
+      "id": "gap",
+      "label": "t:settings.gap",
+      "min": 0,
+      "max": 30,
+      "step": 1,
+      "default": 0,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "radius",
+      "label": "t:settings.border_radius",
+      "min": 0,
+      "max": 30,
+      "step": 1,
+      "default": 0,
+      "unit": "px"
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:name.testimonial-product"
+    }
+  ]
+}
+{% endschema %}

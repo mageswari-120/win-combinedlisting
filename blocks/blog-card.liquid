@@ -1,0 +1,206 @@
+
+{% liquid
+  
+  assign card_align = block.settings.alignment
+
+%}
+
+
+
+{%- capture alignment -%}
+  {%- case block.settings.alignment -%}
+    {%- when 'center' -%}
+       text-center
+    {%- when 'end' -%}
+       text-end
+    {%- endcase -%}
+{%- endcapture -%}
+
+  <div
+    class="article-card {% if block.settings.inherit_color_scheme == false %} color-{{ block.settings.color_scheme }} {% endif %} d-flex flex-column h-100 overflow-hidden border-style"
+    {{ block.shopify_attributes }}
+    style="
+      {% render 'border-style', settings:block.settings %};
+      --gap-style: max(calc(var(--space-scale, 1.0) * {{ section.settings.gap }}px));
+    "
+  >
+    <div class="card-image" {{ block.shopify_attributes }}>
+      {% content_for 'block', id: 'article-image', type: '_blog-image', article: article %}
+      {% if block.settings.show_date %}
+        <div  class="published-date {{ block.settings.heading_size }} text-{{ block.settings.alignment }}"{{ block.shopify_attributes }}>
+            <p class="m-0">{{ article.published_at | time_tag: format: 'date' }}</p> 
+        </div>   
+      {% endif %}
+    </div>
+
+    <div
+      class="card-body {{ alignment }} spacing-style gap-style d-flex flex-column"
+      style="{% render 'spacing-style', settings: block.settings %}; --gap-style:max(calc(var(--space-scale) * {{ block.settings.grid_space }}px));"
+    >
+      {% content_for 'block', id: 'article-details', type: '_blog-details', article: article, alignment: card_align %}
+      {% content_for 'block', id: 'article-title', type: '_blog-title', article: article %}
+      {% content_for 'block', id: 'article-description', type: '_blog-description', article: article %}
+      {% content_for 'block', id: 'article-button', type: '_blog-button', article: article, alignment: card_align %}
+    </div>
+  </div>
+
+
+{% schema %}
+{
+  "name": "t:name.blog_card",
+  "tag": null,
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "inherit_color_scheme",
+      "label": "t:settings.inherit_color_scheme",
+      "default": true
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:settings.color_scheme",
+      "default": "scheme-1",
+      "visible_if": "{{ block.settings.inherit_color_scheme == false }}"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_date",
+      "label": "t:settings.show_date",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "t:content.layout"
+    },
+    {
+      "type": "select",
+      "id": "alignment",
+      "label": "t:settings.alignment",
+      "options": [
+        {
+          "value": "start",
+          "label": "t:options.left"
+        },
+        {
+          "value": "center",
+          "label": "t:options.center"
+        },
+        {
+          "value": "end",
+          "label": "t:options.right"
+        }
+      ],
+      "default": "start",
+      "visible_if": "{{ section.settings.content_direction != 'row' }}"
+    },
+    {
+      "type": "range",
+      "id": "grid_space",
+      "min": 0,
+      "max": 50,
+      "step": 1,
+      "unit": "px",
+      "label": "t:settings.gap",
+      "default": 10,
+    },
+    {
+      "type": "header",
+      "content": "t:content.borders"
+    },
+    {
+      "type": "select",
+      "id": "border",
+      "label": "t:settings.style",
+      "options": [
+        {
+          "value": "none",
+          "label": "t:options.none"
+        },
+        {
+          "value": "solid",
+          "label": "t:options.solid"
+        }
+      ],
+      "default": "none"
+    },
+    {
+      "type": "range",
+      "id": "border_width",
+      "min": 1,
+      "max": 5,
+      "step": 1,
+      "unit": "px",
+      "label": "t:settings.thickness",
+      "default": 1,
+      "visible_if": "{{ block.settings.border != 'none' }}"
+    },
+    {
+      "type": "range",
+      "id": "border_opacity",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "label": "t:settings.opacity",
+      "default": 100,
+      "visible_if": "{{ block.settings.border != 'none' }}"
+    },
+    {
+      "type": "range",
+      "id": "border_radius",
+      "label": "t:settings.border_radius",
+      "min": 0,
+      "max": 30,
+      "unit": "px",
+      "step": 1,
+      "default": 0
+    },
+    {
+      "type": "header",
+      "content": "t:content.padding"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start",
+      "label": "t:settings.top",
+      "min": 0,
+      "max": 50,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end",
+      "label": "t:settings.bottom",
+      "min": 0,
+      "max": 50,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding-inline-start",
+      "label": "t:settings.left",
+      "min": 0,
+      "max": 50,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding-inline-end",
+      "label": "t:settings.right",
+      "min": 0,
+      "max": 50,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    }
+  ],
+  "presets": []
+}
+{% endschema %}

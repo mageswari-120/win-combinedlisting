@@ -1,0 +1,43 @@
+{% liquid
+  if template == 'search'
+    assign result = search.filters    
+    assign terms = search.terms | escape
+    assign results_url = '?q=' | append: terms | append: '&options%5Bprefix%5D=last&sort_by=' | append: sort_by    
+    else
+    assign result = collection.filters  
+    assign results_url = result.url  
+  endif  
+%}
+ <div class="collection_filter{% unless show_active_filters %} d-none{% endunless %}">
+    <div id="selected-filters" class="filter-tags-container mb-4 pb-2">
+      {%- for filter in result -%}
+        {%- if filter.type == 'price_range' -%}
+          {%- if filter.min_value.value != null or filter.max_value.value != null -%}
+            <div class="position-relative selected-filters">
+              <a href="{{ filter.url_to_remove }}" class="filter-tag">
+              <span>
+                {%- assign min_value = filter.min_value.value | default: 0 -%}
+                {%- assign max_value = filter.max_value.value | default: filter.range_max -%}
+                {{ min_value | money }} - {{ max_value | money }}
+              </span>
+              
+                {% render 'cancel.svg' %}
+              </a>
+            </div>
+          {%- endif -%}
+        {%- else -%}
+          {%- for filter_value in filter.active_values -%}
+            <div class="position-relative selected-filters">
+              <a href="{{ filter_value.url_to_remove }}" class="filter-tag"> 
+              <span> {{ filter_value.label }}</span>
+                {% render 'cancel.svg' %}
+              </a>
+            </div>
+          {%- endfor -%}
+        {%- endif -%}
+      {%- endfor -%}
+      <button id="clear-all-filters" data-path="{{ results_url }}" class="btn clear-all-filters clear_filter text-capitalize" hidden>
+       {{ 'products.facets.remove_all' | t }}
+      </button>
+    </div>  
+  </div>

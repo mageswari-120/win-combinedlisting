@@ -1,0 +1,87 @@
+<div class="contact-form-{{ section.id }} color-{{ section.settings.color_scheme }}  {% if section.settings.inherit_color_scheme == false %} color-{{ section.settings.color_scheme }} {% endif %}">
+  <div
+    class="spacing-style contact-form d-flex flex-column   {% if section.settings.full_width %}container-fluid{% else %}container{% endif %}  size-style-width  "
+    style="{% render 'spacing-style', settings:section.settings %}{% render 'size-style-width', settings:section.settings %} gap: max(calc(var(--space-scale, 1.0) * {{ section.settings.vertical_grid_gap }}px)); "
+    {{ section.shopify_attributes }}
+    {% if settings.animation != blank %}
+      data-aos="{{ settings.animation}}"
+    {% endif %}
+  >
+    <div class="form-heading">
+      {% content_for 'block', type: 'header-block', id: 'contact-title' %}
+    </div>
+    <div
+      style="gap: max(calc(var(--space-scale, 1.0) * {{ section.settings.grid_space }}px));"
+    >
+      {% content_for 'block', id: 'contact_form', type: 'contact-form' %}
+    </div>
+  </div>
+</div>
+{% schema %}
+{
+  "name": "t:name.contact_form",
+  "disabled_on": {
+    "groups": ["header", "footer", "custom.overlay"]
+  },
+  "blocks": [],
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "full_width",
+      "label": "t:settings.full_width"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:settings.color_scheme"
+    },
+
+    {
+      "type": "header",
+      "content": "t:content.padding"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start",
+      "label": "t:options.top",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "default": 120
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end",
+      "label": "t:options.bottom",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "default": 120
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:name.contact_form",
+      "category": "t:categories.forms",
+      "settings": {},
+      "blocks": [
+        {
+          "type": "header-block",
+          "name": "t:name.header-block",
+          "id": "contact-title",
+          "static": true,
+          "settings": {
+            "padding-block-end": 40
+          },
+          "blocks": [
+            { "type": "text", "settings": { "text": "<h2>Contact form</h2>", "padding-block-end": 15 } },
+            { "type": "description", "settings": { "text": "Description" } }
+          ]
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

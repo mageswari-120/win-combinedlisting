@@ -1,0 +1,15 @@
+{%- if settings.btn-width == 'fit-content' -%}
+--desktop-style-width:{{- settings.btn-width -}};
+{%- elsif settings.btn-width == 'fill' -%}
+--desktop-style-width:100%;
+{%- else settings.btn-width == 'custom' -%}
+--desktop-style-width:{{- settings.btn-custom_width -}}%;
+{%- endif -%}
+
+{%- if settings.btn-width_mobile == 'fit-content' -%}
+--mobile-style-width:{{- settings.btn-width -}};
+{%- elsif settings.btn-width_mobile == 'fill' -%}
+--mobile-style-width:100%;
+{%- else settings.btn-width_mobile == 'custom' -%}
+--mobile-style-width:{{- settings.btn-custom_width_mobile -}}%;
+{%- endif -%}

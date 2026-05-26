@@ -1,0 +1,45 @@
+<div class="footer-utilities__group  d-flex text-center flex-column justify-content-md-between flex-md-row align-items-center align-items-md-baseline text-align-md-start flex-wrap footer-utilities__group--left">
+<div class="footer-utilities__group-copyright text-{{ block.settings.case }}"
+  {{ block.shopify_attributes }}>
+  <span class="footer-utilities__text">
+    &copy; {{ 'now' | date: '%Y' }}
+    {{ shop.name | link_to: routes.root_url -}}
+    , {{ powered_by_link }}
+  </span>
+</div>
+</div>
+
+{% schema %}
+{
+  "name": "t:name.copyrights",
+  "tag": null,
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "t:content.copyright_info"
+    },
+    {
+      "type": "select",
+      "id": "case",
+      "label": "t:settings.case",
+      "options": [
+        {
+          "value": "none",
+          "label": "t:options.default"
+        },
+        {
+          "value": "uppercase",
+          "label": "t:options.uppercase"
+        }
+      ],
+      "default": "none"
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:name.copyrights",
+      "category": "t:categories.footer"
+    }
+  ]
+}
+{% endschema %}

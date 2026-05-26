@@ -1,0 +1,52 @@
+<div  class="page-block spacing-style{% if block.settings.inherit_color_scheme == false %} color-{{ block.settings.color_scheme }}{% endif %}">
+    {%- if block.settings.page != blank -%}
+  {%- if block.settings.page.title != blank -%}
+      <h2 class="page-title">{{ block.settings.page.title }}</h2>
+    {%- endif -%}
+    {%- if block.settings.page.content != blank -%}
+      <div class="rte">
+        {% if truncate %}
+        {{ block.settings.page.content | truncate: 100 }}
+        {% else %}
+        {{ block.settings.page.content }}
+        {% endif %}
+      </div>
+    {%- endif -%}  
+   {%- else -%}
+    <h2 class="page-title">{{ 'sections.page.title' | t }}</h2>
+    <div class="rte">
+     Select a page to display its content.
+    </div>
+  {%- endif -%}
+</div>
+{% schema %}
+{
+  "name": "t:name.page",
+  "settings": [
+    {
+      "type": "page",
+      "id": "page",
+      "label": "t:settings.page"
+    },
+    {
+      "type": "checkbox",
+      "id": "inherit_color_scheme",
+      "label": "t:settings.inherit_color_scheme",
+      "default": true
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:settings.color_scheme",
+      "default": "scheme-1",
+      "visible_if": "{{ block.settings.inherit_color_scheme == false }}"
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:name.page",
+      "category": "t:categories.basic"
+    }
+  ]
+}
+{% endschema %}

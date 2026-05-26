@@ -1,0 +1,8 @@
+{% if settings.height == 'fit' %}
+--desktop-style-height: fit;
+{% elsif settings.height == 'fill' %}
+--desktop-style-height: 100%;
+{% else settings.custom_height %}
+--desktop-style-height: {{ settings.custom_height }}%;
+{% endif %}
+

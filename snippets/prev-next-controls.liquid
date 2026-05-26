@@ -1,0 +1,80 @@
+{% style %}
+    {% if settings.inherit_color_scheme == true %}
+      .navigation_button{
+        background: rgb(var(--color-primary-button-bg));
+        color:rgb(var(--color-primary-button-text));
+      }
+    {% endif %}
+    {% if settings.arrow_position == 'top' %}
+    .collection-carousel{
+      position:static !important;
+    }
+    .collection-carousel .swiper-navigation{
+      position:absolute;
+      top:2%;
+      right:0;
+      display:flex;
+      justify-content:flex-end;
+      width:fit-content;
+      gap:30px;
+    }
+    .collection-carousel .navigation_button{
+      position:relative;
+      right:unset;
+      left:unset;
+      margin:unset;
+    }
+    @media (max-width:576px){
+    .collection-carousel .swiper-navigation{
+      position:relative;
+      padding:20px;
+    }
+    }
+    {% endif %}
+  {% if settings.product_arrow_position == 'top' %}
+    .product-tabs .product-carousel .swiper-navigation .navigation_button{
+      margin: unset;
+      position: static;
+  }
+  .product-tabs .product-carousel .swiper-navigation{
+      display: flex;
+      position: absolute;
+      top: 2%;
+      width: fit-content;
+      right: 0;
+      gap: 35px;
+  }
+  @media (max-width:576px){
+.product-tabs .product-carousel .swiper-navigation{
+  position:relative;
+  padding:20px;
+}
+  }
+  {% endif %}
+{% endstyle %}
+<div class="swiper-navigation {{ placement_selector }}">
+    <div
+      tabindex="0"
+      class="navigation_button swiper-button-prev main-prev border-style  {% if settings.inherit_color_scheme == false %}color-{{ settings.pagination_color_scheme }}{% endif %}"
+      type="button"
+      title="Prev"
+      style="
+        --border-width: {{ settings.border_width }}px;  --border-style: {{ settings.border }};  --border-radius: {{ settings.border_radius }}px;
+        --border-color:rgba(var(--color-primary-button-border),{{ settings.border_opacity | divided_by: 100.0 }});
+      "
+    >
+      {% render 'left-arrow' %}
+    </div>
+    <div
+      tabindex="0"
+      class="navigation_button swiper-button-next main-next border-style  {% if settings.inherit_color_scheme == false %}color-{{ settings.pagination_color_scheme }}{% endif %} "
+      type="button"
+      title="Next"
+      style="
+        --border-width: {{ settings.border_width }}px;  --border-style: {{ settings.border }};  --border-radius: {{ settings.border_radius }}px;
+        --border-color:rgba(var(--color-primary-button-border),{{ settings.border_opacity | divided_by: 100.0 }});
+      "
+    >
+      {% render 'right-arrow' %}
+    </div>
+</div>

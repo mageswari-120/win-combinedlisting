@@ -1,0 +1,22 @@
+{%- for block in popups -%}
+  <!-- Modal -->
+  <div
+    class="modal fade"
+    id="ModalPopup-{{ block.id }}"
+    tabindex="-1"
+    aria-labelledby="ModalPopup-{{ block.id }}"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+      <div class="modal-content  color-{{ settings.offcanvas_color_scheme }} gradient rounded-4 border">
+        <div class="modal-header {% if block.settings.page.title == blank %} border-0 {% endif %}">
+          <h5 class="modal-title">{{ block.settings.page.title | escape }}</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">{% render 'cancel.svg' %}</button>
+        </div>
+        <div class="modal-body">
+          {{ block.settings.page.content }}
+        </div>
+      </div>
+    </div>
+  </div>
+{%- endfor -%}

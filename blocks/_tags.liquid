@@ -1,0 +1,40 @@
+{%- if article.tags.size > 0 -%}
+  <ul class="tag-container d-flex flex-wrap row-gap-2 column-gap-3 list-unstyled {{ block.settings.alignment }} justify-content-{{ section.settings.alignment }}">
+    {% for tag in article.tags %}
+      {% if current_tags contains tag %}
+        <li class="articla_tag active text-decoration-none">{{ tag }}</li>
+      {% else %}
+        <li class="articla_tag text-decoration-none text-wrap">{{ tag | link_to_tag: tag }}</li>
+      {% endif %}
+    {% endfor %}
+  </ul>
+{% endif %}
+
+{% schema %}
+{
+  "name": "t:name.tags",
+  "tag":null,
+  "settings": [
+    {
+      "type": "select",
+      "id": "alignment",
+      "label": "t:settings.alignment",
+      "options": [
+        {
+          "value": "start",
+          "label": "t:options.left"
+        },
+        {
+          "value": "center",
+          "label": "t:options.center"
+        },
+        {
+          "value": "end",
+          "label": "t:options.right"
+        }
+      ],
+      "default": "start"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,9 @@
+<div class="wishlist_button position-relative" tabindex="0"
+  data-bs-toggle="tooltip"
+  data-bs-placement="top"
+  title="{{ 'products.wishlist.addToWishList' | t }}"
+>
+   {%- assign product = closest.product -%}
+
+  <a role="link" aria-label="Add to wishlist" class="add-wishlist {{ class }}" button-wishlist data-product-handle="{{ product.handle }}"></a>
+</div>

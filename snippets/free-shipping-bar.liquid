@@ -1,0 +1,35 @@
+{% assign goal = settings.goal | at_least: 0 | default: 1000 %}
+
+<style>
+  .progress-wrapper .progress{overflow:visible; }
+  .progress-bar { position: relative; overflow:visible; }
+  .slider__progerss_mark { --bar-width: 40px; width: var(--bar-width); height: var(--bar-width); display: flex; align-items: center; justify-content: center; font-size: 1.1rem; border-radius: 50%; 
+     {% unless settings.buttons_shadow_horizontal_offset == 0 and settings.buttons_shadow_vertical_offset == 0 %}
+                          -webkit-box-shadow: 0.1em 0.1em 0em rgb(var(--bs-border-color));
+                          box-shadow: 0.1em 0.1em 0em rgb(var(--bs-border-color));
+       {% endunless %}
+       background-color: rgb(var(--color-link)); 
+    color: rgb(var(--color-secondary-button-text)); position: absolute; top: 50%; left: calc(100% - (var(--bar-width)/4)) ; transform: translate(-50%, -50%); border: 0.15em solid rgb(var(--bs-border-color)); 
+    -webkit-transition: left 0.23s ease-in-out; transition: left 0.23s ease-in-out; }
+ .slider__progerss_mark svg path{fill:rgb(var(--color-background));}
+</style>
+<div class="progress-wrapper mb-5">
+ <div class="progress mx-1 mx-sm-0" id="wdtPprogressBar">
+        <div
+          class="progress-bar  rounded-pill"
+          role="progressbar"
+          style="width: 75%;"
+          aria-valuenow="25"
+          aria-valuemin="0"
+          aria-valuemax="100"
+          data-taget-price="{{ goal }}"
+        >
+         <span class="slider__progerss_mark">
+              {% render "progress-marker" %}
+            </span>  
+        </div>
+      </div>
+      <p class="my-4 progressbar_update"></p>
+</div>
+
+      

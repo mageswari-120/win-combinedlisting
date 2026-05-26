@@ -1,0 +1,23 @@
+  {%- if settings.width == 'fit-content' -%}
+  --desktop-style-width:{{- settings.width -}};
+  {%- elsif settings.width == 'fill' -%}
+    --desktop-style-width:100%;
+  {%- else settings.width == 'custtom' -%}
+    --desktop-style-width:{{- settings.custom_width -}}%;
+  {%- endif -%}
+  
+  {%- if settings.width_mobile == 'fit-content' -%}
+  --mobile-style-width:{{- settings.width -}};
+  {%- elsif settings.width_mobile == 'fill' -%}
+    --mobile-style-width:100%;
+  {%- else settings.width_mobile == 'custtom' -%}
+    --mobile-style-width:{{- settings.custom_width_mobile -}}%;
+  {%- endif -%}
+  
+  {% if settings.height == 'fit' %}
+      --desktop-style-height: auto;
+  {% elsif settings.height == 'fill' %}
+      --desktop-style-height: 100%;
+  {% else section.settings.section_height %}
+     --desktop-style-height: {{ settings.custom_height }}%;
+  {% endif %}

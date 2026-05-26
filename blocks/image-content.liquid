@@ -1,0 +1,174 @@
+
+{% liquid
+
+ assign text_alignment = 'text-sm-' | append: block.settings.text_alignment_content
+ assign text_alignment_mobile = 'text-' | append: block.settings.text_alignment_content_mobile
+ assign alignment = 'align-items-sm-' | append: block.settings.text_alignment_content
+ assign mobile_alignment = 'align-items-' | append: block.settings.text_alignment_content_mobile
+
+%}
+
+
+<style>
+  @media (min-width: 768px){
+    .image_banner_section--{{ section.id }} .section_container .image_banner_content{
+       width:var(--content-width);
+      }
+  }
+</style>
+
+
+
+
+<div class="image_banner_content d-flex flex-column {{ vertical-position }} {% if block.settings.inherit_color_scheme == true %}color-{{ block.settings.color_content }}{% endif %} spacing-style" {{ block.settings.text }}
+style="{% render 'spacing-style', settings: block.settings  %} --content-width:{{ block.settings.desktop_content_width }}px;"
+>
+  <div class="content d-flex flex-column w-100 {{ text_alignment }} {{ text_alignment_mobile }} {{ alignment }} {{ mobile_alignment }}"
+  style="--gap:max(calc(var(--space-scale) * {{ block.settings.grid_space }}px));"
+  >
+    {% content_for 'blocks' %}
+  </div>
+</div>
+
+
+
+
+
+
+
+
+{% schema %}
+{
+    "name": "t:name.image_content",
+    "tag":null,
+    "blocks": [{ "type": "text" },{"type": "description"},{"type": "button"}],
+    "settings": [
+        {
+      "type": "header",
+      "content": "t:content.layout"
+    },
+     {
+      "type": "checkbox",
+      "id": "inherit_color_scheme",
+      "label": "t:settings.inherit_color_scheme",
+      "default": false
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_content",
+      "label": "t:settings.color_scheme",
+      "default": "scheme-2",
+      "visible_if": "{{ block.settings.inherit_color_scheme == true }}"
+    },
+    {
+      "type": "select",
+      "id": "text_alignment_content",
+      "label": "t:settings.alignment",
+      "options": [
+        {
+          "value": "start",
+          "label": "t:options.left"
+        },
+        {
+          "value": "center",
+          "label": "t:options.center"
+        },
+        {
+          "value": "end",
+          "label": "t:options.right"
+        },
+      ],
+      "default": "start",
+    },
+    {
+      "type": "select",
+      "id": "text_alignment_content_mobile",
+      "label": "t:settings.mobile_alignment",
+      "options": [
+        {
+          "value": "start",
+          "label": "t:options.left"
+        },
+        {
+          "value": "center",
+          "label": "t:options.center"
+        },
+        {
+          "value": "end",
+          "label": "t:options.right"
+        },
+      ],
+      "default": "start",
+    },
+    {
+      "type": "range",
+      "min": 0,
+      "max": 50,
+      "step": 2,
+      "default": 10,
+      "unit": "px",
+      "id": "grid_space",
+      "label": "t:settings.gap"
+    },
+    {
+      "type": "range",
+      "min": 600,
+      "max": 1000,
+      "step": 10,
+      "default": 600,
+      "unit": "px",
+      "id": "desktop_content_width",
+      "label": "t:settings.content_width"
+    },
+      {
+      "type": "header",
+      "content": "t:content.padding"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start",
+      "label": "t:settings.top",
+      "min": 0,
+      "max": 50,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end",
+      "label": "t:settings.bottom",
+      "min": 0,
+      "max": 50,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding-inline-start",
+      "label": "t:settings.left",
+      "min": 0,
+      "max": 50,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding-inline-end",
+      "label": "t:settings.right",
+      "min": 0,
+      "max": 50,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    }
+    ],
+    "presets": [
+       {
+        "name": "t:name.image_content"
+       }
+    ]
+}
+{% endschema %}

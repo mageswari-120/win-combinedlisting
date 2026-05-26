@@ -1,0 +1,53 @@
+<div
+  class="product__inventory no-js-hidden inventory-form__label{% if product.selected_or_first_available_variant.inventory_management != 'shopify' %} visibility-hidden{% endif %}"
+  {{ block.shopify_attributes }}
+  id="Inventory-{{ section.id }}"
+  role="status"
+>
+  {% assign totalProductsQuantity = 0 %}
+  {% for variant in product.variants %}
+    {% assign totalProductsQuantity = totalProductsQuantity | plus: variant.inventory_quantity %}
+  {% endfor %}
+  <p class="stock-{{ product.selected_or_first_available_variant.inventory_quantity }} availablity-stack m-0">
+    <span class="stock">
+      <span
+        class="stack-progressbar"
+        style="width:{{ product.selected_or_first_available_variant.inventory_quantity |  at_most: 100 }}%;background:rgb(var(--sale-badge-bg))"
+      ></span>
+    </span>
+    {%- if product.selected_or_first_available_variant.inventory_management == 'shopify' -%}
+      {%- if product.selected_or_first_available_variant.inventory_quantity > 0 -%}
+        {%- if product.selected_or_first_available_variant.inventory_quantity <= block.settings.inventory_threshold -%}
+          <span class="low_stock">
+            {%- if block.settings.show_inventory_quantity -%}
+              {{-
+                'products.product.inventory_low_stock_show_count'
+                | t: quantity: product.selected_or_first_available_variant.inventory_quantity
+              -}}
+            {%- else -%}
+              {{- 'products.product.inventory_low_stock' | t -}}
+            {%- endif -%}
+          </span>
+        {%- else -%}
+          <span class="in_stock">
+            {%- if block.settings.show_inventory_quantity -%}
+              Hurry up! only
+              <span class="count">{{ product.selected_or_first_available_variant.inventory_quantity }} {{ 'products.product.items' | t }}</span>
+              items left in stock
+            {%- else -%}
+              {{- 'products.product.inventory_in_stock' | t -}}
+            {%- endif -%}
+          </span>
+        {%- endif -%}
+      {%- else -%}
+        <span class="out_of_stock">
+          {%- if product.selected_or_first_available_variant.inventory_policy == 'continue' -%}
+            {{- 'products.product.inventory_out_of_stock_continue_selling' | t -}}
+          {%- else -%}
+            {{- 'products.product.inventory_out_of_stock' | t -}}
+          {%- endif -%}
+        </span>
+      {%- endif -%}
+    {%- endif -%}
+  </p>
+</div>

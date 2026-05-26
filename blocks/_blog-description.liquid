@@ -1,0 +1,64 @@
+ {% assign content = article.excerpt | default: article.content %}
+
+{% if content != blank %}
+  <div
+    class="rte excerpt_or_content spacing-style"
+    {{ block.shopify_attributes }}
+    style="{% render 'spacing-style', settings:block.settings %}"
+  >
+    {% if content %}
+      {% assign truncatewords =  block.settings.content_limit  %}
+      {% unless article.image %}
+        {% assign truncatewords = block.settings.content_limit %}
+      {% endunless %}
+      {{ content | strip_html | truncatewords: truncatewords }}
+    {% else %}
+      {{ 'blogs.article.no_content' | t }}
+    {% endif %}
+  </div>
+{% endif %}
+{% schema %}
+{
+  "name": "t:name.content",
+  "settings": [
+    {
+      "type": "range",
+      "id": "content_limit",
+      "label": "t:settings.word_limit",
+      "min": 5,
+      "max": 20,
+      "step": 1,
+      "default": 5
+    },
+    {
+      "type": "header",
+      "content": "t:content.padding"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start",
+      "label": "t:settings.top",
+      "min": 0,
+      "max": 50,
+      "step": 1,
+      "unit": "px",
+      "default": 10
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end",
+      "label": "t:settings.bottom",
+      "min": 0,
+      "max": 50,
+      "step": 1,
+      "unit": "px",
+      "default": 10
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:name.content"
+    }
+  ]
+}
+{% endschema %}

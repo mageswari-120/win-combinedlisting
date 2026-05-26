@@ -1,0 +1,268 @@
+{% liquid
+  assign text_alignment = 'text-' | append: section.settings.vartical_alignment
+
+  assign vartical_alignment = 'align-items-' | append: section.settings.vartical_alignment
+
+%}
+
+<div class="custom-section-container color-{{ section.settings.color_scheme }} custom-section-{{ section.id }}"></div>
+<div
+  class="section-{{ section.id }} custom_section {% if section.settings.full_width %}container-fluid {% else %}container{% endif %}  color-{{ section.settings.color_scheme }} {{ section.settings.custom_class }}"
+>
+  <div class="custom_background">
+    {% render 'background-media',
+      background_media: section.settings.background_media,
+      background_image: section.settings.background_image,
+      background_image_position: section.settings.background_image_position
+    %}
+  </div>
+
+  <div class="border-style layout_height z-1 gap-style"
+    style="{% render 'border-style', settings: section.settings %} {% if section.settings.border_radius > 0 %} overflow: hidden; {% endif %}"
+  >
+    {% if section.settings.toggle_overlay %}
+      {% render 'overlay', settings: section.settings %}
+    {% endif %}
+
+    <div
+      class="section_container spacing-style d-flex  gap-style top-bottom-spacing"
+      style="
+         --padding-top:{{ section.settings.padding-block-start }}px;
+        --padding-bottom:{{ section.settings.padding-block-end }}px;
+      "
+    >
+      <div
+        class="newsletter-content d-flex flex-column {{ text_alignment }} {{ vartical_alignment }} mx-auto"
+        style=" gap: max(calc(var(--space-scale, 1.0) * {{ section.settings.grid_space }}px));"
+        {% if settings.animation != blank %}
+          data-aos="{{ settings.animation}}"
+        {% endif %}
+      >
+        {% content_for 'block', type: 'text', id: 'contact-title' %}
+        {% content_for 'block', type: 'description', id: 'contact-text' %}
+        {% content_for 'block', type: 'newsletter', id: 'contact-newsletter' %}
+      </div>
+    </div>
+  </div>
+</div>
+
+{% style %}
+  .custom-section{ position: relative;}
+  .custom-section-container{ position: absolute; inset: 0;z-index: -2; }
+  .custom_section  .custom_background{ grid-area: 1 / -1; }
+  .custom_section .custom_background .background_media{ position: absolute; inset: 0; }
+  .custom_section .custom_background .background_media :is(img, svg, video){
+    width:100%;
+    height: 100%;
+  }
+  .custom_section .section_container{
+    position:relative;
+    width:100%;
+    height:100%;
+    min-height:var(--section-min-height, auto);
+  }
+  .custom_section{display:grid;}
+ 
+  .section-{{ section.id }} .newsletter-content  { width: min({{ section.settings.content_width }}px, 100%); }
+  
+{% endstyle %}
+
+{% schema %}
+{
+  "name": "t:name.newsletter",
+  "class": "section-wrapper custom-section",
+  "disabled_on": {
+    "groups": ["header", "footer", "custom.overlay"]
+  },
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "full_width",
+      "label": "t:settings.full_width"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:settings.color_scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "header",
+      "content": "t:content.layout"
+    },
+    {
+      "type": "select",
+      "id": "vartical_alignment",
+      "label": "t:settings.alignment",
+      "options": [
+        {
+          "value": "start",
+          "label": "t:options.left"
+        },
+        {
+          "value": "center",
+          "label": "t:options.center"
+        },
+        {
+          "value": "end",
+          "label": "t:options.right"
+        }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "range",
+      "id": "grid_space",
+      "min": 0,
+      "max": 30,
+      "step": 5,
+      "unit": "px",
+      "label": "t:settings.gap",
+      "default": 15
+    },
+    {
+      "type": "header",
+      "content": "t:content.content"
+    },
+    {
+      "type": "range",
+      "id": "content_width",
+      "label": "t:settings.content_width",
+      "min": 500,
+      "max": 1000,
+      "step": 100,
+      "unit": "px",
+      "default": 500
+    },
+    {
+      "type": "header",
+      "content": "t:content.appearance"
+    },
+
+    {
+      "type": "select",
+      "id": "background_media",
+      "label": "t:settings.background_media",
+      "options": [
+        {
+          "value": "none",
+          "label": "t:options.none"
+        },
+        {
+          "value": "image",
+          "label": "t:options.image"
+        },
+      ],
+      "default": "none"
+    },
+    {
+      "type": "video",
+      "id": "video",
+      "label": "t:settings.video",
+      "visible_if": "{{ section.settings.background_media == 'video' }}"
+    },
+    {
+      "type": "image_picker",
+      "id": "background_image",
+      "label": "t:settings.image",
+      "visible_if": "{{ section.settings.background_media == 'image' }}"
+    },
+    {
+      "type": "checkbox",
+      "id": "toggle_overlay",
+      "label": "t:settings.background_overlay"
+    },
+    {
+      "type": "color",
+      "id": "overlay_color",
+      "label": "t:settings.overlay_color",
+      "alpha": true,
+      "default": "#00000026",
+      "visible_if": "{{ section.settings.toggle_overlay }}"
+    },
+    {
+      "type": "select",
+      "id": "overlay_style",
+      "label": "t:settings.overlay_style",
+      "options": [
+        {
+          "value": "solid",
+          "label": "t:options.solid"
+        },
+        {
+          "value": "gradient",
+          "label": "t:options.gradient"
+        }
+      ],
+      "default": "solid",
+      "visible_if": "{{ section.settings.toggle_overlay }}"
+    },
+    {
+      "type": "select",
+      "id": "gradient_direction",
+      "label": "t:settings.gradient_direction",
+      "options": [
+        {
+          "value": "to top",
+          "label": "t:options.up"
+        },
+        {
+          "value": "to bottom",
+          "label": "t:options.down"
+        }
+      ],
+      "default": "to top",
+      "visible_if": "{{ section.settings.toggle_overlay and section.settings.overlay_style == 'gradient' }}"
+    },
+    {
+      "type": "header",
+      "content": "t:content.padding"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start",
+      "label": "t:settings.top",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "default": 120
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end",
+      "label": "t:settings.bottom",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "default": 120
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:name.newsletter",
+      "blocks": [
+        {
+          "type": "text",
+          "id": "contact-title",
+          "static": true,
+          "settings": { "type_preset": "h2", "text": "<h2>Newsletter</h2>" }
+        },
+        {
+          "type": "description",
+          "id": "contact-text",
+          "static": true,
+          "settings": { "text": "Newsletter description" }
+        },
+        {
+          "type": "newsletter",
+          "id": "contact-newsletter",
+          "static": true
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
+{% comment %} [END section.blocks] {% endcomment %}

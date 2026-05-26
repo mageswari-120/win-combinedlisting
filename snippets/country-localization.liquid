@@ -1,0 +1,80 @@
+{%- comment -%}
+  Renders the country picker for the localization form
+
+  Accepts:
+    - localPosition: pass in the position in which the form is coming up to create specific IDs
+{%- endcomment -%}
+
+{%- liquid
+  assign currencies = localization.available_countries | map: 'currency' | map: 'iso_code' | uniq
+  assign popular_countries = localization.available_countries | where: 'popular?' | sort: 'name'
+
+   assign show_popular_countries = false
+  if localization.available_countries.size > 9 and popular_countries.size > 1
+    assign show_popular_countries = true
+  endif
+
+  assign show_currencies = false
+  if currencies.size > 1
+    assign show_currencies = true
+  endif
+%}
+
+<div class="disclosure dropdown ">
+  <button
+    type="button"
+    class="localization-selector position-relative localization-form__select dropdown-toggle btn p-0 border-0 bg-transparent"
+    aria-expanded="false"
+    aria-controls="{{ localPosition }}-country-results"
+    aria-describedby="{{ localPosition }}Label"
+    data-bs-toggle="dropdown" 
+  >
+    <div class="d-flex align-items-center">
+    <span class="d-inline-flex gap-2 align-items-center">
+      {% if enable_flag %}
+        <img src="{{ localization.country.iso_code | append: '.svg' | asset_url }}" width="21" height="15" alt="{{ localization.country.iso_code }}" />       
+      {% endif %}
+      ({{- localization.country.currency.iso_code }})
+    </span>  
+    {% comment %} <span class="dt-sc-caret d-flex">{% render 'arrow-svg' %}</span> {% endcomment %}
+    </div>
+  </button>
+
+  <div class="disclosure__list-wrapper country-selector">      
+    <div class="disclosure__list country-selector__list{% if show_currencies %} country-selector__list--with-multiple-currencies{% endif %}" id="{{ localPosition }}-country-results">
+      {% if show_popular_countries %}
+        <ul role="list" class="list-unstyled popular-countries dropdown-menu" aria-label="{{ 'localization.popular_countries_regions' | t }}">
+          {%- for country in popular_countries -%}
+            <li class="disclosure__item" tabindex="-1">
+              <a class="dropdown-item {% if country.iso_code == localization.country.iso_code %} active {% endif %}" href="#" {% if country.iso_code == localization.country.iso_code %} aria-current="true" {% endif %} data-value="{{ country.iso_code }}" id="{{ country.name }}">
+                <div>
+                  <span class="invisible d-none"> {%- render 'icon-checkmark' -%}</span>
+                  <span class="country">{{- country.name }}</span>
+                </div>
+                <span class="localization-form__currency motion-reduce{% unless show_currencies %} hidden{% endunless %}"> 
+                  {{ country.currency.iso_code }}
+                </span>
+              </a>
+            </li>
+          {%- endfor -%}
+        </ul>
+      {% endif %}
+      <ul role="list" class="list-unstyled border-0 countries dropdown-menu">
+        {%- for country in localization.available_countries -%}
+          <li class="disclosure__item" tabindex="-1">
+            <a class="dropdown-item {% if country.iso_code == localization.country.iso_code %} active {% endif %}" href="#" {% if country.iso_code == localization.country.iso_code %} aria-current="true" {% endif %} data-value="{{ country.iso_code }}" id="{{ country.name }}">
+              <div class="country_select d-flex align-items-center gap-2">
+                <span class="country_active_icon">{%- render 'icon-checkmark' -%}</span>
+                <span class="country">{{- country.name }}</span>
+              </div>
+              <span class="localization-form__currency motion-reduce d-inline-flex gap-2 align-items-center {% unless show_currencies %} hidden{% endunless %}">  
+                {{ country.currency.iso_code }}
+              </span>
+            </a>
+          </li>
+        {%- endfor -%}
+      </ul>
+    </div>
+  </div> 
+</div>
+<input type="hidden" name="country_code" value="{{ localization.country.iso_code }}">

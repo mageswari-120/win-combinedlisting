@@ -1,0 +1,94 @@
+<div
+  class="h-100 border-style overflow-hidden"
+  style="
+    {% if block.settings.media_aspect_ratio == 'adapt' %}--aspect-ratio:{%- if article.image -%}{{ 1 | divided_by: article.image.aspect_ratio | times: 100 }}%{%- else -%}100%{%- endif -%};{% endif %}
+    {% render 'border-style', settings:block.settings %};
+  "
+>
+  {% if article.image != blank %}
+      <img
+        srcset="
+          {% if article.width >= 350 %}{{ article | image_url: width: 350 }} 350w,{% endif %}
+          {% if article.width >= 750 %}{{ article | image_url: width: 750 }} 750w,{% endif %}
+          {% if article.width >= 1100 %}{{ article | image_url: width: 1100 }} 1100w,{% endif %}
+          {% if article.width >= 1500 %}{{ article | image_url: width: 1500 }} 1500w,{% endif %}
+          {{ article | image_url }} {{ article.width }}w
+        "
+        src="{{ article | image_url: width: 1100 }}"
+        loading="eager"
+        fetchpriority="high"
+        width="{{ article.width }}"
+        height="{{ article.height }}"
+        alt="{{ article.alt | escape }}"
+        class="
+          w-100 h-100 object-fit-cover
+          blog-post-card__image
+          blog-post-card__image--{{ block.settings.height }}
+        "
+      >
+  {% else %}
+    <img src="{{ 'image_placeholder.jpg' | asset_url }}" class="placeholder" alt="blog_placeholder">
+  {% endif %}
+</div>
+
+{% schema %}
+{
+  "name": "t:name.image",
+  "tag": null,
+  "class": "blog-image",
+  "settings": [   
+    {
+      "type": "header",
+      "content": "t:content.borders"
+    },
+    {
+      "type": "select",
+      "id": "border",
+      "label": "t:settings.style",
+      "options": [
+        {
+          "value": "none",
+          "label": "t:options.none"
+        },
+        {
+          "value": "solid",
+          "label": "t:options.solid"
+        }
+      ],
+      "default": "none"
+    },
+    {
+      "type": "range",
+      "id": "border_width",
+      "min": 1,
+      "max": 5,
+      "step": 1,
+      "unit": "px",
+      "label": "t:settings.thickness",
+      "default": 1,
+      "visible_if": "{{ block.settings.border != 'none' }}"
+    },
+    {
+      "type": "range",
+      "id": "border_opacity",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "label": "t:settings.opacity",
+      "default": 100,
+      "visible_if": "{{ block.settings.border != 'none' }}"
+    },
+    {
+      "type": "range",
+      "id": "border_radius",
+      "label": "t:settings.border_radius",
+      "min": 0,
+      "max": 30,
+      "unit": "px",
+      "step": 1,
+      "default": 0
+    }
+  ]
+}
+{% endschema %}

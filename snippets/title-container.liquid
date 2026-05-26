@@ -1,0 +1,72 @@
+{% style %}
+ {%- if section.settings.title != blank or section.settings.richtext != blank-%}    
+  {% if section.settings.column_alignment == 'left' %} 
+  @media (min-width: 576px) {
+  .section-{{ section.id }}-padding .title-container.text-sm-left .subheading,
+  .section-{{ section.id }}-padding .title-container.text-sm-left .heading_block{max-width:75%; margin-left:0; margin-right:auto;}
+  /* .section-{{ section.id }}-padding .swiper-navigation.nav_right{max-width:25%;}  */
+  }
+  {% endif %}  
+  {% if section.settings.column_alignment == 'right' %}    
+   @media (min-width: 576px) {  
+  .section-{{ section.id }}-padding .title-container.text-sm-right .subheading,
+  .section-{{ section.id }}-padding .title-container.text-sm-right .heading_block {max-width:75%; margin-right:0; margin-left:auto;}  
+   /* .section-{{ section.id }}-padding .swiper-navigation.nav_right{max-width:25%;}   */
+   }
+  {% endif %}   
+{% else %} 
+@media (min-width: 576px) {
+.section-{{ section.id }}-padding .swiper-navigation.nav_right{max-width:100%;} 
+ }
+ {% endif %}  
+  @media (min-width: 576px) {  
+.title-container.text-sm-left.full_width {width:100%; max-width:1100px; margin-right:auto}
+.title-container.text-sm-right.full_width {width:100%; max-width:1100px; margin-left:auto}
+.title-container.text-sm-center {width:100%; max-width:1100px; margin:auto}  
+.title-container.text-sm-left.full_width .subheading{width:100%; max-width:950px; margin-right:auto}
+.title-container.text-sm-right.full_width .subheading{width:100%; max-width:950px; margin-left:auto}
+.title-container.text-sm-center .subheading{width:100%; max-width:950px; margin:auto}      
+  }
+{% endstyle %}
+{%- if section.settings.title != blank
+  or section.settings.richtext != blank
+-%}
+  {%- capture text -%}
+    {%- if section.settings.richtext != blank -%}
+      <div class="subheading text-wrap" {% if settings.animation != blank %} 
+        data-aos="{{ settings.animation }}"
+        data-aos-delay="{{ delay | plus: 50 }}"
+          {% endif %}>
+        {{ section.settings.richtext }} 
+      </div>
+      {%- assign delay = delay | plus: 50 -%}
+    {%- endif -%}
+    {%- endcapture -%}
+
+  <div
+    class=" title-container {% if section.settings.column_alignment %}  text-center text-sm-{{ section.settings.column_alignment }}{% endif %} {{ class }} "
+    {% if section.settings.max_width %}
+      style=" --max-w:{{ section.settings.max_width }}%;"
+    {% endif %}
+  >
+    {%- assign delay = 0 -%}
+    {%- if section.settings.text_position == 'above' -%}
+    {{ text }}
+    {%- endif -%}
+    {%- if section.settings.title != blank -%}
+      <h2
+        class="{{ section.settings.heading_size }} heading_block text-wrap"
+        {% if settings.animation != blank %} 
+        data-aos="{{ settings.animation }}"
+        data-aos-delay="{{ delay | plus: 50 }}"
+          {% endif %}
+      >
+        {{ section.settings.title | escape }}
+      </h2>
+      {%- assign delay = delay | plus: 50 -%}
+    {%- endif -%}
+    {%- if section.settings.text_position == 'below' -%}
+  {{ text }}
+    {%- endif -%}
+  </div>
+{%- endif -%}

@@ -1,0 +1,97 @@
+{%-liquid
+    if settings.animation == blank
+    assign animation_is = 'disabled'
+    else
+    assign animation_is = 'enabled'   
+    endif 
+-%}  
+<script>  
+   window.shopUrl = '{{ request.origin }}';
+      window.routes = {
+        cart_add_url: '{{ routes.cart_add_url }}',
+        cart_change_url: '{{ routes.cart_change_url }}',
+        cart_update_url: '{{ routes.cart_update_url }}',
+        cart_url: '{{ routes.cart_url }}',
+        predictive_search_url: '{{ routes.predictive_search_url }}',
+        search_url: '{{ shop.url }}{{ routes.search_url}}',
+        cart_type: `{{ settings.cart_type }}`
+      };
+
+      window.cartStrings = {
+        error: `{{ 'sections.cart.cart_error' | t }}`,
+        quantityError: `{{ 'sections.cart.cart_quantity_error_html' | t: quantity: '[quantity]' }}`,
+        lowQuantity: `{{ 'sections.cart.cart_quantity_low' | t: quantity: '[quantity]' }}`,
+        quantityRemain: `{{ 'sections.cart.cart_quantity_remain_html' | t: quantity: '[quantity]' }}`,        
+        quantity_sold: `{{ 'sections.cart.quantity_sold' | t }}`,
+        quantity_correct: `{{ 'sections.cart.quantity_correct' | t }}`,
+        free_shipping_eligible: `{{ 'sections.cart.free_shipping_text1' | t }}`,
+        away_from_goal: `{{ 'sections.cart.free_shipping_text2' | t }}`,
+        custom_properties:`{{ 'sections.cart.properties' | t }}`
+        
+      };
+
+      window.variantStrings = {
+        addToCart: `{{ 'products.product.add_to_cart' | t }}`,
+        soldOut: `{{ 'products.product.sold_out' | t }}`,
+        unavailable: `{{ 'products.product.unavailable' | t }}`,
+        unavailable_with_option: `{{ 'products.product.value_unavailable' | t: option_value: '[value]' }}`
+      };
+
+      window.accessibilityStrings = {
+        imageAvailable: `{{ 'products.product.media.image_available' | t: index: '[index]' }}`,
+        shareSuccess: `{{ 'general.share.success_message' | t }}`,     
+        countrySelectorSearchCount: `{{ 'localization.country_results_count' | t: count: '[count]' }}`
+      };       
+       var wdtTheme = {
+        strings: {                 
+          unavailable: {{ 'products.product.unavailable' | t | json }},                   
+          inventoryStatus: {{ 'products.product.stock_status' | t | json }},
+          in_stock: {{ 'products.product.inventory_in_stock' | t | json }},
+          recipient_check: {{ 'recipient.form.checkbox' | t | json }},
+          clear_form: {{ 'recipient.form.clear_form' | t | json }},
+          search_count: `{{ 'templates.search.search_count' | t: count: '[count]' }}`,
+          quizNoResult: {{'sections.quiz-section.not_found' | t | json }},
+          quizAnswerAll: {{'sections.quiz-section.answer_all' | t | json }},
+          viewDetail: {{ 'sections.quiz-section.view_detail' | t | json  }},
+          inventoryStatus: {{ 'products.product.stock_status' | t | json }},
+          wislistEmpty: {{ 'products.wishlist.no_records' | t | json }},         
+          unavailable: {{ 'products.product.unavailable' | t | json }},         
+          minCompareProduct: {{ 'products.compare.limit' | t | json }}
+        },         
+        giftCard: {
+        emailBlank: {{ 'recipient.form.email_blank' | t | json }} ,     
+        emailFormat: {{ 'recipient.form.email_alert' | t | json }} ,
+        dateLimit: {{ 'recipient.form.send_on_limit' | t | json }}              
+        },  
+         filter:{
+          addMinPrice: {{- 'products.facets.add_min_price' | t | json -}},
+          addMaxPrice: {{- 'products.facets.add_max_price' | t | json -}},
+          minMaxCompare: {{- 'products.facets.min_max_compare' | t | json -}}
+         },
+        {% if settings.currency_code_enabled %} 
+        moneyFormat: {{ shop.money_with_currency_format | json }},
+        {% else %}
+         moneyFormat: {{ shop.money_format | json }},
+        {% endif %}
+        shopCurrency: {{ shop.money_with_currency_format | json }},
+        sub_total: {{ 'sections.cart.sub_total' | | t | json }},      
+        animation_status: "{{ animation_is }}"        
+      };  
+  
+</script>
+  {%- if localization.available_countries.size > 1 or localization.available_languages.size > 1 -%}
+  <script src="{{ 'localization-form.js' | asset_url }}" defer="defer"></script>
+  {%- endif -%}
+  <script src="{{ 'predictive-search.js' | asset_url }}" defer="defer"></script>
+  {%- if settings.cart_type == 'drawer' -%}
+  {%-  render 'ajax-cart' -%}
+  {%- endif -%}     
+  <script src="{{ 'bootstrap.min.js' | asset_url }}" defer="defer"></script>
+  <script src="{{ 'wishlist.js' | asset_url }}" defer="defer"></script>
+  <script src="{{ 'compare.js' | asset_url }}" defer="defer"></script>
+  {%- if request.design_mode -%}
+  <script src="{{ 'theme-editor.js' | asset_url }}" defer="defer"></script>
+  {%- endif -%}
+  {%- if template contains 'collection' or template == 'search' -%}
+  <script src="{{ 'ajaxinate.min.js' | asset_url }}" defer></script> 
+  {%- endif -%}
