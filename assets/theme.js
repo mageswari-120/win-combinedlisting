@@ -128,56 +128,46 @@ function initVariantSelection() {
 
 document.addEventListener("DOMContentLoaded", initVariantSelection);
 
- 
+  
 document.addEventListener("click", (e) => {
   const item = e.target.closest(".variant-list-item");
-
-   const connectedUrl = item.dataset.connectedProductUrl;
-  if (connectedUrl && connectedUrl !== '' && connectedUrl !== 'nil') {
-    window.location.href = connectedUrl;
-    return; // stop all variant logic below
-  }
-
   if (!item) return;
-
-  const variantList = item.closest(".variant-list");
-  if (!variantList) return;
 
   const variantSelector = item.closest("variant-selector");
   if (!variantSelector) return;
 
   const dataUrl = variantSelector.dataset.url;
-  const dataSection = variantSelector.dataset.section; 
- variantList.querySelectorAll(".variant-list-item").forEach((li) => {
-    li.classList.remove("selected");
-  });
-  item.classList.add("selected");  
-    
-const optionValues = Array.from(
-  variantSelector.querySelectorAll(".variant-list"),
-  (ul) => {
-    const selected = ul.querySelector(".variant-list-item.selected");
-    return selected ? selected.getAttribute("data-value") : null;
-  }
-).filter(Boolean).join(",");
-
-console.log("selectedValues:", optionValues); 
-    //updateUrlForVariants(optionValues)
-  onVariantChanged(optionValues, dataUrl, dataSection, dataUrl) 
-});
+  const dataSection = variantSelector.dataset.section;
  
-function updateUrlForVariants(variantId, productUrl = null) {
-  if (!variantId) return;
-
-  // Combined listing — full URL change
-  if (productUrl && productUrl !== window.location.pathname) {
-    const newUrl = new URL(productUrl, window.location.origin);
-    newUrl.searchParams.set('variant', variantId);
-    window.history.replaceState({}, '', newUrl.toString());
+  const connectedUrl = item.dataset.connectedProductUrl;
+  if (connectedUrl && connectedUrl !== '' && connectedUrl !== 'nil') {
+    window.history.pushState({}, '', connectedUrl);
+    onVariantChanged(null, connectedUrl, dataSection);
     return;
   }
+ 
+  const variantList = item.closest(".variant-list");
+  if (!variantList) return;
 
-  // Standard variant — only update ?variant= param
+  variantList.querySelectorAll(".variant-list-item").forEach((li) => {
+    li.classList.remove("selected");
+  });
+  item.classList.add("selected");
+
+  const optionValues = Array.from(
+    variantSelector.querySelectorAll(".variant-list"),
+    (ul) => {
+      const selected = ul.querySelector(".variant-list-item.selected");
+      return selected ? selected.getAttribute("data-value-id") : null
+    }
+  ).filter(Boolean).join(",");
+
+  console.log("selectedValues:", optionValues);
+ 
+  onVariantChanged(optionValues, dataUrl, dataSection);
+});
+function updateUrlForVariants(variantId) {
+  if (!variantId) return;
   const url = new URL(window.location);
   const base = url.origin + url.pathname;
   const params = new URLSearchParams(url.search);
@@ -187,42 +177,59 @@ function updateUrlForVariants(variantId, productUrl = null) {
     '',
     base + '?' + params.toString().replace(/%2C/gi, ',')
   );
-  // const url = new URL(window.location);
-  // const base = url.origin + url.pathname;
-  // const params = new URLSearchParams(url.search);
-  // params.set('variant', variantId);
-  // window.history.replaceState({}, '', base + '?' + params.toString().replace(/%2C/gi, ','));
 } 
-
-async function onVariantChanged(optionValues, dataUrl, dataSection) {
-  if (!optionValues || !dataUrl || !dataSection) return;
+async function onVariantChanged(optionValues, dataUrl, dataSection) { 
+  if (!dataUrl || !dataSection) {
+    console.warn("onVariantChanged: missing dataUrl or dataSection", { dataUrl, dataSection });
+    return;
+  }
 
   try {
     const fetchUrl = new URL(dataUrl, window.location.origin);
-    fetchUrl.searchParams.set("section_id", dataSection);
-    const finalUrl = `${fetchUrl.toString()}&option_values=${optionValues}`;
+    fetchUrl.searchParams.set("section_id", dataSection); 
+    const finalUrl = optionValues
+      ? `${fetchUrl.toString()}&option_values=${optionValues}`
+      : fetchUrl.toString();
+
     console.log("fetching:", finalUrl);
 
     const response = await fetch(finalUrl);
+    if (!response.ok) {
+      console.error("Fetch failed:", response.status, finalUrl);
+      return;
+    }
+
     const responseText = await response.text();
     const html = new DOMParser().parseFromString(responseText, 'text/html');
 
     const productTemplate = html.querySelector("product-template");
-    console.log("productTemplate:", productTemplate);
-
     const variantId = productTemplate?.dataset.variantid;
-    console.log("variantId:", variantId);
-    updateUrlForVariants(variantId);
+    console.log("variantId:", variantId); 
+    if (variantId) {
+      updateUrlForVariants(variantId);
+    }
 
-    // if (!variantId) return;
- 
     updateProductGallery(variantId, html);
     updateProductDetails(variantId, html);
 
   } catch (e) {
-    console.error("Error:", e);
+    console.error("onVariantChanged error:", e);
   }
-}
+} 
+window.addEventListener("popstate", () => {
+  const variantSelector = document.querySelector("variant-selector");
+  if (!variantSelector) return;
+
+  const path = window.location.pathname;
+  const dataSection = variantSelector.dataset.section;
+
+  onVariantChanged(null, path, dataSection);
+});
+
+
+
+
+
 function updateProductGallery(variantId, html) {
   console.log(variantId, "variantId", "html", html); 
   const newGallery = html.querySelector("product-gallery");
@@ -236,8 +243,7 @@ function updateProductGallery(variantId, html) {
 
 
   const swapGallery = () => {
-    if (newGallery && currentGallery) {
-      // currentGallery.innerHTML = newGallery.innerHTML;
+    if (newGallery && currentGallery) { 
   currentGallery.replaceWith(newGallery);
 
       requestAnimationFrame(() => {

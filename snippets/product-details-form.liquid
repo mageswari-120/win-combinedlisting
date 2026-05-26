@@ -1,3 +1,8 @@
+  <style>
+li.variant-list-item.selected.btn.btn-secondary.d-inline-block.px-3.py-2.selected {
+    background: red;
+}
+</style>
   <product-detail-page-form>
               {% form 'product', product, id: 'product-form', novalidate: 'novalidate', data-product-id: product.id %}
                 {% for block in section.blocks %}
@@ -225,7 +230,7 @@
                                             assign is_active = true
                                           endif
                                         %}
-                                        <li class="variant-list-item {% if is_active %}selected{% endif %} d-inline-flex align-items-center justify-content-center {% if block.settings.swatch_shape == 'circle' %}rounded-pill{% endif %}"  data-value="{{ value | escape }}" data-swatch="{{ value | escape }}" data-option-value="{{ option.name | escape }}" title="{{ value }}"  role="option" aria-checked="{% if is_active %}true{% else %}false{% endif %}" aria-selected="{% if is_active %}true{% else %}false{% endif %}"
+                                        <li class="variant-list-item {% if is_active %}selected{% endif %} d-inline-flex align-items-center justify-content-center {% if block.settings.swatch_shape == 'circle' %}rounded-pill{% endif %}"  data-value="{{ value | escape }}" data-value-id ="{{ value.id }}" data-swatch="{{ value | escape }}" data-option-value="{{ option.name | escape }}" data-connected-product-url="{{ value.product_url }}" title="{{ value }}"  role="option" aria-checked="{% if is_active %}true{% else %}false{% endif %}" aria-selected="{% if is_active %}true{% else %}false{% endif %}"
                                           style=" width: {{ settings.variant_swatch_width }}px; height: {{ settings.variant_swatch_height }}px; display: flex;  align-items: center; justify-content: center; border-radius: {{ settings.variant_swatch_radius }}px;  
                                            {% if settings.variant_swatch_border_width != 0 %}
                                               border: {{ settings.variant_swatch_border_width }}px solid rgba(var(--color-border), {{ settings.variant_swatch_border_opacity | divided_by: 100.0 }});
@@ -286,9 +291,10 @@
                                         %}
                                         <li
                                           class="variant-list-item {% if is_button_active %}selected{% endif %} btn btn-secondary d-inline-block px-3 py-2 {% if is_button_active %}selected{% endif %}"
-                                          data-value="{{ value | escape }}"
+                                          data-value="{{ value | escape }}"  data-value-id ="{{ value.id }}" 
                                           data-swatch="{{ value | escape }}"
                                           data-option-value="{{ option.name | escape }}"
+                                          data-connected-product-url="{{ value.product_url }}"
                                           title="{{ value }}"
                                           role="option"
                                           aria-checked="{% if is_button_active %}true{% else %}false{% endif %}"
