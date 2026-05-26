@@ -225,7 +225,7 @@
                                             assign is_active = true
                                           endif
                                         %}
-                                        <li class="variant-list-item {% if is_active %}selected{% endif %} d-inline-flex align-items-center justify-content-center {% if block.settings.swatch_shape == 'circle' %}rounded-pill{% endif %}"  data-value="{{ value.id }}" data-swatch="{{ value }}" data-option-value="{{ option.name | escape }}" title="{{ value }}"  role="option" aria-checked="{% if is_active %}true{% else %}false{% endif %}" aria-selected="{% if is_active %}true{% else %}false{% endif %}"
+                                        <li class="variant-list-item {% if is_active %}selected{% endif %} d-inline-flex align-items-center justify-content-center {% if block.settings.swatch_shape == 'circle' %}rounded-pill{% endif %}"  data-value="{{ value | escape }}" data-swatch="{{ value | escape }}" data-option-value="{{ option.name | escape }}" title="{{ value }}"  role="option" aria-checked="{% if is_active %}true{% else %}false{% endif %}" aria-selected="{% if is_active %}true{% else %}false{% endif %}"
                                           style=" width: {{ settings.variant_swatch_width }}px; height: {{ settings.variant_swatch_height }}px; display: flex;  align-items: center; justify-content: center; border-radius: {{ settings.variant_swatch_radius }}px;  
                                            {% if settings.variant_swatch_border_width != 0 %}
                                               border: {{ settings.variant_swatch_border_width }}px solid rgba(var(--color-border), {{ settings.variant_swatch_border_opacity | divided_by: 100.0 }});
@@ -250,7 +250,7 @@
                                           background-size: cover;
                                           background-position: center;
                                           cursor: pointer; ">
-                                        <input data-valueid="{{ value }}" type="radio" name="options[{{ option.name }}]" id="option-{{ option.name | handleize }}-{{ value | handleize }}" value="{{ value.id }}"  class="d-none" {% if is_active %} checked  {% endif %}>
+                                        <input data-valueid="{{ value | escape }}" type="radio" name="options[{{ option.name }}]" id="option-{{ option.name | handleize }}-{{ value | handleize }}" value="{{ value | escape }}"  class="d-none" {% if is_active %} checked  {% endif %}>
                                         <span class="visually-hidden">{{ value }}</span>
                                       </label>
                                         </li>
@@ -286,8 +286,8 @@
                                         %}
                                         <li
                                           class="variant-list-item {% if is_button_active %}selected{% endif %} btn btn-secondary d-inline-block px-3 py-2 {% if is_button_active %}selected{% endif %}"
-                                          data-value="{{ value.id }}"
-                                          data-swatch="{{ value }}"
+                                          data-value="{{ value | escape }}"
+                                          data-swatch="{{ value | escape }}"
                                           data-option-value="{{ option.name | escape }}"
                                           title="{{ value }}"
                                           role="option"
@@ -303,7 +303,7 @@
                                               type="radio"
                                               name="options[{{ option.name }}]"
                                               id="option-{{ option.name | handleize }}-{{ value | handleize }}"
-                                              value="{{ value.id }}"
+                                              value="{{ value | escape }}"
                                               data-valueid="{{ value }}"
                                               class="d-none"
                                               {% if is_button_active %}

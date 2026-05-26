@@ -93,94 +93,10 @@ class ProductDetailGallery {
   }
 
   initDefaultGallery(containers) {
-    // containers.forEach((container) => {
-    //   const swiper = new Swiper(container, {
-    //     slidesPerView: 3,
-    //     spaceBetween: 30,
-    //     loop: true,
-    //     pagination: {
-    //       el: container.querySelector(".swiper-pagination"),
-    //       clickable: true,
-    //     },
-    //     navigation: {
-    //       nextEl: container.querySelector(".swiper-button-next"),
-    //       prevEl: container.querySelector(".swiper-button-prev"),
-    //     },
-    //   });
-    //   this.swipers.push(swiper);
-    // });
+    
   }
 }
- 
- 
-// document.addEventListener("DOMContentLoaded", () => {
-//   const gallery = new ProductDetailGallery(".product-main-gallery");
-
-//   // document.querySelectorAll(".variant-list").forEach((variantList) => {
-//   //     variantList.addEventListener("click", (e) => {
-//   //       const item = e.target.closest(".variant-list-item");
-//   //       if (!item) return;
-
-//   //       const clickedValue = item.dataset.value;
-//   //       const optionName = variantList.dataset.optionName;
-
-//   //       const allLists = Array.from(document.querySelectorAll(".variant-list"));
-    
-//   //       const selectedOptions = {};
-//   //       allLists.forEach((list) => {
-//   //         const activeItem = list.querySelector(".variant-list-item.selected");
-//   //         if (activeItem) {
-//   //           selectedOptions[list.dataset.optionName] = activeItem.dataset.value;
-//   //         }
-//   //       });
-    
-//   //       selectedOptions[optionName] = clickedValue;
-
-//   //       const variantData = JSON.parse(
-//   //         document.querySelector("[data-selected-variant]").textContent
-//   //       ); 
-//   //       const matchedVariant = variantData.find((variant) => {
-//   //         return Object.entries(selectedOptions).every(([name, value], i) => {
-//   //           return variant[`option${i + 1}`] === value;
-//   //         });
-//   //       });
-
-//   //       if (matchedVariant) { 
-//   //         const url = new URL(window.location.href);
-//   //         url.searchParams.set("variant", matchedVariant.id);
-//   //         window.history.replaceState({}, "", url.toString()); 
-//   //         variantList.querySelectorAll(".variant-list-item").forEach((li) => {
-//   //           li.classList.remove("selected");
-//   //           li.querySelector(".swatch-option")?.classList.remove("active");
-//   //           li.setAttribute("aria-selected", "false");
-//   //           li.setAttribute("aria-checked", "false");
-//   //         });
-
-//   //         item.classList.add("selected");
-//   //         item.querySelector(".swatch-option")?.classList.add("active");
-//   //         item.setAttribute("aria-selected", "true");
-//   //         item.setAttribute("aria-checked", "true"); 
-//   //         document.dispatchEvent(new CustomEvent("variant:changed", {
-//   //           detail: { variantId: matchedVariant.id }
-//   //         }));
-//   //       }
-//   //     });
-//   // });
-//    const variantLists = document.querySelectorAll(".variant-list");
-//   const productSection = document.querySelector("[data-section-id]");
-//   const sectionId = productSection?.dataset.sectionId;
-
-//   if (!variantLists.length || !productSection || !sectionId) return;
-
-//   // Handle variant selection clicks
-//   variantLists.forEach((variantList) => {
-//      variantList.addEventListener("click", (e) => {
-//       alert();
-//      });
-//   });
   
-
-// });
 document.addEventListener("DOMContentLoaded", () => {
   const gallery = new ProductDetailGallery(".product-main-gallery");
 
@@ -215,6 +131,13 @@ document.addEventListener("DOMContentLoaded", initVariantSelection);
  
 document.addEventListener("click", (e) => {
   const item = e.target.closest(".variant-list-item");
+
+   const connectedUrl = item.dataset.connectedProductUrl;
+  if (connectedUrl && connectedUrl !== '' && connectedUrl !== 'nil') {
+    window.location.href = connectedUrl;
+    return; // stop all variant logic below
+  }
+
   if (!item) return;
 
   const variantList = item.closest(".variant-list");
@@ -240,16 +163,35 @@ const optionValues = Array.from(
 
 console.log("selectedValues:", optionValues); 
     //updateUrlForVariants(optionValues)
-  onVariantChanged(optionValues, dataUrl, dataSection) 
+  onVariantChanged(optionValues, dataUrl, dataSection, dataUrl) 
 });
  
-function updateUrlForVariants(variantId) {
+function updateUrlForVariants(variantId, productUrl = null) {
   if (!variantId) return;
+
+  // Combined listing — full URL change
+  if (productUrl && productUrl !== window.location.pathname) {
+    const newUrl = new URL(productUrl, window.location.origin);
+    newUrl.searchParams.set('variant', variantId);
+    window.history.replaceState({}, '', newUrl.toString());
+    return;
+  }
+
+  // Standard variant — only update ?variant= param
   const url = new URL(window.location);
   const base = url.origin + url.pathname;
   const params = new URLSearchParams(url.search);
   params.set('variant', variantId);
-  window.history.replaceState({}, '', base + '?' + params.toString().replace(/%2C/gi, ','));
+  window.history.replaceState(
+    {},
+    '',
+    base + '?' + params.toString().replace(/%2C/gi, ',')
+  );
+  // const url = new URL(window.location);
+  // const base = url.origin + url.pathname;
+  // const params = new URLSearchParams(url.search);
+  // params.set('variant', variantId);
+  // window.history.replaceState({}, '', base + '?' + params.toString().replace(/%2C/gi, ','));
 } 
 
 async function onVariantChanged(optionValues, dataUrl, dataSection) {
