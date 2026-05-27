@@ -102,7 +102,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const productSection = document.querySelector('[data-section-id]');
   if (!productSection) {
-    console.warn("No product section with [data-section-id] found");
+   // console.warn("No product section with [data-section-id] found");
     return;
   }
 

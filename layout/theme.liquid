@@ -83,5 +83,25 @@
     {% render 'compare-color' %}
     {% render 'ask-question' %}
     {% render 'share-modal' %}   
+   {{  'recently-viewed.js' | asset_url | script_tag }}  
+<script> 
+  (function() {
+    if (!window.location.pathname.includes('/products/')) return;
+
+    const segment = window.location.pathname.split('/products/')[1];
+    if (!segment) return;
+    const handle = segment.split('/')[0].split('?')[0];
+    if (!handle) return;
+
+    try {
+      const key = 'recently_viewed';
+      const existing = JSON.parse(localStorage.getItem(key) || '[]');
+      const filtered = existing.filter(h => h !== handle);
+      filtered.push(handle);
+      localStorage.setItem(key, JSON.stringify(filtered.slice(-12)));
+    } catch(e) {}
+  })(); 
+</script>
+ 
   </body>
 </html>

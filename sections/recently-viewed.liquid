@@ -1,0 +1,216 @@
+{% stylesheet %}
+  .recently-viewed {
+    padding: 2rem 1.5rem;
+  }
+
+  .recently-viewed__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .recently-viewed__clear {
+    border: none;
+    background: none;
+    color: inherit;
+    text-decoration: underline;
+    cursor: pointer;
+  }
+
+  .recently-viewed__grid {
+    display: grid;
+    grid-template-columns: repeat(var(--recently-viewed-columns, 2), minmax(0, 1fr));
+    gap: 1.5rem;
+  }
+
+  @media (min-width: 768px) {
+    .recently-viewed__grid {
+      --recently-viewed-columns: 4;
+    }
+  }
+
+  .recently-viewed__item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .recently-viewed__media img {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 0.5rem;
+  }
+
+  .recently-viewed__title {
+    font-size: 0.95rem;
+  }
+
+  .recently-viewed__price {
+    display: flex;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+  }
+
+  .recently-viewed__price--sale {
+    color: #b91c1c;
+    font-weight: 600;
+  }
+
+  .recently-viewed__price--compare {
+    text-decoration: line-through;
+    opacity: 0.7;
+  }
+
+  .recently-viewed__empty {
+    color: rgba(0,0,0,0.6);
+  }
+{% endstylesheet %}
+
+<section class="recently-viewed"
+  aria-labelledby="recently-viewed-heading-{{ section.id }}"
+  data-recently-viewed
+  data-max-items="{{ section.settings.max_items }}">
+
+  <div class="recently-viewed__header">
+    <h2 id="recently-viewed-heading-{{ section.id }}">Recently viewed</h2>
+    <button type="button" class="recently-viewed__clear" data-recently-viewed-clear>
+      Clear
+    </button>
+  </div>
+
+  <div class="recently-viewed__grid" data-recently-viewed-grid>
+    <p class="recently-viewed__empty">No recently viewed products</p>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Recently viewed",
+  "settings": [
+    {
+      "type": "header",
+      "content": "t:content.general"
+    },
+    {
+      "type": "range",
+      "id": "max_items",
+      "label": "Recently viewed max items",
+      "min": 2,
+      "max": 12,
+      "step": 1,
+      "default": 4
+    }
+  ],
+  "presets": [
+    {
+      "name": "Recently viewed"
+    }
+  ]
+}
+{% endschema %}
+
+{% javascript %}
+  function initRecentlyViewed() {
+    const sections = document.querySelectorAll('[data-recently-viewed]');
+    if (!sections.length) return;
+
+    function getHandles() {
+      try {
+        return JSON.parse(localStorage.getItem('recently_viewed') || '[]');
+      } catch {
+        return [];
+      }
+    }
+
+    function saveHandles(handles) {
+      localStorage.setItem('recently_viewed', JSON.stringify(handles));
+    }
+
+    async function fetchProduct(handle) {
+      try {
+        const res = await fetch('/products/' + handle + '.js');
+        if (!res.ok) return null;
+        return res.json();
+      } catch {
+        return null;
+      }
+    }
+
+    function formatMoney(cents) {
+      return (cents / 100).toLocaleString('en-IN', {
+        style: 'currency',
+        currency: 'INR'
+      });
+    }
+
+    function renderProduct(product) {
+      const comparePrice = product.compare_at_price_max > product.price
+        ? '<span class="recently-viewed__price--compare">' + formatMoney(product.compare_at_price_max) + '</span>'
+        : '';
+
+      const image = product.featured_image
+        ? '<img src="' + product.featured_image + '" alt="' + product.title + '" loading="lazy">'
+        : '<div class="recently-viewed__placeholder"></div>';
+
+      return (
+        '<article class="recently-viewed__item">' +
+          '<a href="/products/' + product.handle + '" class="recently-viewed__link">' +
+            '<div class="recently-viewed__media">' + image + '</div>' +
+            '<div class="recently-viewed__info">' +
+              '<h3 class="recently-viewed__title">' + product.title + '</h3>' +
+              '<p class="recently-viewed__price">' +
+                '<span class="recently-viewed__price--sale">' + formatMoney(product.price) + '</span>' +
+                comparePrice +
+              '</p>' +
+            '</div>' +
+          '</a>' +
+        '</article>'
+      );
+    }
+
+    async function renderGrid(grid, maxItems) {
+      const handles = getHandles();
+      const limited = handles.slice().reverse().slice(0, maxItems);
+
+      if (!limited.length) {
+        grid.innerHTML = '<p class="recently-viewed__empty">No recently viewed products</p>';
+        return;
+      }
+
+      grid.innerHTML = '<p class="recently-viewed__empty">Loading...</p>';
+
+      const products = await Promise.all(limited.map(fetchProduct));
+      const valid = products.filter(Boolean);
+
+      grid.innerHTML = valid.length
+        ? valid.map(renderProduct).join('')
+        : '<p class="recently-viewed__empty">No recently viewed products</p>';
+    }
+
+    sections.forEach(function(section) {
+      const grid = section.querySelector('[data-recently-viewed-grid]');
+      const clearBtn = section.querySelector('[data-recently-viewed-clear]');
+      const maxItems = parseInt(section.dataset.maxItems, 10) || 8;
+
+      if (!grid) return;
+
+      renderGrid(grid, maxItems);
+
+      if (clearBtn) {
+        clearBtn.addEventListener('click', function() {
+          saveHandles([]);
+          grid.innerHTML = '<p class="recently-viewed__empty">No recently viewed products</p>';
+        });
+      }
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initRecentlyViewed);
+  } else {
+    initRecentlyViewed();
+  }
+{% endjavascript %}
