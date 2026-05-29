@@ -19,124 +19,91 @@
     cursor: pointer;
   }
 
-  .recently-viewed__grid {
-    display: grid;
-    grid-template-columns: repeat(var(--recently-viewed-columns, 2), minmax(0, 1fr));
-    gap: 1.5rem;
+  .recently-viewed__empty {
+    color: rgba(0, 0, 0, 0.6);
   }
 
-  @media (min-width: 768px) {
-    .recently-viewed__grid {
-      --recently-viewed-columns: 4;
-    }
-  }
-
-  .recently-viewed__item {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-  }
-
-  .recently-viewed__media img {
-    width: 100%;
-    height: auto;
+  .rv-card {
     display: block;
-    border-radius: 0.5rem;
+    text-decoration: none;
+    color: inherit;
   }
 
-  .recently-viewed__title {
-    font-size: 0.95rem;
+  .rv-card img {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+    display: block;
   }
 
-  .recently-viewed__price {
-    display: flex;
-    gap: 0.5rem;
+  .rv-card__title {
+    margin: 0.5rem 0 0.25rem;
+    font-weight: 600;
     font-size: 0.9rem;
   }
 
-  .recently-viewed__price--sale {
-    color: #b91c1c;
-    font-weight: 600;
+  .rv-card__price {
+    margin: 0;
+    font-size: 0.9rem;
   }
 
-  .recently-viewed__price--compare {
+  .rv-card__compare {
+    display: none;
+    margin: 0;
+    font-size: 0.85rem;
     text-decoration: line-through;
-    opacity: 0.7;
-  }
-
-  .recently-viewed__empty {
-    color: rgba(0,0,0,0.6);
+    opacity: 0.6;
   }
 {% endstylesheet %}
 
-<section class="recently-viewed"
+<template data-recently-viewed-template>
+  <div class="swiper-slide">
+    <a data-rv-url href="#" class="rv-card">
+      <img data-rv-image src="" alt="" loading="lazy">
+      <p class="rv-card__title" data-rv-title></p>
+      <p class="rv-card__price" data-rv-price></p>
+      <p class="rv-card__compare" data-rv-compare></p>
+    </a>
+  </div>
+</template>
+
+<section
+  class="recently-viewed"
   aria-labelledby="recently-viewed-heading-{{ section.id }}"
   data-recently-viewed
-  data-max-items="{{ section.settings.max_items }}">
-
+  data-max-items="{{ section.settings.max_items | default: 8 }}"
+>
   <div class="recently-viewed__header">
-    <h2 id="recently-viewed-heading-{{ section.id }}">Recently viewed</h2>
+    <h2 id="recently-viewed-heading-{{ section.id }}">
+      Recently viewed
+    </h2>
     <button type="button" class="recently-viewed__clear" data-recently-viewed-clear>
       Clear
     </button>
   </div>
 
-  <div class="recently-viewed__grid" data-recently-viewed-grid>
+  <div data-recently-viewed-grid>
     <p class="recently-viewed__empty">No recently viewed products</p>
   </div>
 </section>
 
-{% schema %}
-{
-  "name": "Recently viewed",
-  "settings": [
-    {
-      "type": "header",
-      "content": "t:content.general"
-    },
-    {
-      "type": "range",
-      "id": "max_items",
-      "label": "Recently viewed max items",
-      "min": 2,
-      "max": 12,
-      "step": 1,
-      "default": 4
-    }
-  ],
-  "presets": [
-    {
-      "name": "Recently viewed"
-    }
-  ]
-}
-{% endschema %}
-
-{% javascript %}
-  function initRecentlyViewed() {
-    const sections = document.querySelectorAll('[data-recently-viewed]');
-    if (!sections.length) return;
+<script>
+  (function() {
+    var STORAGE_KEY = 'viewedProducts';
 
     function getHandles() {
       try {
-        return JSON.parse(localStorage.getItem('recently_viewed') || '[]');
-      } catch {
+        var raw = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+        return raw
+          .map(function(h) { return String(h).replace(/^"|"$/g, '').trim(); })
+          .filter(function(h, i, arr) { return h && arr.indexOf(h) === i; });
+      } catch (e) {
         return [];
       }
     }
 
     function saveHandles(handles) {
-      localStorage.setItem('recently_viewed', JSON.stringify(handles));
-    }
-
-    async function fetchProduct(handle) {
-      try {
-        const res = await fetch('/products/' + handle + '.js');
-        if (!res.ok) return null;
-        return res.json();
-      } catch {
-        return null;
-      }
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(handles));
     }
 
     function formatMoney(cents) {
@@ -147,70 +114,143 @@
     }
 
     function renderProduct(product) {
-      const comparePrice = product.compare_at_price_max > product.price
-        ? '<span class="recently-viewed__price--compare">' + formatMoney(product.compare_at_price_max) + '</span>'
-        : '';
+      var template = document.querySelector('[data-recently-viewed-template]');
+      var clone = template.content.cloneNode(true);
 
-      const image = product.featured_image
-        ? '<img src="' + product.featured_image + '" alt="' + product.title + '" loading="lazy">'
-        : '<div class="recently-viewed__placeholder"></div>';
+      clone.querySelector('[data-rv-url]').href = '/products/' + product.handle;
 
-      return (
-        '<article class="recently-viewed__item">' +
-          '<a href="/products/' + product.handle + '" class="recently-viewed__link">' +
-            '<div class="recently-viewed__media">' + image + '</div>' +
-            '<div class="recently-viewed__info">' +
-              '<h3 class="recently-viewed__title">' + product.title + '</h3>' +
-              '<p class="recently-viewed__price">' +
-                '<span class="recently-viewed__price--sale">' + formatMoney(product.price) + '</span>' +
-                comparePrice +
-              '</p>' +
-            '</div>' +
-          '</a>' +
-        '</article>'
-      );
+      var img = clone.querySelector('[data-rv-image]');
+      if (product.featured_image) {
+        img.src = product.featured_image;
+        img.alt = product.title;
+      } else {
+        img.remove();
+      }
+
+      clone.querySelector('[data-rv-title]').textContent = product.title;
+      clone.querySelector('[data-rv-price]').textContent = formatMoney(product.price);
+
+      var compare = clone.querySelector('[data-rv-compare]');
+      if (product.compare_at_price_max > product.price) {
+        compare.textContent = formatMoney(product.compare_at_price_max);
+        compare.style.display = '';
+      }
+
+      var wrapper = document.createElement('div');
+      wrapper.appendChild(clone);
+      return wrapper.innerHTML;
+    }
+
+    async function fetchProduct(handle) {
+      try {
+        var res = await fetch('/products/' + handle + '.js');
+        if (!res.ok) return null;
+        return await res.json();
+      } catch (e) {
+        return null;
+      }
     }
 
     async function renderGrid(grid, maxItems) {
-      const handles = getHandles();
-      const limited = handles.slice().reverse().slice(0, maxItems);
+      var handles = getHandles().slice(0, maxItems);
 
-      if (!limited.length) {
+      if (!handles.length) {
         grid.innerHTML = '<p class="recently-viewed__empty">No recently viewed products</p>';
         return;
       }
 
       grid.innerHTML = '<p class="recently-viewed__empty">Loading...</p>';
 
-      const products = await Promise.all(limited.map(fetchProduct));
-      const valid = products.filter(Boolean);
+      var products = await Promise.all(handles.map(fetchProduct));
+      var valid = products.filter(Boolean);
 
-      grid.innerHTML = valid.length
-        ? valid.map(renderProduct).join('')
-        : '<p class="recently-viewed__empty">No recently viewed products</p>';
-    }
+      if (!valid.length) {
+        grid.innerHTML = '<p class="recently-viewed__empty">No recently viewed products</p>';
+        return;
+      }
 
-    sections.forEach(function(section) {
-      const grid = section.querySelector('[data-recently-viewed-grid]');
-      const clearBtn = section.querySelector('[data-recently-viewed-clear]');
-      const maxItems = parseInt(section.dataset.maxItems, 10) || 8;
+      // Build swiper structure
+      grid.innerHTML = `
+        <div class="swiper recently-viewed__swiper">
+          <div class="swiper-wrapper">
+            ${valid.map(renderProduct).join('')}
+          </div>
+          <div class="swiper-button-prev"></div>
+          <div class="swiper-button-next"></div>
+          <div class="swiper-pagination"></div>
+        </div>
+      `;
 
-      if (!grid) return;
-
-      renderGrid(grid, maxItems);
-
-      if (clearBtn) {
-        clearBtn.addEventListener('click', function() {
-          saveHandles([]);
-          grid.innerHTML = '<p class="recently-viewed__empty">No recently viewed products</p>';
+      // Init Swiper — reuse existing instance if Swiper is loaded
+      if (typeof Swiper !== 'undefined') {
+        new Swiper('.recently-viewed__swiper', {
+          slidesPerView: 2,
+          spaceBetween: 16,
+          navigation: {
+            nextEl: '.recently-viewed__swiper .swiper-button-next',
+            prevEl: '.recently-viewed__swiper .swiper-button-prev',
+          },
+          pagination: {
+            el: '.recently-viewed__swiper .swiper-pagination',
+            clickable: true,
+          },
+          breakpoints: {
+            640: { slidesPerView: 3 },
+            1024: { slidesPerView: 4 },
+          }
         });
       }
-    });
-  }
+    }
 
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initRecentlyViewed);
-  } else {
-    initRecentlyViewed();
-  }
-{% endjavascript %}
+    function initRecentlyViewed() {
+      var sections = document.querySelectorAll('[data-recently-viewed]');
+      if (!sections.length) return;
+
+      sections.forEach(function(sectionEl) {
+        var grid = sectionEl.querySelector('[data-recently-viewed-grid]');
+        var clearBtn = sectionEl.querySelector('[data-recently-viewed-clear]');
+        var maxItems = parseInt(sectionEl.dataset.maxItems, 10) || 8;
+
+        if (!grid) return;
+
+        renderGrid(grid, maxItems);
+
+        if (clearBtn) {
+          clearBtn.addEventListener('click', function() {
+            saveHandles([]);
+            grid.innerHTML = '<p class="recently-viewed__empty">No recently viewed products</p>';
+          });
+        }
+      });
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initRecentlyViewed);
+    } else {
+      initRecentlyViewed();
+    }
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Recently viewed",
+  "settings": [
+    {
+      "type": "range",
+      "id": "max_items",
+      "label": "Maximum items",
+      "min": 1,
+      "max": 20,
+      "step": 1,
+      "default": 8
+    }
+  ],
+  "blocks": [],
+  "presets": [
+    {
+      "name": "Recently viewed"
+    }
+  ]
+}
+{% endschema %}

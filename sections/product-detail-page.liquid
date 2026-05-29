@@ -662,6 +662,10 @@ product-gallery.stacked .product-thumbnails {
       {{ product | structured_data }}
     </script>
   </section>
+  {{- 'recently-viewed.js' | asset_url | script_tag -}}
+<script>
+  RecentlyViewed.addProduct({{ product.handle | json }});
+</script>
 </product-template>
 
 
@@ -699,12 +703,21 @@ product-gallery.stacked .product-thumbnails {
 
 
 </script>
+<script>
+  (function() {
+    var key = 'viewedProducts';
+    var handle = {{ product.handle | json }};
+    try {
+      var raw = JSON.parse(localStorage.getItem(key) || '[]');
+      raw = raw.filter(function(h) { return h !== handle; });
+      raw.unshift(handle);
+      raw = raw.slice(0, 20);
+      localStorage.setItem(key, JSON.stringify(raw));
+    } catch(e) {}
+  })();
+</script>
 
-
-
-
-
-
+ 
 {% schema %}
 {
   "name": "t:name.product-detail-page",
