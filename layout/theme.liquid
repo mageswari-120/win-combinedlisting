@@ -77,13 +77,13 @@
     </ul>
     {% render 'js-variables' %}
     {% render 'scroll-to-top' %}
-    {% sections 'overlay-group' %} 
-    {% render 'compare-modal' %}
+    {% sections 'overlay-group' %}  
     {% render 'quick-buy-modal' %}  
-    {% render 'compare-color' %}
     {% render 'ask-question' %}
     {% render 'share-modal' %}   
-   {{  'recently-viewed.js' | asset_url | script_tag }}  
+    {{  'recently-viewed.js' | asset_url | script_tag }}  
+    {{ 'promo-tiles.js' | asset_url | script_tag }}
+
 <script> 
   (function() {
     if (!window.location.pathname.includes('/products/')) return;
