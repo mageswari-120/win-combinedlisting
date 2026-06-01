@@ -1,1 +1,334 @@
-{"sections":{"breadcrumb_tcK7ky":{"type":"breadcrumb","name":"t:name.breadcrumb","settings":{"full_width":false,"color_scheme":"scheme-1","use_breadcrumb_title":true,"breadcrumb_style":"center","image_overlay_opacity":40,"padding-block-start":62,"padding-block-end":66}},"main":{"type":"product-detail-page","blocks":{"discount_9XwcXJ":{"type":"discount","settings":{}},"vendor_JzGTNB":{"type":"vendor","settings":{"padding-block-start":8,"padding-block-end":4}},"title_yerNVa":{"type":"title","settings":{"padding-block-start":0,"padding-block-end":10}},"price_KWVhw6":{"type":"price","settings":{"padding-block-start":8,"padding-block-end":10}},"variant_selector_QnLwig":{"type":"variant_selector","settings":{"swatch_style":"button","color_swatch":true,"show_variant_image_as_swatch":false,"padding-block-start":0,"padding-block-end":20}},"inventory_mUwQc4":{"type":"inventory","settings":{"inventory_threshold":18,"show_inventory_quantity":true,"padding-block-start":18,"padding-block-end":20}},"checkout_buttons_RHqFtR":{"type":"checkout_buttons","settings":{"show_dynamic_checkout":true,"show_gift_card_recipient":true,"padding-block-start":4,"padding-block-end":10}},"model_details_block_WbdenA":{"type":"model-details-block","settings":{"padding-block-start":20,"padding-block-end":20}},"badge_RrCnYe":{"type":"badge","settings":{"badge_label":"100% Secured Payment","padding-block-start":0,"padding-block-end":10}},"accordion_panel_dEqUKW":{"type":"accordion_panel","settings":{"accordion_icon":"plus","dividers":true,"heading":"Shipping and Returns","type_preset":"h6","content":"<p>We offer fast and reliable shipping for all our clothing items. Orders are processed within <strong>1-2 business days<\/strong> and shipped via standard delivery, which typically takes 3-5 business days.<\/p><p>Express shipping options are also available at checkout for an additional fee, ensuring your fashion essentials arrive even sooner. Enjoy <strong>free shipping<\/strong> on orders<strong> over $150<\/strong>. For any questions regarding your order, please contact our customer service team for assistance.<\/p>","page":"","padding-block-start":0,"padding-block-end":0}},"accordion_panel_VYkTdU":{"type":"accordion_panel","settings":{"accordion_icon":"plus","dividers":true,"heading":"Return Policies","type_preset":"h6","content":"<p>Provided the conditions in our refund policy have been met, refunds will be processed using the original form of payment. You can return an item purchased online by posting it to us. Please contact customer service for return address. Please note that delivery costs will be excluded from the refund unless goods are returned in accordance with your statutory rights (e.g. they are faulty or not as ordered).<br\/><\/p><ul><li>The items with the original receipt are returned within 30 days of purchase.<\/li><\/ul><p><\/p><ul><li>Items must be in the original condition as purchased with all labels\/tickets attached.<\/li><\/ul><p><br\/>Provided the conditions in our refund policy have been met, refunds will be processed using the original form of payment. You can return an item purchased online by posting it to us. Please contact customer service for return address. Please note that delivery costs will be excluded from the refund unless goods are returned in accordance with your statutory rights (e.g. they are faulty or not as ordered).<\/p>","page":"","padding-block-start":0,"padding-block-end":0}}},"block_order":["discount_9XwcXJ","vendor_JzGTNB","title_yerNVa","price_KWVhw6","variant_selector_QnLwig","inventory_mUwQc4","checkout_buttons_RHqFtR","model_details_block_WbdenA","badge_RrCnYe","accordion_panel_dEqUKW","accordion_panel_VYkTdU"],"settings":{"full_width":true,"color_scheme":"scheme-1","show_sticky":true,"media_position":"left","media_width":"medium","media_border":"solid","media_border_width":1,"media_border_opacity":100,"media_border_radius":5,"slider_option":"stacked","thumbnail_type":"none","thumbnail_position":"inside_gallery","gallery_options":"none","description_placement":"right","style":"arrow","border":"solid","border_width":1,"border_opacity":100,"border_radius":32,"inherit_color_scheme":true,"pagination_color_scheme":"","padding-block-start":100,"padding-block-end":100}},"related_product_kqC79P":{"type":"related-product","blocks":{"header-block":{"type":"header-block","name":"t:name.header-block","static":true,"settings":{"width":"fill","custom_width":88,"horizontal_alignment":"center","horizontal_alignment_mobile":"center","padding-block-start":0,"padding-block-end":50},"blocks":{"text_kxV6Fa":{"type":"text","name":"t:name.header","settings":{"text":"<h2>Related Product<\/h2>","type_preset":"rte","text_transform":"capitalize","padding-block-start":0,"padding-block-end":14,"padding-inline-start":0,"padding-inline-end":0},"blocks":{}},"description_WanfBV":{"type":"description","name":"t:settings.text","settings":{"text":"Description","text_transform":"capitalize","padding-block-start":0,"padding-block-end":0,"padding-inline-start":0,"padding-inline-end":0},"blocks":{}}},"block_order":["text_kxV6Fa","description_WanfBV"]},"product-grid-item":{"type":"product-card","static":true,"settings":{"inherit_color_scheme":true,"color_scheme":"scheme-2","alignment":"center","border":"none","border_width":1,"border_opacity":100,"border_radius":0,"padding-block-start":20,"padding-block-end":20,"padding-inline-start":20,"padding-inline-end":20},"blocks":{"featured-media":{"type":"featured-media","static":true,"settings":{"media_aspect_ratio":"portrait","secondary_image":false,"border":"none","border_width":1,"border_opacity":100,"border_radius":0},"blocks":{}},"product-title":{"type":"product-title","static":true,"settings":{"type_preset":"h5","text_transform":"capitalize","padding-block-start":0,"padding-block-end":10},"blocks":{}},"price":{"type":"price","static":true,"settings":{"compare_price":false,"type_preset":"p","padding-block-start":10,"padding-block-end":10},"blocks":{}},"card-swatch":{"type":"card-swatch","static":true,"settings":{"swatches":"color","variant_swatch_width":30,"variant_swatch_height":30,"variant_swatch_radius":100,"variant_swatch_border_width":1,"variant_swatch_border_opacity":10,"padding-block-start":0,"padding-block-end":10},"blocks":{}}},"block_order":[]}},"disabled":true,"name":"t:name.related-product","settings":{"full_width":false,"color_scheme":"","product":"","product_style":"carousel","products_to_show":4,"horizontal_gap":20,"vertical_gap":20,"columns_desktop":"4","columns_mobile":"1","style":"arrow","border":"none","border_width":1,"border_opacity":100,"border_radius":0,"inherit_color_scheme":true,"pagination_color_scheme":"","padding-top":100,"padding-bottom":100,"custom_class":""}},"177089188518c9fc48":{"type":"apps","disabled":true,"settings":{"include_margins":true}}},"order":["breadcrumb_tcK7ky","main","related_product_kqC79P","177089188518c9fc48"]}
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "breadcrumb_tcK7ky": {
+      "type": "breadcrumb",
+      "name": "t:name.breadcrumb",
+      "settings": {
+        "full_width": false,
+        "color_scheme": "scheme-1",
+        "use_breadcrumb_title": true,
+        "breadcrumb_style": "center",
+        "image_overlay_opacity": 40,
+        "padding-block-start": 62,
+        "padding-block-end": 66
+      }
+    },
+    "main": {
+      "type": "product-detail-page",
+      "blocks": {
+        "amp_back_in_stock_app_block_iQrQY8": {
+          "type": "shopify://apps/amp-back-in-stock/blocks/app-block/bfa6a8c4-24e2-411a-9396-e35031b33f34",
+          "settings": {
+            "caption": "Email when available",
+            "font_size": 16,
+            "color": "#ffffff",
+            "background_color": "#000000",
+            "margin_top": 10,
+            "margin_bottom": 10,
+            "classes": "button button--full-width",
+            "style": "text-decoration:none"
+          }
+        },
+        "discount_9XwcXJ": {
+          "type": "discount",
+          "settings": {}
+        },
+        "vendor_JzGTNB": {
+          "type": "vendor",
+          "settings": {
+            "padding-block-start": 8,
+            "padding-block-end": 4
+          }
+        },
+        "title_yerNVa": {
+          "type": "title",
+          "settings": {
+            "padding-block-start": 0,
+            "padding-block-end": 10
+          }
+        },
+        "price_KWVhw6": {
+          "type": "price",
+          "settings": {
+            "padding-block-start": 8,
+            "padding-block-end": 10
+          }
+        },
+        "variant_selector_QnLwig": {
+          "type": "variant_selector",
+          "settings": {
+            "swatch_style": "button",
+            "color_swatch": true,
+            "show_variant_image_as_swatch": false,
+            "padding-block-start": 0,
+            "padding-block-end": 20
+          }
+        },
+        "inventory_mUwQc4": {
+          "type": "inventory",
+          "settings": {
+            "inventory_threshold": 18,
+            "show_inventory_quantity": true,
+            "padding-block-start": 18,
+            "padding-block-end": 20
+          }
+        },
+        "checkout_buttons_RHqFtR": {
+          "type": "checkout_buttons",
+          "settings": {
+            "show_dynamic_checkout": true,
+            "show_gift_card_recipient": true,
+            "padding-block-start": 4,
+            "padding-block-end": 10
+          }
+        },
+        "model_details_block_WbdenA": {
+          "type": "model-details-block",
+          "settings": {
+            "padding-block-start": 20,
+            "padding-block-end": 20
+          }
+        },
+        "badge_RrCnYe": {
+          "type": "badge",
+          "settings": {
+            "badge_label": "100% Secured Payment",
+            "padding-block-start": 0,
+            "padding-block-end": 10
+          }
+        },
+        "accordion_panel_dEqUKW": {
+          "type": "accordion_panel",
+          "settings": {
+            "accordion_icon": "plus",
+            "dividers": true,
+            "heading": "Shipping and Returns",
+            "type_preset": "h6",
+            "content": "<p>We offer fast and reliable shipping for all our clothing items. Orders are processed within <strong>1-2 business days</strong> and shipped via standard delivery, which typically takes 3-5 business days.</p><p>Express shipping options are also available at checkout for an additional fee, ensuring your fashion essentials arrive even sooner. Enjoy <strong>free shipping</strong> on orders<strong> over $150</strong>. For any questions regarding your order, please contact our customer service team for assistance.</p>",
+            "page": "",
+            "padding-block-start": 0,
+            "padding-block-end": 0
+          }
+        },
+        "accordion_panel_VYkTdU": {
+          "type": "accordion_panel",
+          "settings": {
+            "accordion_icon": "plus",
+            "dividers": true,
+            "heading": "Return Policies",
+            "type_preset": "h6",
+            "content": "<p>Provided the conditions in our refund policy have been met, refunds will be processed using the original form of payment. You can return an item purchased online by posting it to us. Please contact customer service for return address. Please note that delivery costs will be excluded from the refund unless goods are returned in accordance with your statutory rights (e.g. they are faulty or not as ordered).<br/></p><ul><li>The items with the original receipt are returned within 30 days of purchase.</li></ul><p></p><ul><li>Items must be in the original condition as purchased with all labels/tickets attached.</li></ul><p><br/>Provided the conditions in our refund policy have been met, refunds will be processed using the original form of payment. You can return an item purchased online by posting it to us. Please contact customer service for return address. Please note that delivery costs will be excluded from the refund unless goods are returned in accordance with your statutory rights (e.g. they are faulty or not as ordered).</p>",
+            "page": "",
+            "padding-block-start": 0,
+            "padding-block-end": 0
+          }
+        }
+      },
+      "block_order": [
+        "amp_back_in_stock_app_block_iQrQY8",
+        "discount_9XwcXJ",
+        "vendor_JzGTNB",
+        "title_yerNVa",
+        "price_KWVhw6",
+        "variant_selector_QnLwig",
+        "inventory_mUwQc4",
+        "checkout_buttons_RHqFtR",
+        "model_details_block_WbdenA",
+        "badge_RrCnYe",
+        "accordion_panel_dEqUKW",
+        "accordion_panel_VYkTdU"
+      ],
+      "settings": {
+        "full_width": true,
+        "color_scheme": "scheme-1",
+        "show_sticky": true,
+        "media_position": "left",
+        "media_width": "medium",
+        "media_border": "solid",
+        "media_border_width": 1,
+        "media_border_opacity": 100,
+        "media_border_radius": 5,
+        "slider_option": "stacked",
+        "thumbnail_type": "none",
+        "thumbnail_position": "inside_gallery",
+        "gallery_options": "none",
+        "description_placement": "right",
+        "style": "arrow",
+        "border": "solid",
+        "border_width": 1,
+        "border_opacity": 100,
+        "border_radius": 32,
+        "inherit_color_scheme": true,
+        "pagination_color_scheme": "",
+        "padding-block-start": 100,
+        "padding-block-end": 100
+      }
+    },
+    "related_product_kqC79P": {
+      "type": "related-product",
+      "blocks": {
+        "header-block": {
+          "type": "header-block",
+          "name": "t:name.header-block",
+          "static": true,
+          "settings": {
+            "width": "fill",
+            "custom_width": 88,
+            "horizontal_alignment": "center",
+            "horizontal_alignment_mobile": "center",
+            "padding-block-start": 0,
+            "padding-block-end": 50
+          },
+          "blocks": {
+            "text_kxV6Fa": {
+              "type": "text",
+              "name": "t:name.header",
+              "settings": {
+                "text": "<h2>Related Product</h2>",
+                "type_preset": "rte",
+                "text_transform": "capitalize",
+                "padding-block-start": 0,
+                "padding-block-end": 14,
+                "padding-inline-start": 0,
+                "padding-inline-end": 0
+              },
+              "blocks": {}
+            },
+            "description_WanfBV": {
+              "type": "description",
+              "name": "t:settings.text",
+              "settings": {
+                "text": "Description",
+                "text_transform": "capitalize",
+                "padding-block-start": 0,
+                "padding-block-end": 0,
+                "padding-inline-start": 0,
+                "padding-inline-end": 0
+              },
+              "blocks": {}
+            }
+          },
+          "block_order": [
+            "text_kxV6Fa",
+            "description_WanfBV"
+          ]
+        },
+        "product-grid-item": {
+          "type": "product-card",
+          "static": true,
+          "settings": {
+            "inherit_color_scheme": true,
+            "color_scheme": "scheme-2",
+            "alignment": "center",
+            "border": "none",
+            "border_width": 1,
+            "border_opacity": 100,
+            "border_radius": 0,
+            "padding-block-start": 20,
+            "padding-block-end": 20,
+            "padding-inline-start": 20,
+            "padding-inline-end": 20
+          },
+          "blocks": {
+            "featured-media": {
+              "type": "featured-media",
+              "static": true,
+              "settings": {
+                "media_aspect_ratio": "portrait",
+                "secondary_image": false,
+                "border": "none",
+                "border_width": 1,
+                "border_opacity": 100,
+                "border_radius": 0
+              },
+              "blocks": {}
+            },
+            "product-title": {
+              "type": "product-title",
+              "static": true,
+              "settings": {
+                "type_preset": "h5",
+                "text_transform": "capitalize",
+                "padding-block-start": 0,
+                "padding-block-end": 10
+              },
+              "blocks": {}
+            },
+            "price": {
+              "type": "price",
+              "static": true,
+              "settings": {
+                "compare_price": false,
+                "type_preset": "p",
+                "padding-block-start": 10,
+                "padding-block-end": 10
+              },
+              "blocks": {}
+            },
+            "card-swatch": {
+              "type": "card-swatch",
+              "static": true,
+              "settings": {
+                "swatches": "color",
+                "variant_swatch_width": 30,
+                "variant_swatch_height": 30,
+                "variant_swatch_radius": 100,
+                "variant_swatch_border_width": 1,
+                "variant_swatch_border_opacity": 10,
+                "padding-block-start": 0,
+                "padding-block-end": 10
+              },
+              "blocks": {}
+            }
+          },
+          "block_order": []
+        }
+      },
+      "disabled": true,
+      "name": "t:name.related-product",
+      "settings": {
+        "full_width": false,
+        "color_scheme": "",
+        "product": "",
+        "product_style": "carousel",
+        "products_to_show": 4,
+        "horizontal_gap": 20,
+        "vertical_gap": 20,
+        "columns_desktop": "4",
+        "columns_mobile": "1",
+        "style": "arrow",
+        "border": "none",
+        "border_width": 1,
+        "border_opacity": 100,
+        "border_radius": 0,
+        "inherit_color_scheme": true,
+        "pagination_color_scheme": "",
+        "padding-top": 100,
+        "padding-bottom": 100,
+        "custom_class": ""
+      }
+    },
+    "177089188518c9fc48": {
+      "type": "apps",
+      "disabled": true,
+      "settings": {
+        "include_margins": true
+      }
+    }
+  },
+  "order": [
+    "breadcrumb_tcK7ky",
+    "main",
+    "related_product_kqC79P",
+    "177089188518c9fc48"
+  ]
+}
