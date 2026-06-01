@@ -1,0 +1,656 @@
+{% stylesheet %}
+  .quick-order {
+    display: grid;
+    gap: 1rem;
+  }
+
+  .quick-order__heading {
+    margin: 0;
+    font-size: 1.4rem;
+    font-weight: 600;
+  }
+
+  .quick-order__description {
+    margin: 0;
+    font-size: 0.95rem;
+    color: rgba(0, 0, 0, 0.7);
+  }
+
+  .quick-order__form {
+    border-radius: 0.75rem;
+    border: 1px solid rgba(0, 0, 0, 0.06);
+    padding: 1rem 1.25rem;
+    display: grid;
+    gap: 0.75rem;
+  }
+
+  .quick-order__summary {
+    font-size: 0.9rem;
+    color: rgba(0, 0, 0, 0.8);
+  }
+
+  .quick-order__table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+  }
+
+  .quick-order__col {
+    text-align: left;
+    padding: 0.4rem 0.3rem;
+    font-weight: 500;
+    color: rgba(0, 0, 0, 0.8);
+  }
+
+  .quick-order__row:nth-child(odd) {
+    background-color: rgba(0, 0, 0, 0.015);
+  }
+
+  .quick-order__row--added {
+    animation: quick-order-row-added 1.5s ease-out;
+  }
+
+  .quick-order__cell {
+    padding: 0.4rem 0.3rem;
+    vertical-align: middle;
+  }
+
+  .quick-order__product {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .quick-order__image {
+    display: block;
+    width: 3.5rem;
+    height: auto;
+    border-radius: 0.4rem;
+  }
+
+  .quick-order__product-title {
+    display: inline-block;
+    font-weight: 500;
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .quick-order__product-title:hover {
+    text-decoration: underline;
+  }
+
+  .quick-order__variant-title {
+    display: block;
+    font-size: 0.8rem;
+    color: rgba(0, 0, 0, 0.7);
+  }
+
+  .quick-order__variant-select-wrapper {
+    margin-top: 0.2rem;
+  }
+
+  .quick-order__variant-label {
+    display: block;
+    font-size: 0.75rem;
+    color: rgba(0, 0, 0, 0.6);
+    margin-bottom: 0.1rem;
+  }
+
+  .quick-order__variant-select {
+    font-size: 0.85rem;
+    padding: 0.25rem 0.4rem;
+    border-radius: 0.25rem;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+  }
+
+  .quick-order__sku {
+    font-size: 0.8rem;
+    color: rgba(0, 0, 0, 0.7);
+  }
+
+  .quick-order__price {
+    white-space: nowrap;
+  }
+
+  .quick-order__price--sale {
+    font-weight: 600;
+    margin-right: 0.35rem;
+  }
+
+  .quick-order__price--compare {
+    text-decoration: line-through;
+    color: rgba(0, 0, 0, 0.6);
+    font-size: 0.8rem;
+  }
+
+  .quick-order__availability {
+    display: block;
+    margin-top: 0.15rem;
+    font-size: 0.8rem;
+    color: rgba(0, 0, 0, 0.7);
+  }
+
+  .quick-order__availability--out {
+    color: #b91c1c;
+  }
+
+  .quick-order__availability--in {
+    color: #047857;
+  }
+
+  .quick-order__quantity-input {
+    width: 5rem;
+    padding: 0.4rem 0.5rem;
+    border-radius: 0.35rem;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    font-size: 0.9rem;
+  }
+
+  .quick-order__quantity-input:focus-visible {
+    outline: 2px solid currentColor;
+    outline-offset: 2px;
+  }
+
+  .quick-order__quantity-input:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+
+  .quick-order__actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .quick-order__submit {
+    padding: 0.7rem 1.6rem;
+    border-radius: 999px;
+    border: none;
+    background-color: #111827;
+    color: #ffffff;
+    font-size: 0.95rem;
+    font-weight: 500;
+    cursor: pointer;
+  }
+
+  .quick-order__submit[disabled] {
+    opacity: 0.7;
+    cursor: wait;
+  }
+
+  .quick-order__submit:hover {
+    filter: brightness(1.05);
+  }
+
+  .quick-order__submit:focus-visible {
+    outline: 2px solid currentColor;
+    outline-offset: 2px;
+  }
+
+  .quick-order__status {
+    margin: 0;
+    font-size: 0.85rem;
+    color: rgba(0, 0, 0, 0.8);
+  }
+
+  .quick-order__apps {
+    display: grid;
+    gap: 1rem;
+  }
+
+  @media (max-width: 768px) {
+    .quick-order__table {
+      display: block;
+      overflow-x: auto;
+    }
+  }
+
+  @keyframes quick-order-row-added {
+    0% {
+      background-color: rgba(34, 197, 94, 0.25);
+    }
+    100% {
+      background-color: transparent;
+    }
+  }
+{% endstylesheet %}
+<section class="quick-order" data-section-id="{{ section.id }}">
+  {% assign quick_order_collection = section.settings.collection %}
+  {% if quick_order_collection and quick_order_collection.products.size > 0 %}
+    {% if section.settings.heading != '' %}
+      <h1 class="quick-order__heading">{{ section.settings.heading | escape }}</h1>
+    {% endif %}
+
+    {% if section.settings.description != '' %}
+      <p class="quick-order__description">{{ section.settings.description | escape }}</p>
+    {% endif %}
+
+    <form
+      class="quick-order__form"
+      data-quick-order-form
+      data-quick-order-submit-label="{{ section.settings.submit_label | escape }}"
+      data-quick-order-submit-loading-label="Adding items…"
+      data-quick-order-empty-message="Set a quantity above zero before adding to cart."
+      data-quick-order-success-message="Items added to cart."
+      data-quick-order-generic-error-message="Something went wrong while adding to cart."
+    >
+      <div class="quick-order__summary" data-quick-order-summary aria-live="polite">
+        0 items selected
+      </div>
+
+      <table class="quick-order__table" role="grid">
+        <thead>
+          <tr>
+            <th scope="col" class="quick-order__col quick-order__col--product">
+              {{ section.settings.product_column_label | escape }}
+            </th>
+            {% if section.settings.show_sku %}
+              <th scope="col" class="quick-order__col quick-order__col--sku">
+                {{ section.settings.sku_column_label | escape }}
+              </th>
+            {% endif %}
+            {% if section.settings.show_price %}
+              <th scope="col" class="quick-order__col quick-order__col--price">
+                {{ section.settings.price_column_label | escape }}
+              </th>
+            {% endif %}
+            <th scope="col" class="quick-order__col quick-order__col--quantity">
+              {{ section.settings.quantity_column_label | escape }}
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          {% assign max_items = section.settings.max_products | default: 25 %}
+          {% for product in quick_order_collection.products limit: max_items %}
+            {% assign default_variant = product.selected_or_first_available_variant %}
+            {% if default_variant %}
+              {% assign default_available = default_variant.available %}
+              <tr
+                class="quick-order__row"
+                data-quick-order-row
+                data-quick-order-row-available="{{ default_available }}"
+              >
+                <td class="quick-order__cell quick-order__cell--product">
+                  <div class="quick-order__product">
+                    {% if section.settings.show_image and product.featured_image %}
+                      <a href="{{ product.url }}" class="quick-order__image-link">
+                        {{ product.featured_image | image_url: width: 80 | image_tag: loading: 'lazy', class: 'quick-order__image' }}
+                      </a>
+                    {% endif %}
+                    <div class="quick-order__product-info">
+                      <a href="{{ product.url }}" class="quick-order__product-title">
+                        {{ product.title | escape }}
+                      </a>
+
+                      {% if product.variants.size > 1 %}
+                        <div class="quick-order__variant-select-wrapper">
+                          <label class="quick-order__variant-label" for="QuickOrderVariant-{{ section.id }}-{{ product.id }}">
+                            Variant
+                          </label>
+                          <select
+                            id="QuickOrderVariant-{{ section.id }}-{{ product.id }}"
+                            class="quick-order__variant-select"
+                            data-quick-order-variant-select
+                          >
+                            {% for variant in product.variants %}
+                              <option
+                                value="{{ variant.id }}"
+                                data-available="{{ variant.available }}"
+                                data-price="{{ variant.price | money }}"
+                                {% if variant.id == default_variant.id %}selected{% endif %}
+                              >
+                                {{ variant.title | escape }}
+                                {% if variant.available == false %}
+                                  (Out of stock)
+                                {% endif %}
+                              </option>
+                            {% endfor %}
+                          </select>
+                        </div>
+                      {% else %}
+                        <span class="quick-order__variant-title">
+                          {{ default_variant.title | escape }}
+                        </span>
+                      {% endif %}
+
+                      <span
+                        class="quick-order__availability"
+                        data-quick-order-availability
+                      >
+                        {% if default_available %}
+                          In stock
+                        {% else %}
+                          Out of stock
+                        {% endif %}
+                      </span>
+                    </div>
+                  </div>
+                </td>
+
+                {% if section.settings.show_sku %}
+                  <td class="quick-order__cell quick-order__cell--sku">
+                    {% if default_variant.sku != '' %}
+                      <span class="quick-order__sku">{{ default_variant.sku | escape }}</span>
+                    {% endif %}
+                  </td>
+                {% endif %}
+
+                {% if section.settings.show_price %}
+                  <td class="quick-order__cell quick-order__cell--price" data-quick-order-price>
+                    {% if default_variant.compare_at_price > default_variant.price %}
+                      <span class="quick-order__price quick-order__price--sale">
+                        {{ default_variant.price | money }}
+                      </span>
+                      <span class="quick-order__price quick-order__price--compare">
+                        {{ default_variant.compare_at_price | money }}
+                      </span>
+                    {% else %}
+                      <span class="quick-order__price">
+                        {{ default_variant.price | money }}
+                      </span>
+                    {% endif %}
+                  </td>
+                {% endif %}
+
+                <td class="quick-order__cell quick-order__cell--quantity">
+                  <input
+                    type="number"
+                    class="quick-order__quantity-input"
+                    name="quantity"
+                    min="0"
+                    step="1"
+                    value="0"
+                    inputmode="numeric"
+                    aria-label="{{ section.settings.quantity_column_label | escape }} {{ product.title | escape }}"
+                    data-quick-order-quantity
+                    data-quick-order-variant-id="{{ default_variant.id }}"
+                    {% if default_available == false %}disabled{% endif %}
+                  />
+                </td>
+              </tr>
+            {% endif %}
+          {% endfor %}
+        </tbody>
+      </table>
+
+      <div class="quick-order__actions">
+        <button type="submit" class="quick-order__submit" data-quick-order-submit>
+          {{ section.settings.submit_label | escape }}
+        </button>
+        <p class="quick-order__status" data-quick-order-status aria-live="polite"></p>
+      </div>
+    </form>
+
+    <div class="quick-order__apps">
+      {% for block in section.blocks %}
+        {% if block.type == '@app' %}
+          {% render block %}
+        {% endif %}
+      {% endfor %}
+    </div>
+  {% endif %}
+</section> 
+{% javascript %}
+  const quickOrderForms = document.querySelectorAll('[data-quick-order-form]');
+
+  function updateRowAvailability(row, available) {
+    const qtyInput = row.querySelector('[data-quick-order-quantity]');
+    const availabilityEl = row.querySelector('[data-quick-order-availability]');
+    row.dataset.quickOrderRowAvailable = String(available);
+    if (qtyInput) {
+      qtyInput.disabled = !available;
+      if (!available) {
+        qtyInput.value = '0';
+      }
+    }
+    if (availabilityEl) {
+      availabilityEl.textContent = available ? 'In stock' : 'Out of stock';
+      availabilityEl.classList.toggle('quick-order__availability--in', available);
+      availabilityEl.classList.toggle('quick-order__availability--out', !available);
+    }
+  }
+
+  function updateSummary(form) {
+    const summary = form.querySelector('[data-quick-order-summary]');
+    if (!summary) return;
+    const qtyInputs = form.querySelectorAll('[data-quick-order-quantity]');
+    let total = 0;
+    qtyInputs.forEach((input) => {
+      const value = parseInt(input.value, 10) || 0;
+      total += value;
+    });
+    const label = total === 1 ? '1 item selected' : `${total} items selected`;
+    summary.textContent = label;
+  }
+
+  function attachVariantChangeHandlers(form) {
+    const rows = form.querySelectorAll('[data-quick-order-row]');
+    rows.forEach((row) => {
+      const select = row.querySelector('[data-quick-order-variant-select]');
+      const qtyInput = row.querySelector('[data-quick-order-quantity]');
+      if (!select || !qtyInput) return;
+
+      const priceCell = row.querySelector('[data-quick-order-price]');
+
+      select.addEventListener('change', () => {
+        const selectedOption = select.options[select.selectedIndex];
+        const variantId = selectedOption.value;
+        const available = selectedOption.dataset.available === 'true';
+        qtyInput.dataset.quickOrderVariantId = variantId;
+        updateRowAvailability(row, available);
+
+        if (priceCell) {
+          const priceText = selectedOption.dataset.price;
+          if (priceText) {
+            const priceEl = priceCell.querySelector('.quick-order__price');
+            if (priceEl) {
+              priceEl.textContent = priceText;
+            }
+          }
+        }
+
+        updateSummary(form);
+      });
+    });
+  }
+
+  quickOrderForms.forEach((form) => {
+    const status = form.querySelector('[data-quick-order-status]');
+    const submitButton = form.querySelector('[data-quick-order-submit]');
+    const submitDefaultLabel = form.dataset.quickOrderSubmitLabel || (submitButton && submitButton.textContent) || 'Add selected to cart';
+    const submitLoadingLabel = form.dataset.quickOrderSubmitLoadingLabel || 'Adding items…';
+    const emptyMessage = form.dataset.quickOrderEmptyMessage || 'Set a quantity above zero before adding to cart.';
+    const successMessage = form.dataset.quickOrderSuccessMessage || 'Items added to cart.';
+    const genericErrorMessage = form.dataset.quickOrderGenericErrorMessage || 'Something went wrong while adding to cart.';
+
+    let summaryTimeoutId;
+    const qtyInputs = form.querySelectorAll('[data-quick-order-quantity]');
+    qtyInputs.forEach((input) => {
+      input.addEventListener('input', () => {
+        if (summaryTimeoutId) {
+          window.clearTimeout(summaryTimeoutId);
+        }
+        summaryTimeoutId = window.setTimeout(() => {
+          updateSummary(form);
+        }, 150);
+      });
+    });
+
+    updateSummary(form);
+    attachVariantChangeHandlers(form);
+
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+
+      if (!submitButton || !status) return;
+
+      const rows = Array.from(form.querySelectorAll('[data-quick-order-row]'));
+      const items = [];
+      const rowsToHighlight = [];
+
+      rows.forEach((row) => {
+        const qtyInput = row.querySelector('[data-quick-order-quantity]');
+        if (!qtyInput || qtyInput.disabled) return;
+        const quantity = parseInt(qtyInput.value, 10) || 0;
+        if (quantity <= 0) return;
+        const variantId = Number(qtyInput.dataset.quickOrderVariantId);
+        if (!variantId) return;
+        items.push({ id: variantId, quantity });
+        rowsToHighlight.push(row);
+      });
+
+      if (items.length === 0) {
+        status.textContent = emptyMessage;
+        return;
+      }
+
+      submitButton.disabled = true;
+      submitButton.textContent = submitLoadingLabel;
+      status.textContent = '';
+
+      try {
+        const response = await fetch('/cart/add.js', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Accept: 'application/json'
+          },
+          body: JSON.stringify({ items })
+        });
+
+        if (!response.ok) {
+          let errorMessage = genericErrorMessage;
+          try {
+            const errorData = await response.json();
+            if (errorData && (errorData.description || errorData.message)) {
+              errorMessage = errorData.description || errorData.message;
+            }
+          } catch (_) {}
+          status.textContent = errorMessage;
+          return;
+        }
+
+        rowsToHighlight.forEach((row) => {
+          row.classList.remove('quick-order__row--added');
+          void row.offsetWidth;
+          row.classList.add('quick-order__row--added');
+          const qtyInput = row.querySelector('[data-quick-order-quantity]');
+          if (qtyInput) {
+            qtyInput.value = '0';
+          }
+        });
+
+        updateSummary(form);
+        status.textContent = successMessage;
+
+        try {
+          document.dispatchEvent(
+            new CustomEvent('quick-order:items-added', { detail: { items } })
+          );
+          document.dispatchEvent(new CustomEvent('cart:refresh'));
+        } catch (_) {}
+      } catch (_) {
+        status.textContent = genericErrorMessage;
+      } finally {
+        submitButton.disabled = false;
+        submitButton.textContent = submitDefaultLabel;
+      }
+    });
+  });
+{% endjavascript %}
+
+{% schema %}
+{
+  "name": "Quick order list",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Quick order list"
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "Description",
+      "default": "Quickly add multiple products to your cart from a single list. Set quantities and add all to cart in one step."
+    },
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Collection"
+    },
+    {
+      "type": "range",
+      "id": "max_products",
+      "label": "Maximum products to show",
+      "min": 1,
+      "max": 100,
+      "step": 1,
+      "default": 25
+    },
+    {
+      "type": "checkbox",
+      "id": "show_image",
+      "label": "Show product image",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_sku",
+      "label": "Show SKU",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_price",
+      "label": "Show price",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "product_column_label",
+      "label": "Product column label",
+      "default": "Product"
+    },
+    {
+      "type": "text",
+      "id": "sku_column_label",
+      "label": "SKU column label",
+      "default": "SKU"
+    },
+    {
+      "type": "text",
+      "id": "price_column_label",
+      "label": "Price column label",
+      "default": "Price"
+    },
+    {
+      "type": "text",
+      "id": "quantity_column_label",
+      "label": "Quantity column label",
+      "default": "Quantity"
+    },
+    {
+      "type": "text",
+      "id": "submit_label",
+      "label": "Submit button label",
+      "default": "Add selected to cart"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "@theme"
+    },
+    {
+      "type": "@app"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Quick order list"
+    }
+  ]
+}
+{% endschema %}
