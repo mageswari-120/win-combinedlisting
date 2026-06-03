@@ -232,29 +232,10 @@
         "enable_language_selector": true,
         "enable_customer_avatar": true
       }
-    },
-    "quick_order_list_BP7BMH": {
-      "type": "quick-order-list",
-      "name": "Quick order list",
-      "settings": {
-        "heading": "Quick order list",
-        "description": "Quickly add multiple products to your cart from a single list. Set quantities and add all to cart in one step.",
-        "collection": "frontpage",
-        "max_products": 25,
-        "show_image": true,
-        "show_sku": true,
-        "show_price": true,
-        "product_column_label": "Product",
-        "sku_column_label": "SKU",
-        "price_column_label": "Price",
-        "quantity_column_label": "Quantity",
-        "submit_label": "Add selected to cart"
-      }
     }
   },
   "order": [
     "announcement_bar_ReJkPN",
-    "header",
-    "quick_order_list_BP7BMH"
+    "header"
   ]
 }
