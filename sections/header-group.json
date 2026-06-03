@@ -1,1 +1,260 @@
-{"name":"t:name.header","type":"header","sections":{"announcement_bar_ReJkPN":{"type":"announcement-bar","blocks":{"announcement_bar_4ETe7R":{"type":"_announcement_bar","settings":{"text":"Free Gift Wrapping + 20%","primary_font":"body","text_transform":"rte"},"blocks":{}},"announcement_bar_wVGGet":{"type":"_announcement_bar","settings":{"text":"Extra 30% Off Clearance Items","primary_font":"body","text_transform":"lowercase"},"blocks":{}},"announcement_bar_w47CLz":{"type":"_announcement_bar","disabled":true,"settings":{"text":"Get Free Rose-Infused Lipstick","primary_font":"body","text_transform":"lowercase"},"blocks":{}},"social_icon":{"type":"header-social-icon","static":true,"settings":{"inherit_color_scheme":false,"icon-bg-color":"#ed5f31","icon-color":"#ffffff","Border":"#008000","icon_size":20,"gap":10,"border":"solid","border_width":1,"border_opacity":100,"border_radius":28,"padding-block-start":6,"padding-block-end":5,"padding-inline-start":5,"padding-inline-end":5},"blocks":{"social_link_c9aGGL":{"type":"_social-link","name":"t:name.social_links","settings":{"link":"https:\/\/www.facebook.com"},"blocks":{}},"social_link_GQnt8c":{"type":"_social-link","name":"t:name.social_links","settings":{"link":"https:\/\/www.youtube.com"},"blocks":{}},"social_link_9LgkYi":{"type":"_social-link","name":"t:name.social_links","settings":{"link":"https:\/\/www.instagram.com"},"blocks":{}},"social_link_BxLUFq":{"type":"_social-link","name":"t:name.social_links","settings":{"link":"https:\/\/www.twitter.com"},"blocks":{}}},"block_order":["social_link_c9aGGL","social_link_GQnt8c","social_link_9LgkYi","social_link_BxLUFq"]}},"block_order":["announcement_bar_4ETe7R","announcement_bar_wVGGet","announcement_bar_w47CLz"],"name":"t:name.announcement_bar","settings":{"full_width":false,"color_scheme":"scheme-2","disable_announcement_bar_mobile":false,"divider":true,"timer":1,"enable_arrow":true,"border":"solid","border_width":1,"border_opacity":100,"border_radius":30,"inherit_color_scheme":true,"nav_color_scheme":"scheme-1","enable_country_selector":true,"flag":true,"enable_language_selector":true,"padding-top":10,"padding-bottom":10}},"header":{"type":"header","blocks":{"promo_banner_YYCdWK":{"type":"promo_banner","settings":{"mega_1":"Shop","banner_style":"right","banner_color_scheme":"scheme-1","button_1":"sale","title_1":"Moisturizers","link_1":"shopify:\/\/collections\/cleansers","button_2":"hot","title_2":"Cleanser","link_2":"shopify:\/\/collections\/eye-cosmetics"}},"promo_banner_x8zYnR":{"type":"promo_banner","settings":{"mega_1":"Product","banner_style":"both_edges","banner_color_scheme":"","button_1":"sale","title_1":"Moisturizers","link_1":"shopify:\/\/collections\/cleansers","button_2":"hot","title_2":"Cleanser","link_2":"shopify:\/\/collections\/eye-cosmetics"}},"promo_banner_4BWrqq":{"type":"promo_banner","settings":{"mega_1":"Other Shortcodes","banner_style":"both_edges","banner_color_scheme":"scheme-1","button_1":"","title_1":"","link_1":"","button_2":"","title_2":"","link_2":""}},"promo_banner_qcnPGB":{"type":"promo_banner","settings":{"mega_1":"Other Shortcodes","banner_style":"right","banner_color_scheme":"scheme-1","button_1":"","title_1":"","link_1":"","button_2":"","title_2":"","link_2":""}},"promo_banner_xcagB7":{"type":"promo_banner","settings":{"mega_1":"Collection","banner_style":"both_edges","banner_color_scheme":"scheme-1","button_1":"","title_1":"","link_1":"","button_2":"","title_2":"","link_2":""}}},"block_order":["promo_banner_YYCdWK","promo_banner_x8zYnR","promo_banner_4BWrqq","promo_banner_qcnPGB","promo_banner_xcagB7"],"settings":{"full_width":false,"color_scheme":"scheme-2","logo_position":"middle-center","transparent_header":false,"transparent_color_scheme":"scheme-617e2199-08e3-4893-bbfb-7d5495a674f4","transparent_width":100,"menu":"demo-menu","type_preset":"h6","menu_position":"top","menu_allignment":"center","sticky_header_type":"sticky","border_bottom":true,"search":true,"account":true,"wishlist":true,"compare":true,"enable_country_selector":true,"flag":false,"enable_language_selector":true,"enable_customer_avatar":true}}},"order":["announcement_bar_ReJkPN","header"]}
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "name": "t:name.header",
+  "type": "header",
+  "sections": {
+    "announcement_bar_ReJkPN": {
+      "type": "announcement-bar",
+      "blocks": {
+        "announcement_bar_4ETe7R": {
+          "type": "_announcement_bar",
+          "settings": {
+            "text": "Free Gift Wrapping + 20%",
+            "primary_font": "body",
+            "text_transform": "rte"
+          },
+          "blocks": {}
+        },
+        "announcement_bar_wVGGet": {
+          "type": "_announcement_bar",
+          "settings": {
+            "text": "Extra 30% Off Clearance Items",
+            "primary_font": "body",
+            "text_transform": "lowercase"
+          },
+          "blocks": {}
+        },
+        "announcement_bar_w47CLz": {
+          "type": "_announcement_bar",
+          "disabled": true,
+          "settings": {
+            "text": "Get Free Rose-Infused Lipstick",
+            "primary_font": "body",
+            "text_transform": "lowercase"
+          },
+          "blocks": {}
+        },
+        "social_icon": {
+          "type": "header-social-icon",
+          "static": true,
+          "settings": {
+            "inherit_color_scheme": false,
+            "icon-bg-color": "#ed5f31",
+            "icon-color": "#ffffff",
+            "Border": "#008000",
+            "icon_size": 20,
+            "gap": 10,
+            "border": "solid",
+            "border_width": 1,
+            "border_opacity": 100,
+            "border_radius": 28,
+            "padding-block-start": 6,
+            "padding-block-end": 5,
+            "padding-inline-start": 5,
+            "padding-inline-end": 5
+          },
+          "blocks": {
+            "social_link_c9aGGL": {
+              "type": "_social-link",
+              "name": "t:name.social_links",
+              "settings": {
+                "link": "https://www.facebook.com"
+              },
+              "blocks": {}
+            },
+            "social_link_GQnt8c": {
+              "type": "_social-link",
+              "name": "t:name.social_links",
+              "settings": {
+                "link": "https://www.youtube.com"
+              },
+              "blocks": {}
+            },
+            "social_link_9LgkYi": {
+              "type": "_social-link",
+              "name": "t:name.social_links",
+              "settings": {
+                "link": "https://www.instagram.com"
+              },
+              "blocks": {}
+            },
+            "social_link_BxLUFq": {
+              "type": "_social-link",
+              "name": "t:name.social_links",
+              "settings": {
+                "link": "https://www.twitter.com"
+              },
+              "blocks": {}
+            }
+          },
+          "block_order": [
+            "social_link_c9aGGL",
+            "social_link_GQnt8c",
+            "social_link_9LgkYi",
+            "social_link_BxLUFq"
+          ]
+        }
+      },
+      "block_order": [
+        "announcement_bar_4ETe7R",
+        "announcement_bar_wVGGet",
+        "announcement_bar_w47CLz"
+      ],
+      "name": "t:name.announcement_bar",
+      "settings": {
+        "full_width": false,
+        "color_scheme": "scheme-2",
+        "disable_announcement_bar_mobile": false,
+        "divider": true,
+        "timer": 1,
+        "enable_arrow": true,
+        "border": "solid",
+        "border_width": 1,
+        "border_opacity": 100,
+        "border_radius": 30,
+        "inherit_color_scheme": true,
+        "nav_color_scheme": "scheme-1",
+        "enable_country_selector": true,
+        "flag": true,
+        "enable_language_selector": true,
+        "padding-top": 10,
+        "padding-bottom": 10
+      }
+    },
+    "header": {
+      "type": "header",
+      "blocks": {
+        "promo_banner_YYCdWK": {
+          "type": "promo_banner",
+          "settings": {
+            "mega_1": "Shop",
+            "banner_style": "right",
+            "banner_color_scheme": "scheme-1",
+            "button_1": "sale",
+            "title_1": "Moisturizers",
+            "link_1": "shopify://collections/cleansers",
+            "button_2": "hot",
+            "title_2": "Cleanser",
+            "link_2": "shopify://collections/eye-cosmetics"
+          }
+        },
+        "promo_banner_x8zYnR": {
+          "type": "promo_banner",
+          "settings": {
+            "mega_1": "Product",
+            "banner_style": "both_edges",
+            "banner_color_scheme": "",
+            "button_1": "sale",
+            "title_1": "Moisturizers",
+            "link_1": "shopify://collections/cleansers",
+            "button_2": "hot",
+            "title_2": "Cleanser",
+            "link_2": "shopify://collections/eye-cosmetics"
+          }
+        },
+        "promo_banner_4BWrqq": {
+          "type": "promo_banner",
+          "settings": {
+            "mega_1": "Other Shortcodes",
+            "banner_style": "both_edges",
+            "banner_color_scheme": "scheme-1",
+            "button_1": "",
+            "title_1": "",
+            "link_1": "",
+            "button_2": "",
+            "title_2": "",
+            "link_2": ""
+          }
+        },
+        "promo_banner_qcnPGB": {
+          "type": "promo_banner",
+          "settings": {
+            "mega_1": "Other Shortcodes",
+            "banner_style": "right",
+            "banner_color_scheme": "scheme-1",
+            "button_1": "",
+            "title_1": "",
+            "link_1": "",
+            "button_2": "",
+            "title_2": "",
+            "link_2": ""
+          }
+        },
+        "promo_banner_xcagB7": {
+          "type": "promo_banner",
+          "settings": {
+            "mega_1": "Collection",
+            "banner_style": "both_edges",
+            "banner_color_scheme": "scheme-1",
+            "button_1": "",
+            "title_1": "",
+            "link_1": "",
+            "button_2": "",
+            "title_2": "",
+            "link_2": ""
+          }
+        }
+      },
+      "block_order": [
+        "promo_banner_YYCdWK",
+        "promo_banner_x8zYnR",
+        "promo_banner_4BWrqq",
+        "promo_banner_qcnPGB",
+        "promo_banner_xcagB7"
+      ],
+      "settings": {
+        "full_width": false,
+        "color_scheme": "scheme-2",
+        "logo_position": "middle-center",
+        "transparent_header": false,
+        "transparent_color_scheme": "scheme-617e2199-08e3-4893-bbfb-7d5495a674f4",
+        "transparent_width": 100,
+        "menu": "",
+        "type_preset": "h6",
+        "menu_position": "top",
+        "menu_allignment": "center",
+        "sticky_header_type": "sticky",
+        "border_bottom": true,
+        "search": true,
+        "account": true,
+        "wishlist": true,
+        "compare": true,
+        "enable_country_selector": true,
+        "flag": false,
+        "enable_language_selector": true,
+        "enable_customer_avatar": true
+      }
+    },
+    "quick_order_list_BP7BMH": {
+      "type": "quick-order-list",
+      "name": "Quick order list",
+      "settings": {
+        "heading": "Quick order list",
+        "description": "Quickly add multiple products to your cart from a single list. Set quantities and add all to cart in one step.",
+        "collection": "frontpage",
+        "max_products": 25,
+        "show_image": true,
+        "show_sku": true,
+        "show_price": true,
+        "product_column_label": "Product",
+        "sku_column_label": "SKU",
+        "price_column_label": "Price",
+        "quantity_column_label": "Quantity",
+        "submit_label": "Add selected to cart"
+      }
+    }
+  },
+  "order": [
+    "announcement_bar_ReJkPN",
+    "header",
+    "quick_order_list_BP7BMH"
+  ]
+}
