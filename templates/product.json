@@ -25,6 +25,12 @@
     "main": {
       "type": "product-detail-page",
       "blocks": {
+        "usage_information_nVtX9C": {
+          "type": "usage_information",
+          "settings": {
+            "display_style": "standard"
+          }
+        },
         "amp_back_in_stock_app_block_iQrQY8": {
           "type": "shopify://apps/amp-back-in-stock/blocks/app-block/bfa6a8c4-24e2-411a-9396-e35031b33f34",
           "settings": {
@@ -134,6 +140,7 @@
         }
       },
       "block_order": [
+        "usage_information_nVtX9C",
         "amp_back_in_stock_app_block_iQrQY8",
         "discount_9XwcXJ",
         "vendor_JzGTNB",
