@@ -1018,51 +1018,37 @@ label.swatch-option.d-inline-flex.align-items-center.justify-content-center.acti
                         {% render block %}
                       </div>
                        {%- when 'usage_information' -%}
-                          {%- assign usage = product.metafields.custom.usage_information -%}
-                          {%- if usage != blank -%}
-                            {%- if block.settings.display_style == 'collapse' -%}
-                              <section class="product-usage" {{ block.shopify_attributes }}>
-                                <div class="accordion" id="accordionUsage-{{ section.id }}">
-                                  <div class="accordion-item">
-                                    <h2 class="accordion-header" id="heading-usage-{{ block.id }}-{{ section.id }}">
-                                      <button
-                                        class="accordion-button collapsed px-0"
-                                        type="button"
-                                        data-bs-toggle="collapse"
-                                        data-bs-target="#collapse-usage-{{ block.id }}-{{ section.id }}"
-                                        aria-controls="collapse-usage-{{ block.id }}-{{ section.id }}"
-                                      >
-                                        <span class="h4 mb-0">
-                                         <h1>Usage Infomation </h1>
-                                        </span>
-                                      </button>
-                                    </h2>
-                                    <div
-                                      class="accordion-collapse collapse"
-                                      id="collapse-usage-{{ block.id }}-{{ section.id }}"
-                                      aria-labelledby="heading-usage-{{ block.id }}-{{ section.id }}"
-                                      data-bs-parent="#accordionUsage-{{ section.id }}"
-                                    >
-                                      <div class="rte accordion-body px-0">
-                                        <div class="accordion__content">
-                                          {{ usage | metafield_tag }}
-                                        </div>
-                                      </div>
-                                    </div>
-                                  </div>
-                                </div>
-                              </section>
-                            {%- else -%}
-                              <section class="product-usage my-3" {{ block.shopify_attributes }}>
-                                <h2 class="h4 mb-2">
-                                  <h1>Usage Infomation </h1>
-                                </h2>
-                                <div class="rte product-usage__content">
-                                  {{ usage | metafield_tag }}
-                                </div>
-                              </section>
-                            {%- endif -%}
-                          {%- endif -%}
+  {%- assign usage = product.metafields.custom.usage_information -%}
+  {%- if usage != blank -%}
+    <div class="accordion-item accordion--{{ block.id }} top-bottom-spacing" {{ block.shopify_attributes }}
+      style="margin-top:{{ block.settings.padding-block-start }}px; margin-bottom:{{ block.settings.padding-block-end }}px;"
+    >
+      <h2 class="accordion-header" id="heading-usage-{{ block.id }}-{{ section.id }}">
+        <button
+          class="accordion-button collapsed px-0 gap-2"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#collapse-usage-{{ block.id }}-{{ section.id }}"
+          aria-controls="collapse-usage-{{ block.id }}-{{ section.id }}"
+        >
+          <span class="{{ block.settings.type_preset }} mb-0">
+            {{ block.settings.heading | default: 'Usage Information' | escape }}
+          </span>
+        </button>
+      </h2>
+      <div
+        class="accordion-collapse collapse"
+        id="collapse-usage-{{ block.id }}-{{ section.id }}"
+        aria-labelledby="heading-usage-{{ block.id }}-{{ section.id }}"
+      >
+        <div class="rte accordion-body px-0 pb-0 pt-3">
+          <div class="accordion__content rte pb-3">
+            {{ usage | metafield_tag }}
+          </div>
+        </div>
+      </div>
+    </div>
+  {%- endif -%}
                   {% endcase %}
                 {% endfor %}
               {%- endif -%}
