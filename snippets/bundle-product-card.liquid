@@ -1,0 +1,85 @@
+{%- comment -%}
+  Snippet: bundle-product-card.liquid
+  Params:
+    product    {object}  Shopify product object
+    block      {object}  The block (for shopify_attributes)
+    cat_key    {string}  Tab key this card belongs to
+    section_id {string}  Parent section id
+{%- endcomment -%}
+
+{%- liquid
+  assign first_variant = product.first_available_variant | default: product.variants.first
+  assign card_price    = first_variant.price
+  assign compare_price = first_variant.compare_at_price
+  assign badge1        = block.settings.badge
+  assign badge2        = block.settings.badge_2
+  assign show_badge2   = block.settings.show_second_badge
+  assign product_image = product.featured_image
+-%}
+
+<div
+  class="bb-card"
+  data-product-id="{{ product.id }}"
+  data-variant-id="{{ first_variant.id }}"
+  data-cat-key="{{ cat_key }}"
+  data-product-handle="{{ product.handle }}"
+  data-product-title="{{ product.title | escape }}"
+  data-product-price="{{ card_price }}"
+  {{ block.shopify_attributes }}
+>
+
+  {%- comment -%} Product image {%- endcomment -%}
+  <div class="bb-card-img">
+    {%- if product_image != blank -%}
+      <img
+        src="{{ product_image | image_url: width: 480 }}"
+        alt="{{ product_image.alt | default: product.title | escape }}"
+        width="{{ product_image.width }}"
+        height="{{ product_image.height }}"
+        loading="lazy"
+      />
+    {%- else -%}
+      {{ 'product-1' | placeholder_svg_tag: 'bb-placeholder-svg' }}
+    {%- endif -%}
+
+    {%- comment -%} Badges {%- endcomment -%}
+    {%- if badge1 != blank or badge2 != blank -%}
+      <div class="bb-badge-wrap">
+        {%- if badge1 != blank -%}
+          <span class="bb-badge">{{ badge1 }}</span>
+        {%- endif -%}
+        {%- if show_badge2 and badge2 != blank -%}
+          <span class="bb-badge">{{ badge2 }}</span>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+
+    {%- comment -%} Selected checkmark {%- endcomment -%}
+    <div class="bb-check-mark" aria-hidden="true">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+    </div>
+  </div>
+
+  {%- comment -%} Card body {%- endcomment -%}
+  <div class="bb-card-body">
+    <a href="{{ product.url }}" class="bb-card-name" tabindex="-1">{{ product.title }}</a>
+
+    <div class="bb-card-price">
+      {%- if compare_price > card_price -%}
+        <s class="bb-compare-price">{{ compare_price | money }}</s>
+      {%- endif -%}
+      <span class="bb-sale-price">{{ card_price | money }}</span>
+    </div>
+
+    <button
+      class="bb-btn"
+      type="button"
+      aria-pressed="false"
+      data-add-label="{{ 'sections.bundle.add_to_bundle' | t: default: 'Add to Bundle' }}"
+      data-remove-label="{{ 'sections.bundle.remove' | t: default: 'Remove from Bundle' }}"
+    >
+      {{ 'sections.bundle.add_to_bundle' | t: default: 'Add to Bundle' }}
+    </button>
+  </div>
+
+</div>

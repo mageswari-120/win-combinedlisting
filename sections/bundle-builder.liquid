@@ -1,0 +1,326 @@
+{{- 'bundle-builder.css' | asset_url | stylesheet_tag -}}
+
+{%- liquid
+  assign section_id     = section.id
+  assign eyebrow        = section.settings.eyebrow
+  assign heading        = section.settings.heading
+  assign subheading     = section.settings.subheading
+  assign products_limit = section.settings.products_per_collection
+  assign col_blocks     = section.blocks | where: 'type', 'collection'
+-%}
+
+<div  class="bb-section"  id="bb-{{ section_id }}" data-section-id="{{ section_id }}"> 
+  <div class="bb-main"> 
+    <div class="bb-header">
+      {%- if eyebrow != blank -%}
+        <p class="bb-eyebrow">{{ eyebrow }}</p>
+      {%- endif -%}
+      <h2 class="bb-title">{{ heading }}</h2>
+      {%- if subheading != blank -%}
+        <p class="bb-sub">{{ subheading }}</p>
+      {%- endif -%}
+    </div> 
+    <div class="bb-tab-wrap" id="bb-tab-wrap-{{ section_id }}">
+
+      <button class="bb-tab-arrow" id="bb-prev-{{ section_id }}" aria-label="Previous" type="button">
+         Prev
+      </button>
+
+      <div class="bb-tabs-viewport" id="bb-tabs-viewport-{{ section_id }}">
+        <div class="bb-tabs-track" id="bb-tabs-track-{{ section_id }}" role="tablist">
+          {%- for block in col_blocks -%}
+            {%- assign col               = block.settings.collection -%}
+            {%- assign col_product_count = col.products_count | default: 0 -%}
+            {%- assign tab_label         = block.settings.tab_label | default: col.title -%}
+            {%- assign tab_icon          = block.settings.icon -%}
+
+            <button
+              class="bb-tab{% if forloop.first %} active{% endif %}"
+              role="tab"
+              aria-selected="{% if forloop.first %}true{% else %}false{% endif %}"
+              aria-controls="bb-pane-{{ section_id }}-{{ forloop.index0 }}"
+              data-tab-index="{{ forloop.index0 }}"
+              type="button"
+              {{ block.shopify_attributes }} >
+              {%- if tab_icon != blank -%}
+                <span class="bb-tab-icon" aria-hidden="true">{{ tab_icon }}</span>
+              {%- endif -%}
+              <span class="bb-tab-label-text">{{ tab_label }}</span> 
+              <span class="bb-col-total-count">{{ col_product_count }}</span>
+            </button>
+          {%- endfor -%}
+        </div>
+      </div>
+
+      <button class="bb-tab-arrow" id="bb-next-{{ section_id }}" aria-label="Next" type="button">
+        Next
+      </button>
+
+    </div> 
+    <div class="bb-panes-wrap">
+      {%- for block in col_blocks -%}
+        {%- assign col        = block.settings.collection -%}
+        {%- assign tab_index  = forloop.index0 -%}
+        {%- assign col_handle = col.handle -%}
+
+        <div
+          class="bb-pane{% if forloop.first %} active{% endif %}"
+          id="bb-pane-{{ section_id }}-{{ tab_index }}"
+          role="tabpanel"
+          data-cat-index="{{ tab_index }}"
+          data-cat-key="{{ col_handle }}"  >
+          {%- if col == blank -%}
+            <p class="bb-empty-collection">Select a collection in the Theme Editor.</p>
+
+          {%- elsif col.products_count == 0 -%}
+            <p class="bb-empty-collection">This collection has no products.</p>
+
+          {%- else -%}
+             <div class="swiper bb-cards-swiper">
+              <div class="swiper-wrapper">
+                {%- for product in col.products limit: products_limit -%}
+                  {%- assign first_variant = product.first_available_variant | default: product.variants.first -%}
+                  {%- assign compare_price = first_variant.compare_at_price -%}
+                  {%- assign sale_price    = first_variant.price -%}
+
+                  {%- comment -%} Badge logic: block setting takes priority, else auto from tags {%- endcomment -%}
+                  {%- if block.settings.badge_text != blank -%}
+                    {%- assign display_badge = block.settings.badge_text -%}
+                  {%- elsif product.tags contains 'vegan' -%}
+                    {%- assign display_badge = 'Vegan' -%}
+                  {%- elsif product.tags contains 'bestseller' -%}
+                    {%- assign display_badge = 'Bestseller' -%}
+                  {%- elsif product.tags contains 'new' -%}
+                    {%- assign display_badge = 'New' -%}
+                  {%- elsif product.tags contains 'cruelty-free' -%}
+                    {%- assign display_badge = 'Cruelty-free' -%}
+                  {%- else -%}
+                    {%- assign display_badge = '' -%}
+                  {%- endif -%}
+
+                  <div
+                    class="bb-card swiper-slide"
+                    data-product-id="{{ product.id }}"
+                    data-variant-id="{{ first_variant.id }}"
+                    data-cat-key="{{ col_handle }}"
+                    data-cat-index="{{ tab_index }}"
+                    data-product-handle="{{ product.handle }}"
+                    data-product-title="{{ product.title | escape }}"
+                    data-product-price="{{ sale_price }}"
+                  >
+                    <div class="bb-card-img">
+                      {%- if product.featured_image != blank -%}
+                        {{ product.featured_image | image_url: width: 480 | img_tag: product.title, loading: 'lazy' }} 
+                        {{ 'product-1' | placeholder_svg_tag: 'bb-placeholder-svg' }}
+                      {%- endif -%}
+
+                      {%- if display_badge != blank or compare_price > sale_price -%}
+                        <div class="bb-badge-wrap">
+                          {%- if compare_price > sale_price -%}
+                            <span class="bb-badge bb-badge-sale">Sale</span>
+                          {%- endif -%}
+                          {%- if display_badge != blank -%}
+                            <span class="bb-badge">{{ display_badge }}</span>
+                          {%- endif -%}
+                        </div>
+                      {%- endif -%}
+
+                      <div class="bb-check-mark" aria-hidden="true">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                      </div>
+                    </div>
+
+                    <div class="bb-card-body">
+                      <a href="{{ product.url }}" class="bb-card-name" tabindex="-1">{{ product.title }}</a>
+                      <div class="bb-card-price">
+                        {%- if compare_price > sale_price -%}
+                          <s class="bb-compare-price">{{ compare_price | money }}</s>
+                        {%- endif -%}
+                        <span class="bb-sale-price">{{ sale_price | money }}</span>
+                      </div>
+                      {% if product.available %}
+                      <button
+                        class="bb-btn"
+                        type="button"
+                        aria-pressed="false"
+                        data-add-label="Add to Bundle"
+                        data-remove-label="Remove from Bundle"
+                      >Add to Bundle</button>
+                      {% else %}
+                      <button class="bb-sold-out">Sold Out</button>
+                      {%- endif -%}
+                    </div>
+                  </div>
+                {%- endfor -%}
+                
+              </div>
+              <button class="swiper-button-prev">Prev</button>
+                <button class="swiper-button-next">Next</button>
+              </div>
+          {%- endif -%}
+        </div>
+      {%- endfor -%}
+    </div>
+
+  </div> 
+ 
+  <div class="bb-panel" id="bb-panel-{{ section_id }}">
+    <div class="bb-panel-inner">
+
+      <div class="bb-panel-header">
+        <div>
+          <p class="bb-panel-eyebrow">Your Selection</p>
+          <h3 class="bb-panel-title">Bundle Contents</h3>
+        </div>
+        <div class="bb-panel-count-wrap">
+          <span id="bb-hdr-count-{{ section_id }}" class="bb-panel-count-num">0</span>
+          <span class="bb-panel-count-label">items</span>
+        </div>
+      </div> 
+      <div class="bb-panel-cats">
+        {%- for block in col_blocks -%}
+          {%- assign col       = block.settings.collection -%}
+          {%- assign col_label = block.settings.tab_label | default: col.title -%}
+
+          <div class="bb-panel-cat open" id="bb-pcat-{{ section_id }}-{{ forloop.index0 }}">
+            <div class="bb-panel-cat-head" data-toggle="{{ forloop.index0 }}">
+              <div>
+                <span class="bb-panel-cat-name">{{ col_label }}</span>
+                <span class="bb-panel-cat-req">at least 1 item</span>
+              </div>
+              <div class="bb-panel-cat-right">
+                <span class="bb-panel-cat-count bb-zero" id="bb-col-count-{{ section_id }}-{{ forloop.index0 }}">0 added</span>
+                <span class="bb-panel-chevron" aria-hidden="true">&#9660;</span>
+              </div>
+            </div>
+            <div class="bb-panel-cat-body" id="bb-col-{{ section_id }}-{{ forloop.index0 }}">
+              <div class="bb-empty-state">No product chosen</div>
+            </div>
+          </div>
+        {%- endfor -%}
+      </div>
+ 
+      <div class="bb-panel-footer">
+        <div class="bb-panel-total-row">
+          <span class="bb-panel-total-label">Total</span>
+          <span class="bb-panel-total-price" id="bb-tray-total-{{ section_id }}">{{ 0 | money }}</span>
+        </div>
+        <div class="bb-item-total" id="bb-item-total-{{ section_id }}">0 items · {{ 0 | money }}</div>
+        <button class="bb-add-all" id="bb-add-all-{{ section_id }}" disabled aria-disabled="true" type="button">
+          Add All to Cart
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+</div> 
+
+<script>
+  window.bbSectionData = window.bbSectionData || {};
+  window.bbSectionData['{{ section_id }}'] = {
+    sectionId:   '{{ section_id }}',
+    moneyFormat: {{ shop.money_format | json }},
+    cartUrl:     '{{ routes.cart_add_url }}',
+    tabs: [
+      {%- for block in col_blocks -%}
+        {%- assign col = block.settings.collection -%}
+        {
+          index: {{ forloop.index0 }},
+          key:   {{ col.handle | json }},
+          label: {{ block.settings.tab_label | default: col.title | json }}
+        }{% unless forloop.last %},{% endunless %}
+      {%- endfor -%}
+    ],
+    i18n: {
+      items:            'items',
+      added:            'added',
+      nothingSelected:  'No product chosen',
+      addToBundle:      'Add to Bundle',
+      removeFromBundle: 'Remove from Bundle',
+      addedToCart:      'Bundle added to cart!'
+    }
+  };
+</script>
+
+{{ 'bundle-builder.js' | asset_url | script_tag }}
+
+{% schema %}
+{
+  "name": "Bundle Builder",
+  "tag": "section",
+  "class": "bundle-builder-section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow text",
+      "default": "Curate Your Ritual"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Build Your Perfect Bundle"
+    },
+    {
+      "type": "text",
+      "id": "subheading",
+      "label": "Subheading",
+      "info": "Optional subtitle shown below the heading."
+    },
+    {
+      "type": "range",
+      "id": "products_per_collection",
+      "label": "Max products shown per collection",
+      "min": 2,
+      "max": 24,
+      "step": 1,
+      "default": 8
+    }
+  ],
+  "blocks": [
+    {
+      "type": "collection",
+      "name": "Collection Tab",
+      "settings": [
+        {
+          "type": "collection",
+          "id": "collection",
+          "label": "Collection",
+          "info": "Products from this collection appear in this tab."
+        },
+        {
+          "type": "text",
+          "id": "tab_label",
+          "label": "Tab label override",
+          "info": "Leave blank to use the collection title automatically."
+        },
+        {
+          "type": "text",
+          "id": "icon",
+          "label": "Tab icon (emoji)",
+          "default": "💧",
+          "info": "Shown before the tab label."
+        },
+        {
+          "type": "text",
+          "id": "badge_text",
+          "label": "Default badge on all products",
+          "info": "e.g. Vegan. Leave blank to auto-detect from product tags."
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Bundle Builder",
+      "blocks": [
+        { "type": "collection", "settings": { "icon": "💧" } },
+        { "type": "collection", "settings": { "icon": "✨" } },
+        { "type": "collection", "settings": { "icon": "🛡" } }
+      ]
+    }
+  ]
+}
+{% endschema %}
