@@ -137,6 +137,19 @@
             "padding-block-start": 0,
             "padding-block-end": 0
           }
+        },
+        "accordion_panel_4knciP": {
+          "type": "accordion_panel",
+          "settings": {
+            "accordion_icon": "caret",
+            "dividers": true,
+            "heading": "Accordion panel",
+            "type_preset": "h5",
+            "content": "",
+            "page": "",
+            "padding-block-start": 0,
+            "padding-block-end": 10
+          }
         }
       },
       "block_order": [
@@ -152,7 +165,8 @@
         "model_details_block_WbdenA",
         "badge_RrCnYe",
         "accordion_panel_dEqUKW",
-        "accordion_panel_VYkTdU"
+        "accordion_panel_VYkTdU",
+        "accordion_panel_4knciP"
       ],
       "settings": {
         "full_width": true,
