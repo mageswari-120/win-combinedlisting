@@ -1,0 +1,465 @@
+/* ============================================================
+   Section: Hotspot Image
+   ============================================================ */
+
+/* ── SECTION WRAPPER ── */
+.hotspot-section {
+  position: relative;
+  width: 100%;
+  height: var(--hotspot-section-height, 100vh);
+  min-height: 480px;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+/* ── BACKGROUND ── */
+.hotspot-section__bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.hotspot-section__bg-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+}
+
+.hotspot-section__placeholder-svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.hotspot-section__overlay {
+  position: absolute;
+  inset: 0;
+}
+
+/* ── HERO TEXT ── */
+.hotspot-section__text {
+  position: absolute;
+  bottom: 10%;
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+  z-index: 3;
+  pointer-events: none;
+  width: 90%;
+  max-width: 680px;
+}
+
+.hotspot-section__heading {
+  font-size: clamp(1.6rem, 4vw, 3rem);
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: 0.01em;
+  color: #fff;
+  text-shadow: 0 2px 24px rgba(0, 0, 0, 0.5);
+  margin: 0 0 10px;
+}
+
+.hotspot-section__subheading {
+  font-size: clamp(0.8rem, 1.5vw, 1rem);
+  color: rgba(255, 255, 255, 0.78);
+  line-height: 1.6;
+  margin: 0 0 20px;
+}
+
+.hotspot-section__cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 28px;
+  border: 1px solid rgba(255, 255, 255, 0.55);
+  color: #fff;
+  font-size: 0.9rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  text-decoration: none;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  pointer-events: all;
+  transition: background 0.25s ease, border-color 0.25s ease;
+}
+
+.hotspot-section__cta:hover {
+  background: rgba(255, 255, 255, 0.22);
+  border-color: #fff;
+  color: #fff;
+}
+
+/* ── HOTSPOT DOTS ── */
+.hotspot-dot-btn {
+  position: absolute;
+  z-index: 5;
+  transform: translate(-50%, -50%);
+  background: transparent;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Pulsing outer ring */
+.hotspot-dot-btn__ring {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.55);
+  animation: hotspot-pulse 2.5s ease-out infinite;
+  pointer-events: none;
+}
+
+@keyframes hotspot-pulse {
+  0%   { transform: scale(0.85); opacity: 0.9; }
+  65%  { transform: scale(1.65); opacity: 0; }
+  100% { transform: scale(0.85); opacity: 0; }
+}
+
+/* Inner dot */
+.hotspot-dot-btn__inner {
+  position: relative;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #111;
+  transition: transform 0.2s ease, background 0.2s ease;
+  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.25);
+}
+
+.hotspot-dot-btn:hover .hotspot-dot-btn__inner,
+.hotspot-dot-btn[aria-expanded="true"] .hotspot-dot-btn__inner {
+  transform: scale(1.25);
+  background: var(--hotspot-accent, #e8ff3a);
+  color: #111;
+}
+
+/* Tooltip label */
+.hotspot-dot-btn__label {
+  position: absolute;
+  left: calc(100% + 10px);
+  top: 50%;
+  transform: translateY(-50%);
+  white-space: nowrap;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: #fff;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  padding: 4px 10px;
+  border-left: 2px solid var(--hotspot-accent, #e8ff3a);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+}
+
+.hotspot-dot-btn:hover .hotspot-dot-btn__label {
+  opacity: 1;
+}
+
+/* ── BACKDROP ── */
+.hotspot-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  z-index: 200;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.35s ease;
+}
+
+.hotspot-backdrop.is-open {
+  opacity: 1;
+  pointer-events: all;
+}
+
+/* ── DRAWER ── */
+.hotspot-drawer {
+  position: fixed;
+  top: 0;
+  right: 0;
+  height: 100%;
+  width: var(--hotspot-drawer-width, 420px);
+  max-width: 95vw;
+  background: var(--hotspot-drawer-bg, #0f0f0f);
+  color: var(--hotspot-drawer-text, #fff);
+  z-index: 210;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  transform: translateX(100%);
+  transition: transform 0.42s cubic-bezier(0.77, 0, 0.18, 1);
+  /* override [hidden] when open */
+}
+
+/* Visibility is controlled by transform only – JS removes [hidden] on init.
+   pointer-events off while closed so nothing beneath is blocked. */
+.hotspot-drawer[aria-hidden="true"] {
+  pointer-events: none;
+}
+
+.hotspot-drawer.is-open {
+  transform: translateX(0);
+}
+
+/* Close button */
+.hotspot-drawer__close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  width: 38px;
+  height: 38px;
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: var(--hotspot-drawer-text, #fff);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 5;
+  transition: background 0.2s ease;
+  border-radius: 0;
+}
+
+.hotspot-drawer__close:hover {
+  background: rgba(255, 255, 255, 0.16);
+}
+
+/* ── SLIDES CONTAINER ── */
+.hotspot-drawer__slides {
+  flex: 1;
+  overflow: hidden;
+  position: relative;
+}
+
+/* ── INDIVIDUAL SLIDE ── */
+.hotspot-drawer__slide {
+  display: none;           /* hidden by default */
+  flex-direction: column;
+  height: 100%;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: #333 transparent;
+  position: absolute;
+  inset: 0;
+}
+
+.hotspot-drawer__slide::-webkit-scrollbar { width: 3px; }
+.hotspot-drawer__slide::-webkit-scrollbar-thumb { background: #333; }
+
+.hotspot-drawer__slide.is-active {
+  display: flex;           /* shown when active */
+}
+
+/* Image pane */
+.hotspot-swiper__img-pane {
+  position: relative;
+  width: 100%;
+  height: 260px;
+  background: #1a1a1a;
+  flex-shrink: 0;
+  overflow: hidden;
+}
+
+.hotspot-swiper__img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  padding: 24px;
+  display: block;
+}
+
+.hotspot-swiper__img-placeholder {
+  width: 100%;
+  height: 100%;
+  display: block;
+  opacity: 0.3;
+}
+
+.hotspot-swiper__tag {
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  background: var(--hotspot-accent, #e8ff3a);
+  color: #111;
+  padding: 3px 10px;
+  line-height: 1.6;
+}
+
+/* Slide body */
+.hotspot-swiper__body {
+  flex: 1;
+  padding: 28px 28px 32px;
+}
+
+.hotspot-swiper__title {
+  font-size: clamp(1.3rem, 3vw, 1.75rem);
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: 0.01em;
+  margin: 0 0 16px;
+  color: var(--hotspot-drawer-text, #fff);
+  padding-right: 32px; /* clear close btn */
+}
+
+.hotspot-swiper__desc {
+  font-size: 0.875rem;
+  line-height: 1.75;
+  color: rgba(255, 255, 255, 0.62);
+}
+
+.hotspot-swiper__desc p {
+  margin: 0 0 12px;
+}
+
+.hotspot-swiper__desc p:last-child {
+  margin-bottom: 0;
+}
+
+/* Specs grid */
+.hotspot-swiper__specs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-top: 22px;
+  list-style: none;
+}
+
+.hotspot-swiper__spec-item {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 12px 14px;
+}
+
+.hotspot-swiper__spec-label {
+  font-size: 0.66rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.45);
+  margin-bottom: 5px;
+  display: block;
+}
+
+.hotspot-swiper__spec-value {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--hotspot-drawer-text, #fff);
+  display: block;
+}
+
+/* Slide CTA */
+.hotspot-swiper__cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 24px;
+  padding: 11px 24px;
+  background: var(--hotspot-accent, #e8ff3a);
+  color: #111;
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  text-decoration: none;
+  transition: opacity 0.2s ease;
+}
+
+.hotspot-swiper__cta:hover {
+  opacity: 0.85;
+  color: #111;
+}
+
+/* ── DRAWER NAVIGATION ── */
+.hotspot-drawer__nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 24px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  flex-shrink: 0;
+}
+
+.hotspot-drawer__nav-btn {
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: var(--hotspot-drawer-text, #fff);
+  cursor: pointer;
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.hotspot-drawer__nav-btn:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.35);
+}
+
+.hotspot-drawer__nav-btn:disabled,
+.hotspot-drawer__nav-btn.is-disabled {
+  opacity: 0.25;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.hotspot-drawer__pagination {
+  font-size: 0.85rem;
+  letter-spacing: 0.06em;
+  color: rgba(255, 255, 255, 0.5);
+  display: flex;
+  align-items: baseline;
+  gap: 5px;
+}
+
+.hotspot-drawer__pagination-current {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--hotspot-accent, #e8ff3a);
+  display: block;
+}
+
+.hotspot-drawer__pagination-sep {
+  opacity: 0.4;
+}
+
+/* ── MOBILE ADJUSTMENTS ── */
+@media (max-width: 749px) {
+  .hotspot-dot-btn__label {
+    display: none; /* too cramped on mobile */
+  }
+
+  .hotspot-swiper__img-pane {
+    height: 200px;
+  }
+
+  .hotspot-swiper__body {
+    padding: 20px 20px 24px;
+  }
+
+  .hotspot-drawer__nav {
+    padding: 12px 20px;
+  }
+}

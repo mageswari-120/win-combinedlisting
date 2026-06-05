@@ -1,0 +1,347 @@
+ {{ 'section-hotspot-image.css' | asset_url | stylesheet_tag }}
+
+
+<script src="{{ 'section-hotspot-image.js' | asset_url }}" defer></script>
+
+{%- assign section_id = 'hotspot-' | append: section.id -%}
+
+<hotspot-image-section
+  data-section-id="{{ section.id }}" >
+
+<section
+  class="hotspot-section"
+  id="{{ section_id }}"
+  data-section-id="{{ section.id }}"
+  data-section-type="hotspot-image"
+> 
+  <div class="hotspot-section__bg">
+    {%- if section.settings.bg_image != blank -%}
+      <img
+        src="{{ section.settings.bg_image | image_url: width: 2000 }}"
+        alt="{{ section.settings.bg_image.alt | escape }}"
+        width="{{ section.settings.bg_image.width }}"
+        height="{{ section.settings.bg_image.height }}"
+        loading="eager"
+        fetchpriority="high"
+        class="hotspot-section__bg-img"
+      >
+    {%- else -%}
+      {{ 'lifestyle-1' | placeholder_svg_tag: 'hotspot-section__placeholder-svg' }}
+    {%- endif -%}
+    <div class="hotspot-section__overlay" style="background: {{ section.settings.overlay_color }}; opacity: {{ section.settings.overlay_opacity | divided_by: 100.0 }};"></div>
+  </div>
+ 
+  {%- for block in section.blocks -%}
+    <button
+      class="hotspot-dot-btn"
+      data-hotspot-index="{{ forloop.index0 }}"
+      style="left: {{ block.settings.position_x }}%; top: {{ block.settings.position_y }}%;"
+      aria-label="{{ block.settings.label | escape }}"
+      {{ block.shopify_attributes }}
+    >
+      <span class="hotspot-dot-btn__ring" aria-hidden="true"></span>
+      <span class="hotspot-dot-btn__inner" aria-hidden="true">
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <line x1="6" y1="1" x2="6" y2="11" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          <line x1="1" y1="6" x2="11" y2="6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+      </span>
+      {%- if block.settings.label != blank -%}
+        <span class="hotspot-dot-btn__label">{{ block.settings.label | escape }}</span>
+      {%- endif -%}
+    </button>
+  {%- endfor -%}
+ 
+  {%- if section.settings.heading != blank or section.settings.subheading != blank or section.settings.cta_label != blank -%}
+    <div class="hotspot-section__text">
+      {%- if section.settings.heading != blank -%}
+        <h2 class="hotspot-section__heading">{{ section.settings.heading | escape }}</h2>
+      {%- endif -%}
+      {%- if section.settings.subheading != blank -%}
+        <p class="hotspot-section__subheading">{{ section.settings.subheading | escape }}</p>
+      {%- endif -%}
+      {%- if section.settings.cta_label != blank -%}
+        <a
+          href="{{ section.settings.cta_url | default: '#' }}"
+          class="hotspot-section__cta"
+        >
+          {{ section.settings.cta_label | escape }}
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <path d="M2 12L12 2M12 2H5M12 2V9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </a>
+      {%- endif -%}
+    </div>
+  {%- endif -%}
+</section>
+ 
+<div class="hotspot-backdrop" id="hotspot-backdrop-{{ section.id }}" aria-hidden="true"></div>
+ 
+<div
+  class="hotspot-drawer"
+  id="hotspot-drawer-{{ section.id }}"
+  role="dialog"
+  aria-modal="true"
+  aria-label="Feature details"
+  hidden
+>
+  <button class="hotspot-drawer__close" id="hotspot-drawer-close-{{ section.id }}" aria-label="{{ 'general.accessibility.close' | t | default: 'Close' }}">
+    <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <path d="M1 1L17 17M17 1L1 17" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+    </svg>
+  </button>
+ 
+  <div class="hotspot-drawer__slides">
+    {%- for block in section.blocks -%}
+      <div class="hotspot-drawer__slide" data-slide-index="{{ forloop.index0 }}" {{ block.shopify_attributes }}>
+ 
+        <div class="hotspot-swiper__img-pane">
+          {%- if block.settings.feature_image != blank -%}
+            <img
+              src="{{ block.settings.feature_image | image_url: width: 800 }}"
+              alt="{{ block.settings.feature_image.alt | default: block.settings.title | escape }}"
+              width="{{ block.settings.feature_image.width }}"
+              height="{{ block.settings.feature_image.height }}"
+              loading="lazy"
+              class="hotspot-swiper__img"
+            >
+          {%- else -%}
+            {{ 'product-1' | placeholder_svg_tag: 'hotspot-swiper__img-placeholder' }}
+          {%- endif -%}
+
+          {%- if block.settings.tag != blank -%}
+            <span class="hotspot-swiper__tag">{{ block.settings.tag | escape }}</span>
+          {%- endif -%}
+        </div>
+ 
+        <div class="hotspot-swiper__body">
+          {%- if block.settings.title != blank -%}
+            <h3 class="hotspot-swiper__title">{{ block.settings.title | escape }}</h3>
+          {%- endif -%}
+
+          {%- if block.settings.description != blank -%}
+            <div class="hotspot-swiper__desc">{{ block.settings.description }}</div>
+          {%- endif -%}
+ 
+          {%- assign has_specs = false -%}
+          {%- for i in (1..4) -%}
+            {%- assign label_key = 'spec_' | append: i | append: '_label' -%}
+            {%- assign value_key = 'spec_' | append: i | append: '_value' -%}
+            {%- if block.settings[label_key] != blank and block.settings[value_key] != blank -%}
+              {%- assign has_specs = true -%}
+            {%- endif -%}
+          {%- endfor -%}
+
+          {%- if has_specs -%}
+            <dl class="hotspot-swiper__specs">
+              {%- for i in (1..4) -%}
+                {%- assign label_key = 'spec_' | append: i | append: '_label' -%}
+                {%- assign value_key = 'spec_' | append: i | append: '_value' -%}
+                {%- if block.settings[label_key] != blank and block.settings[value_key] != blank -%}
+                  <div class="hotspot-swiper__spec-item">
+                    <dt class="hotspot-swiper__spec-label">{{ block.settings[label_key] | escape }}</dt>
+                    <dd class="hotspot-swiper__spec-value">{{ block.settings[value_key] | escape }}</dd>
+                  </div>
+                {%- endif -%}
+              {%- endfor -%}
+            </dl>
+          {%- endif -%}
+
+          
+        </div>
+
+      </div>
+    {%- endfor -%}
+  </div> 
+  <div class="hotspot-drawer__nav">
+    <button class="hotspot-drawer__nav-btn hotspot-drawer__nav-btn--prev" id="hotspot-prev-{{ section.id }}" aria-label="{{ 'general.pagination.previous' | t | default: 'Previous' }}">
+      <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <path d="M11 3L5 9L11 15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+    <p class="hotspot-drawer__pagination" aria-live="polite">
+      <span class="hotspot-drawer__pagination-current">1</span>
+      <span class="hotspot-drawer__pagination-sep">/</span>
+      <span class="hotspot-drawer__pagination-total">{{ section.blocks.size }}</span>
+    </p>
+    <button class="hotspot-drawer__nav-btn hotspot-drawer__nav-btn--next" id="hotspot-next-{{ section.id }}" aria-label="{{ 'general.pagination.next' | t | default: 'Next' }}">
+      <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <path d="M7 3L13 9L7 15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+  </div>
+</div>
+
+</hotspot-image-section>
+
+{% schema %}
+{
+  "name": "Hotspot Image",
+  "tag": "section",
+  "class": "section-hotspot-image",
+  "limit": 1,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Background"
+    },
+    {
+      "type": "image_picker",
+      "id": "bg_image",
+      "label": "Background image"
+    },
+    {
+      "type": "color",
+      "id": "overlay_color",
+      "label": "Overlay colour",
+      "default": "#000000"
+    },
+    {
+      "type": "range",
+      "id": "overlay_opacity",
+      "label": "Overlay opacity",
+      "min": 0,
+      "max": 80,
+      "step": 5,
+      "unit": "%",
+      "default": 35
+    },
+    {
+      "type": "header",
+      "content": "Hero text"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Smart features, built-in."
+    },
+    {
+      "type": "text",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "Smart features, powerful performance, and seamless control in every ride."
+    },
+    {
+      "type": "text",
+      "id": "cta_label",
+      "label": "Button label",
+      "default": "Discovery"
+    },
+    {
+      "type": "url",
+      "id": "cta_url",
+      "label": "Button URL"
+    }
+     
+  ],
+  "blocks": [
+    {
+      "type": "hotspot",
+      "name": "Hotspot",
+      "limit": 8,
+      "settings": [
+        {
+          "type": "header",
+          "content": "Position on image"
+        },
+        {
+          "type": "range",
+          "id": "position_x",
+          "label": "Horizontal position",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "unit": "%",
+          "default": 50
+        },
+        {
+          "type": "range",
+          "id": "position_y",
+          "label": "Vertical position",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "unit": "%",
+          "default": 50
+        },
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Dot tooltip label",
+          "default": "Feature"
+        },
+        {
+          "type": "header",
+          "content": "Drawer slide content"
+        },
+        {
+          "type": "image_picker",
+          "id": "feature_image",
+          "label": "Feature image"
+        },
+        {
+          "type": "text",
+          "id": "tag",
+          "label": "Tag / badge text",
+          "default": "Detail"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Feature Title"
+        },
+        {
+          "type": "richtext",
+          "id": "description",
+          "label": "Description",
+          "default": "<p>Describe this feature in detail here. You can use rich text formatting.</p>"
+        },
+        
+       
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Hotspot Image",
+      "blocks": [
+        {
+          "type": "hotspot",
+          "settings": {
+            "position_x": 34,
+            "position_y": 34,
+            "label": "Suspension Fork",
+            "tag": "Fork",
+            "title": "Suspension Fork",
+             
+          }
+        },
+        {
+          "type": "hotspot",
+          "settings": {
+            "position_x": 54,
+            "position_y": 54,
+            "label": "Drive System",
+            "tag": "Drive",
+            "title": "Drive System",
+             
+          }
+        },
+        {
+          "type": "hotspot",
+          "settings": {
+            "position_x": 70,
+            "position_y": 68,
+            "label": "All-Terrain Tyre",
+            "tag": "Tyre",
+            "title": "Built for Speed & Control",
+             
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
