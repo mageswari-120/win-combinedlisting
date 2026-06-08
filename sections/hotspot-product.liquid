@@ -1,0 +1,288 @@
+{{ 'hotspot-product.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'hotspot-product.js' | asset_url }}" defer></script>
+
+<hotspot-product-section
+  data-section-id="{{ section.id }}"
+  data-section-height="{{ section.settings.section_height }}"
+  data-panel-width="{{ section.settings.panel_width }}"
+  data-accent-color="{{ section.settings.accent_color }}"
+  data-card-radius="{{ section.settings.card_radius }}"
+> 
+  <div class="hsp-panel">
+    <ul class="hsp-list" role="list">
+      {%- for block in section.blocks -%}
+        {%- assign product = block.settings.product -%}
+        <li
+          class="hsp-card{% if forloop.first %} is-active{% endif %}"
+          data-card-index="{{ forloop.index0 }}"
+          role="button"
+          tabindex="0"
+          aria-label="{{ product.title | default: block.settings.custom_title | escape }}"
+          {{ block.shopify_attributes }}
+        >
+          <div class="hsp-card__img-wrap">
+            {%- if product != blank -%}
+              {%- assign card_image = product.featured_image -%}
+              {%- if card_image != blank -%}
+                <img
+                  src="{{ card_image | image_url: width: 200 }}"
+                  alt="{{ card_image.alt | default: product.title | escape }}"
+                  width="200"
+                  height="200"
+                  loading="lazy"
+                  class="hsp-card__img"
+                >
+              {%- else -%}
+                {{ 'product-1' | placeholder_svg_tag: 'hsp-card__img-placeholder' }}
+              {%- endif -%}
+            {%- elsif block.settings.custom_image != blank -%}
+              <img
+                src="{{ block.settings.custom_image | image_url: width: 200 }}"
+                alt="{{ block.settings.custom_image.alt | default: block.settings.custom_title | escape }}"
+                width="200"
+                height="200"
+                loading="lazy"
+                class="hsp-card__img"
+              >
+            {%- else -%}
+              {{ 'product-1' | placeholder_svg_tag: 'hsp-card__img-placeholder' }}
+            {%- endif -%}
+          </div>
+
+          <div class="hsp-card__body">
+            <p class="hsp-card__title">
+              {{- product.title | default: block.settings.custom_title | escape -}}
+            </p>
+
+            {%- assign desc = product.description | default: block.settings.custom_desc -%}
+            {%- if desc != blank -%}
+              <p class="hsp-card__desc">{{ desc | strip_html | truncate: 80 }}</p>
+            {%- endif -%}
+
+            {%- if product != blank -%}
+              <p class="hsp-card__price">{{ product.price | money }}</p>
+            {%- elsif block.settings.custom_price != blank -%}
+              <p class="hsp-card__price">{{ block.settings.custom_price }}</p>
+            {%- endif -%}
+          </div>
+        </li>
+      {%- endfor -%}
+    </ul>
+  </div>
+ 
+  <div class="hsp-hero">
+    {%- if section.settings.hero_image != blank -%}
+      <img
+        src="{{ section.settings.hero_image | image_url: width: 2000 }}"
+        alt="{{ section.settings.hero_image.alt | escape }}"
+        width="{{ section.settings.hero_image.width }}"
+        height="{{ section.settings.hero_image.height }}"
+        loading="eager"
+        fetchpriority="high"
+        class="hsp-hero__img"
+      >
+    {%- else -%}
+      {{ 'lifestyle-2' | placeholder_svg_tag: 'hsp-hero__placeholder' }}
+    {%- endif -%}
+
+    <div
+      class="hsp-hero__overlay"
+      style="background:{{ section.settings.overlay_color }}; opacity:{{ section.settings.overlay_opacity | divided_by: 100.0 }};"
+    ></div> 
+    {%- for block in section.blocks -%}
+      <button
+        class="hsp-dot{% if forloop.first %} is-active{% endif %}"
+        data-product-index="{{ forloop.index0 }}"
+        style="left:{{ block.settings.dot_x }}%; top:{{ block.settings.dot_y }}%;"
+        aria-label="{{ block.settings.product.title | default: block.settings.custom_title | escape }}"
+        {{ block.shopify_attributes }}
+      >
+        <span class="hsp-dot__ring" aria-hidden="true"></span>
+        <span class="hsp-dot__inner" aria-hidden="true"></span>
+      </button>
+    {%- endfor -%}
+  </div>
+
+</hotspot-product-section>
+
+{% schema %}
+{
+  "name": "Hotspot Products",
+  "tag": "section",
+  "class": "section-hotspot-product",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Hero image"
+    },
+    {
+      "type": "image_picker",
+      "id": "hero_image",
+      "label": "Hero image"
+    },
+    {
+      "type": "color",
+      "id": "overlay_color",
+      "label": "Image overlay colour",
+      "default": "#000000"
+    },
+    {
+      "type": "range",
+      "id": "overlay_opacity",
+      "label": "Image overlay opacity",
+      "min": 0,
+      "max": 70,
+      "step": 5,
+      "unit": "%",
+      "default": 0
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "select",
+      "id": "section_height",
+      "label": "Section height",
+      "options": [
+        { "value": "60vh", "label": "Small (60vh)" },
+        { "value": "75vh", "label": "Medium (75vh)" },
+        { "value": "90vh", "label": "Large (90vh)" },
+        { "value": "100vh", "label": "Full screen" }
+      ],
+      "default": "90vh"
+    },
+    {
+      "type": "range",
+      "id": "panel_width",
+      "label": "Left panel width (px)",
+      "min": 260,
+      "max": 460,
+      "step": 10,
+      "default": 340
+    },
+    {
+      "type": "header",
+      "content": "Style"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent colour (active card border + price)",
+      "default": "#c8956c"
+    },
+    {
+      "type": "range",
+      "id": "card_radius",
+      "label": "Card corner radius (px)",
+      "min": 0,
+      "max": 24,
+      "step": 2,
+      "default": 14
+    }
+  ],
+  "blocks": [
+    {
+      "type": "product_hotspot",
+      "name": "Product hotspot",
+      "limit": 8,
+      "settings": [
+        {
+          "type": "header",
+          "content": "Dot position on image"
+        },
+        {
+          "type": "range",
+          "id": "dot_x",
+          "label": "Horizontal (%)",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "default": 50
+        },
+        {
+          "type": "range",
+          "id": "dot_y",
+          "label": "Vertical (%)",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "default": 50
+        },
+        {
+          "type": "header",
+          "content": "Product (picks from store)"
+        },
+        {
+          "type": "product",
+          "id": "product",
+          "label": "Product"
+        },
+        {
+          "type": "header",
+          "content": "Or fill manually (used when no product picked)"
+        },
+        {
+          "type": "image_picker",
+          "id": "custom_image",
+          "label": "Custom image"
+        },
+        {
+          "type": "text",
+          "id": "custom_title",
+          "label": "Title",
+          "default": "Product Name"
+        },
+        {
+          "type": "textarea",
+          "id": "custom_desc",
+          "label": "Description",
+          "default": "A short description of this product."
+        },
+        {
+          "type": "text",
+          "id": "custom_price",
+          "label": "Price (e.g. Rs. 1,500.00)"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Hotspot Products",
+      "blocks": [
+        {
+          "type": "product_hotspot",
+          "settings": {
+            "dot_x": 38,
+            "dot_y": 42,
+            "custom_title": "Facial Serum",
+            "custom_desc": "Elevate your skincare ritual with our luxurious Facial Serum.",
+            "custom_price": "Rs. 1,500.00"
+          }
+        },
+        {
+          "type": "product_hotspot",
+          "settings": {
+            "dot_x": 52,
+            "dot_y": 28,
+            "custom_title": "Vitamin C Face Oil",
+            "custom_desc": "Experience the golden touch of nature with our Vitamin C Brightening Face Oil.",
+            "custom_price": "Rs. 1,999.00"
+          }
+        },
+        {
+          "type": "product_hotspot",
+          "settings": {
+            "dot_x": 62,
+            "dot_y": 60,
+            "custom_title": "Advanced Anti-Aging Serum",
+            "custom_desc": "Experience the transformative power of our Advanced Anti-Aging Serum.",
+            "custom_price": "Rs. 900.00"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

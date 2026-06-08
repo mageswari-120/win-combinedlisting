@@ -1,0 +1,284 @@
+hotspot-product-section {
+  position: relative;
+  width: 100%;
+  height: var(--hsp-height, 90vh);
+  min-height: 500px;
+  display: flex;
+  overflow: hidden;
+  font-family: inherit;
+}
+
+/* ── LEFT PANEL ── */
+.hsp-panel {
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 10;
+  width: var(--hsp-panel-width, 340px);
+  height: 300px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  /* justify-content: center; */
+  padding: 32px 0 32px 32px;
+  pointer-events: none;  
+  overflow: hidden;
+}
+
+/* vertical list that slides */
+.hsp-list {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  transition: transform 0.55s cubic-bezier(0.77, 0, 0.18, 1);
+  pointer-events: all;
+  /* Clones extend outside the panel; let them render, panel clips them */
+  will-change: transform;
+}
+
+/* ── NAV BUTTONS (optional – rendered by Liquid if you add them) ── */
+.hsp-nav-wrap {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 14px;
+  padding-right: 16px;
+}
+
+.hsp-nav {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(0, 0, 0, 0.15);
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  color: #333;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s, color 0.2s;
+}
+
+.hsp-nav:hover {
+  background: var(--hsp-accent, #c8956c);
+  border-color: var(--hsp-accent, #c8956c);
+  color: #fff;
+}
+
+/* ── PRODUCT CARD ── */
+.hsp-card {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: rgba(255, 255, 255, 0.88);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-radius: var(--hsp-card-radius, 14px);
+  padding: 14px;
+  cursor: grab;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.10);
+  transition:
+    transform  0.45s cubic-bezier(0.77, 0, 0.18, 1),
+    opacity    0.45s ease,
+    box-shadow 0.3s ease;
+  opacity: 0.55;
+  transform: scale(0.93);
+  will-change: transform, opacity;
+  border: 2px solid transparent;
+  /* Prevent text selection while dragging */
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.hsp-card.is-active {
+  opacity: 1;
+  transform: scale(1);
+  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.18);
+  border-color: var(--hsp-accent, #c8956c);
+  cursor: grab;
+}
+
+.hsp-card:active {
+  cursor: grabbing;
+}
+
+/* Clone cards can become active briefly while crossing a loop boundary. */
+.hsp-card.hsp-clone {
+  pointer-events: none;
+}
+
+.hsp-card__img-wrap {
+  width: 72px;
+  height: 72px;
+  flex-shrink: 0;
+  border-radius: calc(var(--hsp-card-radius, 14px) - 4px);
+  overflow: hidden;
+  background: #f3ede8;
+}
+
+.hsp-card__img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.hsp-card__img-placeholder {
+  width: 100%;
+  height: 100%;
+  display: block;
+  opacity: 0.4;
+}
+
+.hsp-card__body {
+  flex: 1;
+  min-width: 0;
+}
+
+.hsp-card__title {
+  font-size: 0.95rem;
+  font-weight: 700;
+  line-height: 1.3;
+  margin: 0 0 5px;
+  color: #1a1a1a;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.hsp-card__desc {
+  font-size: 0.78rem;
+  color: #666;
+  line-height: 1.5;
+  margin: 0 0 6px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.hsp-card__price {
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--hsp-accent, #c8956c);
+}
+
+/* ── RIGHT: HERO IMAGE ── */
+.hsp-hero {
+  position: relative;
+  flex: 1;
+  overflow: hidden;
+}
+
+.hsp-hero__img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+}
+
+.hsp-hero__placeholder {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.hsp-hero__overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+/* ── HOTSPOT DOTS ── */
+.hsp-dot {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  cursor: pointer;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  padding: 0;
+  z-index: 5;
+}
+
+.hsp-dot__ring {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.6);
+  animation: hsp-pulse 2.4s ease-out infinite;
+  pointer-events: none;
+}
+
+@keyframes hsp-pulse {
+  0%   { transform: scale(0.85); opacity: 0.9; }
+  65%  { transform: scale(1.7);  opacity: 0;   }
+  100% { transform: scale(0.85); opacity: 0;   }
+}
+
+.hsp-dot__inner {
+  position: relative;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.92);
+  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.3), 0 2px 8px rgba(0, 0, 0, 0.25);
+  transition: transform 0.2s ease, background 0.2s ease;
+}
+
+.hsp-dot.is-active .hsp-dot__inner,
+.hsp-dot:hover .hsp-dot__inner {
+  transform: scale(1.25);
+  background: var(--hsp-accent, #c8956c);
+}
+
+/* ── MOBILE / RESPONSIVE ── */
+@media (max-width: 749px) {
+  hotspot-product-section {
+    flex-direction: column;
+    height: auto;
+  }
+
+  .hsp-hero {
+    height: 56vw;
+    min-height: 260px;
+    flex: none;
+    order: -1;
+  }
+
+  .hsp-panel {
+    position: relative;   /* take normal flow on mobile */
+    width: 100%;
+    height: auto;
+    padding: 20px 16px;
+    overflow-x: hidden;
+    overflow-y: hidden;
+    flex-direction: row;
+    justify-content: flex-start;
+  }
+
+  .hsp-list {
+    flex-direction: row;
+    gap: 12px;
+    transition: transform 0.55s cubic-bezier(0.77, 0, 0.18, 1);
+  }
+
+  .hsp-card {
+    flex-direction: column;
+    width: 160px;
+    flex-shrink: 0;
+    align-items: flex-start;
+  }
+
+  .hsp-card__img-wrap {
+    width: 100%;
+    height: 110px;
+  }
+}
