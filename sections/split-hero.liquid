@@ -1,0 +1,1108 @@
+{% comment %}
+  Split Hero Section
+  Left panel: image OR Shopify-hosted video OR YouTube/Vimeo embed — merchant chooses via "Left media type"
+  Right panel: image / product featured image (unchanged)
+  Video controls: autoplay, muted, loop, show native controls — all schema-driven
+{% endcomment %}
+
+{% liquid
+  assign left_img        = section.settings.left_image
+  assign left_video      = section.settings.left_video
+  assign left_video_url  = section.settings.left_video_url
+  assign left_media_type = section.settings.left_media_type
+
+  assign right_img  = section.settings.right_image
+  assign product    = section.settings.product
+  assign eyebrow    = section.settings.eyebrow
+  assign headline   = section.settings.headline
+  assign btn_label  = section.settings.button_label
+  assign btn_url    = section.settings.button_url
+  assign min_height = section.settings.min_height
+
+  assign right_title   = product.title | default: section.settings.product_title
+  assign right_sub     = section.settings.product_subtitle
+  assign show_price    = section.settings.show_price
+  assign right_btn_lbl = section.settings.cta_label | default: 'Add to bag'
+  assign right_btn_url = product.url | default: section.settings.cta_url
+
+  if product != blank
+    assign right_price = product.selected_or_first_available_variant.price | money
+  endif
+
+  assign gap_value = section.settings.panel_gap
+
+  assign vid_autoplay = section.settings.video_autoplay
+  assign vid_muted    = section.settings.video_muted
+  assign vid_loop     = section.settings.video_loop
+  assign vid_controls = section.settings.video_controls
+  assign vid_poster   = section.settings.video_poster
+
+   
+  if vid_autoplay
+    assign vid_muted = true
+  endif
+ 
+  assign left_has_hosted  = false
+  assign left_has_ext     = false
+  assign left_has_image   = false
+  if left_video != blank
+    assign left_has_hosted = true
+  endif
+  if left_video_url != blank
+    assign left_has_ext = true
+  endif
+  if left_img != blank
+    assign left_has_image = true
+  endif
+
+  assign left_render = 'placeholder'
+  if left_media_type == 'video_hosted' and left_has_hosted
+    assign left_render = 'video_hosted'
+  elsif left_media_type == 'video_url' and left_has_ext
+    assign left_render = 'video_url'
+  elsif left_media_type == 'image' and left_has_image
+    assign left_render = 'image'
+  elsif left_has_hosted
+    assign left_render = 'video_hosted'
+  elsif left_has_ext
+    assign left_render = 'video_url'
+  elsif left_has_image
+    assign left_render = 'image'
+  endif
+
+ 
+  assign embed_url = ''
+  if left_render == 'video_url' and left_video_url != blank
+    assign vid_type = left_video_url.type
+    assign vid_id   = left_video_url.id
+    if vid_type == 'youtube'
+      assign embed_base = 'https://www.youtube.com/embed/' | append: vid_id
+      assign embed_params = '?playsinline=1&rel=0'
+      if vid_autoplay
+        assign embed_params = embed_params | append: '&autoplay=1'
+      endif
+      if vid_muted
+        assign embed_params = embed_params | append: '&mute=1'
+      endif
+      if vid_loop
+        assign embed_params = embed_params | append: '&loop=1&playlist=' | append: vid_id
+      endif
+      if vid_controls == false
+        assign embed_params = embed_params | append: '&controls=0'
+      endif
+      assign embed_url = embed_base | append: embed_params
+    elsif vid_type == 'vimeo'
+      assign embed_base = 'https://player.vimeo.com/video/' | append: vid_id
+      assign embed_params = '?playsinline=1'
+      if vid_autoplay
+        assign embed_params = embed_params | append: '&autoplay=1'
+      endif
+      if vid_muted
+        assign embed_params = embed_params | append: '&muted=1'
+      endif
+      if vid_loop
+        assign embed_params = embed_params | append: '&loop=1'
+      endif
+      if vid_controls == false
+        assign embed_params = embed_params | append: '&controls=0'
+      endif
+      assign embed_url = embed_base | append: embed_params
+    endif
+  endif
+%}
+
+{% style %}
+  .split-hero--{{ section.id }} {
+    display: grid;
+    grid-template-columns: {{ section.settings.left_width }}% 1fr;
+    min-height: {{ min_height }}px;
+    gap: {{ gap_value }}px;
+    padding-top: {{ section.settings.padding_top }}px;
+    padding-bottom: {{ section.settings.padding_bottom }}px;
+  }
+
+  @media screen and (max-width: 767px) {
+    .split-hero--{{ section.id }} {
+      grid-template-columns: 1fr;
+      min-height: auto;
+    }
+  }
+
+  .split-hero--{{ section.id }} .sh-panel {
+    position: relative;
+    overflow: hidden;
+    border-radius: {{ section.settings.border_radius }}px;
+  }
+
+  /* ── Shared media layer (img + video) ── */
+  .split-hero--{{ section.id }} .sh-panel__img,
+  .split-hero--{{ section.id }} .sh-panel__video {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+
+  .split-hero--{{ section.id }} .sh-panel__img {
+    object-fit: cover;
+    object-position: {{ section.settings.left_focal }};
+  }
+
+  .split-hero--{{ section.id }} .sh-panel--right .sh-panel__img {
+    object-position: {{ section.settings.right_focal }};
+  }
+
+  /* Hosted <video> */
+  .split-hero--{{ section.id }} .sh-panel__video {
+    object-fit: {{ section.settings.video_fit }};
+    object-position: center center;
+    background: #000;
+  }
+
+  /* YouTube / Vimeo iframe */
+  .split-hero--{{ section.id }} .sh-panel__iframe-wrap {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background: #000;
+  }
+
+  .split-hero--{{ section.id }} .sh-panel__iframe {
+    position: absolute;
+    /* Oversized to hide letterbox bars */
+    top: 50%;
+    left: 50%;
+    width: 177.78%;   /* 16:9 in a box of unknown AR */
+    height: 177.78%;
+    min-width: 100%;
+    min-height: 100%;
+    transform: translate(-50%, -50%);
+    border: 0;
+    pointer-events: {{ section.settings.video_controls | map: '' }};
+  }
+
+  /* ── Video play/pause toggle button ── */
+  .split-hero--{{ section.id }} .sh-vid-toggle {
+    position: absolute;
+    bottom: {{ section.settings.video_btn_bottom }}px;
+    right: {{ section.settings.video_btn_right }}px;
+    z-index: 3;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    border: 2px solid {{ section.settings.video_btn_color }};
+    background: transparent;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    transition: background 0.2s ease, opacity 0.2s ease;
+    opacity: 0.85;
+  }
+
+  .split-hero--{{ section.id }} .sh-vid-toggle:hover {
+    background: rgba(255,255,255,0.15);
+    opacity: 1;
+  }
+
+  .split-hero--{{ section.id }} .sh-vid-toggle svg {
+    width: 18px;
+    height: 18px;
+    fill: {{ section.settings.video_btn_color }};
+    flex-shrink: 0;
+  }
+
+  /* ── Mute toggle ── */
+  .split-hero--{{ section.id }} .sh-vid-mute {
+    position: absolute;
+    bottom: {{ section.settings.video_btn_bottom }}px;
+    right: {{ section.settings.video_btn_right | plus: 54 }}px;
+    z-index: 3;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    border: 2px solid {{ section.settings.video_btn_color }};
+    background: transparent;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    transition: background 0.2s ease, opacity 0.2s ease;
+    opacity: 0.85;
+  }
+
+  .split-hero--{{ section.id }} .sh-vid-mute:hover {
+    background: rgba(255,255,255,0.15);
+    opacity: 1;
+  }
+
+  .split-hero--{{ section.id }} .sh-vid-mute svg {
+    width: 18px;
+    height: 18px;
+    fill: {{ section.settings.video_btn_color }};
+    flex-shrink: 0;
+  }
+
+  /* ── Content layer ── */
+  .split-hero--{{ section.id }} .sh-panel__content {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: clamp(24px, 4vw, 48px);
+  }
+
+  .split-hero--{{ section.id }} .sh-eyebrow {
+    font-size: 0.75rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+
+  .split-hero--{{ section.id }} .sh-headline {
+    font-size: clamp(2rem, 4vw, {{ section.settings.headline_size }}px);
+    line-height: 1.05;
+    font-style: italic;
+    font-weight: {{ section.settings.headline_weight }};
+    margin: 0;
+  }
+
+  .split-hero--{{ section.id }} .sh-panel--right .sh-panel__content {
+    padding: clamp(20px, 3vw, 40px);
+  }
+
+  .split-hero--{{ section.id }} .sh-product-title {
+    font-size: clamp(1.1rem, 2vw, {{ section.settings.product_title_size }}px);
+    font-weight: 500;
+    margin: 0 0 4px;
+  }
+
+  .split-hero--{{ section.id }} .sh-product-sub {
+    font-size: 0.875rem;
+    opacity: 0.65;
+    margin: 0 0 20px;
+  }
+
+  .split-hero--{{ section.id }} .sh-price {
+    display: block;
+    margin-bottom: 4px;
+    font-size: 0.875rem;
+    opacity: 0.7;
+  }
+
+  .split-hero--{{ section.id }} .sh-cta {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    max-width: 380px;
+    padding: 16px 28px;
+    border-radius: 100px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    text-decoration: none;
+    cursor: pointer;
+    border: none;
+    transition: opacity 0.2s ease, transform 0.15s ease;
+  }
+
+  .split-hero--{{ section.id }} .sh-cta:hover {
+    opacity: 0.88;
+    transform: translateY(-1px);
+  }
+
+  .split-hero--{{ section.id }} .sh-cta--primary {
+    background-color: rgb(var(--color-button));
+    color: rgb(var(--color-button-text));
+  }
+
+  /* ── Overlays ── */
+  .split-hero--{{ section.id }} .sh-panel__overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+  }
+
+  .split-hero--{{ section.id }} .sh-panel--left .sh-panel__overlay {
+    background: linear-gradient(
+      to top,
+      rgba(0,0,0,{{ section.settings.overlay_opacity | divided_by: 100.0 }}) 0%,
+      transparent 55%
+    );
+  }
+
+  .split-hero--{{ section.id }} .sh-panel--right .sh-panel__overlay {
+    background: linear-gradient(
+      to top,
+      rgba(0,0,0,{{ section.settings.right_overlay_opacity | divided_by: 100.0 }}) 0%,
+      transparent 50%
+    );
+  }
+
+  /* ── Text colours ── */
+  .split-hero--{{ section.id }} .sh-panel--left .sh-eyebrow,
+  .split-hero--{{ section.id }} .sh-panel--left .sh-headline,
+  .split-hero--{{ section.id }} .sh-panel--left .sh-cta { color: {{ section.settings.left_text_color }}; }
+
+  .split-hero--{{ section.id }} .sh-panel--right .sh-product-title,
+  .split-hero--{{ section.id }} .sh-panel--right .sh-product-sub,
+  .split-hero--{{ section.id }} .sh-panel--right .sh-price { color: {{ section.settings.right_text_color }}; }
+
+  /* ── Placeholder ── */
+  .split-hero--{{ section.id }} .sh-placeholder {
+    width: 100%; height: 100%;
+    display: flex; align-items: center; justify-content: center;
+    background: rgb(var(--color-foreground), 0.06);
+  }
+  .split-hero--{{ section.id }} .sh-placeholder svg { width: 60%; max-width: 200px; opacity: 0.15; }
+
+  @media screen and (prefers-reduced-motion: reduce) {
+    .split-hero--{{ section.id }} .sh-cta,
+    .split-hero--{{ section.id }} .sh-vid-toggle,
+    .split-hero--{{ section.id }} .sh-vid-mute { transition: none; }
+  }
+{% endstyle %}
+
+<div
+  class="split-hero--{{ section.id }} color-{{ section.settings.color_scheme }} {% if section.settings.full_width %}container-fluid px-0{% else %}container{% endif %}"
+  id="split-hero-{{ section.id }}"
+>
+
+  {%- comment -%} ═══════════════ LEFT PANEL ═══════════════ {%- endcomment -%}
+  <div class="sh-panel sh-panel--left">
+
+    {%- case left_render -%}
+
+      {%- when 'video_hosted' -%}
+        {%- comment -%} Shopify-hosted video — use .sources[] for best format {%- endcomment -%}
+        <video
+          class="sh-panel__video"
+          id="sh-vid-{{ section.id }}"
+          {%- if vid_poster != blank -%} poster="{{ vid_poster | image_url: width: 1400 }}"{%- endif -%}
+          {%- if vid_autoplay %} autoplay{%- endif -%}
+          {%- if vid_muted %} muted playsinline{%- endif -%}
+          {%- if vid_loop %} loop{%- endif -%}
+          {%- if vid_controls %} controls{%- endif -%}
+          preload="metadata"
+        >
+          {%- for source in left_video.sources -%}
+            <source src="{{ source.url }}" type="{{ source.mime_type }}">
+          {%- endfor -%}
+          {%- comment -%} Fallback for unsupported browsers {%- endcomment -%}
+          {%- if left_img != blank -%}
+            {%- comment -%} No Liquid <img> fallback inside <video>; use poster instead {%- endcomment -%}
+          {%- endif -%}
+        </video>
+
+        {%- comment -%} Custom play/pause & mute buttons (only for hosted video) {%- endcomment -%}
+        {%- if section.settings.show_video_controls -%}
+          <button
+            class="sh-vid-toggle"
+            type="button"
+            data-sh-vid-toggle="{{ section.id }}"
+            aria-label="Pause video"
+            aria-pressed="true"
+          >
+            {%- comment -%} Pause icon (shown when playing) {%- endcomment -%}
+            <svg class="icon-pause" viewBox="0 0 24 24" aria-hidden="true"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>
+            {%- comment -%} Play icon (shown when paused) {%- endcomment -%}
+            <svg class="icon-play" viewBox="0 0 24 24" aria-hidden="true" style="display:none"><polygon points="5,3 19,12 5,21"/></svg>
+          </button>
+
+          {%- if vid_muted -%}
+          <button
+            class="sh-vid-mute"
+            type="button"
+            data-sh-vid-mute="{{ section.id }}"
+            aria-label="Unmute video"
+            aria-pressed="true"
+          >
+            {%- comment -%} Muted icon {%- endcomment -%}
+            <svg class="icon-muted" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z"/><line x1="18" y1="6" x2="22" y2="18" stroke-width="2" stroke="currentColor"/></svg>
+            {%- comment -%} Unmuted icon {%- endcomment -%}
+            <svg class="icon-unmuted" viewBox="0 0 24 24" aria-hidden="true" style="display:none"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>
+          </button>
+          {%- endif -%}
+        {%- endif -%}
+
+      {%- when 'video_url' -%}
+        {%- comment -%} YouTube / Vimeo iframe embed {%- endcomment -%}
+        {%- if embed_url != blank -%}
+          <div class="sh-panel__iframe-wrap" aria-label="{{ section.settings.eyebrow | default: 'Video' }} video">
+            <iframe
+              class="sh-panel__iframe"
+              src="{{ embed_url }}"
+              title="{{ section.settings.headline | escape | default: 'Video' }}"
+              allow="autoplay; fullscreen; picture-in-picture"
+              allowfullscreen
+              loading="lazy"
+            ></iframe>
+          </div>
+        {%- else -%}
+          <div class="sh-placeholder">{{ 'lifestyle-2' | placeholder_svg_tag }}</div>
+        {%- endif -%}
+
+      {%- when 'image' -%}
+        <img
+          class="sh-panel__img"
+          src="{{ left_img | image_url: width: 1400 }}"
+          srcset="{{ left_img | image_url: width: 600 }} 600w, {{ left_img | image_url: width: 900 }} 900w, {{ left_img | image_url: width: 1400 }} 1400w"
+          sizes="(max-width: 767px) 100vw, {{ section.settings.left_width }}vw"
+          alt="{{ left_img.alt | escape | default: headline | escape }}"
+          loading="eager"
+          width="{{ left_img.width }}"
+          height="{{ left_img.height }}"
+        >
+
+      {%- else -%}
+        <div class="sh-placeholder">{{ 'lifestyle-1' | placeholder_svg_tag }}</div>
+
+    {%- endcase -%}
+
+    <div class="sh-panel__overlay" aria-hidden="true"></div>
+
+    <div class="sh-panel__content">
+      {%- if eyebrow != blank -%}
+        <p class="sh-eyebrow">{{ eyebrow }}</p>
+      {%- endif -%}
+      {%- if headline != blank -%}
+        <{{ section.settings.headline_tag }} class="sh-headline">{{ headline }}</{{ section.settings.headline_tag }}>
+      {%- endif -%}
+      {%- if btn_label != blank and btn_url != blank -%}
+        <a href="{{ btn_url }}" class="sh-cta sh-cta--primary" style="margin-top: 28px;">{{ btn_label }}</a>
+      {%- endif -%}
+    </div>
+
+  </div>
+
+  {%- comment -%} ═══════════════ RIGHT PANEL ═══════════════ {%- endcomment -%}
+  <div class="sh-panel sh-panel--right">
+    {%- if right_img != blank -%}
+      <img
+        class="sh-panel__img"
+        src="{{ right_img | image_url: width: 1200 }}"
+        srcset="{{ right_img | image_url: width: 600 }} 600w, {{ right_img | image_url: width: 900 }} 900w, {{ right_img | image_url: width: 1200 }} 1200w"
+        sizes="(max-width: 767px) 100vw, {{ 100 | minus: section.settings.left_width }}vw"
+        alt="{{ right_img.alt | escape | default: right_title | escape }}"
+        loading="eager"
+        width="{{ right_img.width }}"
+        height="{{ right_img.height }}"
+      >
+    {%- elsif product != blank and product.featured_image -%}
+      <img
+        class="sh-panel__img"
+        src="{{ product.featured_image | image_url: width: 1200 }}"
+        srcset="{{ product.featured_image | image_url: width: 600 }} 600w, {{ product.featured_image | image_url: width: 900 }} 900w, {{ product.featured_image | image_url: width: 1200 }} 1200w"
+        sizes="(max-width: 767px) 100vw, {{ 100 | minus: section.settings.left_width }}vw"
+        alt="{{ product.featured_image.alt | escape | default: right_title | escape }}"
+        loading="eager"
+        width="{{ product.featured_image.width }}"
+        height="{{ product.featured_image.height }}"
+      >
+    {%- else -%}
+      <div class="sh-placeholder">{{ 'product-2' | placeholder_svg_tag }}</div>
+    {%- endif -%}
+
+    <div class="sh-panel__overlay" aria-hidden="true"></div>
+
+    <div class="sh-panel__content">
+      {%- if right_title != blank -%}<h3 class="sh-product-title">{{ right_title }}</h3>{%- endif -%}
+      {%- if right_sub != blank -%}<p class="sh-product-sub">{{ right_sub }}</p>{%- endif -%}
+      {%- if show_price and product != blank -%}<span class="sh-price">{{ right_price }}</span>{%- endif -%}
+
+      {%- if right_btn_lbl != blank -%}
+        {%- if product != blank and section.settings.enable_atc -%}
+          {%- assign first_variant = product.selected_or_first_available_variant -%}
+          {%- if first_variant.available -%}
+            <button class="sh-cta sh-cta--primary" type="button" data-sh-atc data-variant-id="{{ first_variant.id }}" aria-label="{{ 'products.product.add_to_cart' | t | default: 'Add to cart' }}">
+              {{ right_btn_lbl }}{%- if show_price %} – {{ right_price }}{%- endif -%}
+            </button>
+          {%- else -%}
+            <button class="sh-cta sh-cta--primary" type="button" disabled aria-disabled="true">
+              {{ 'products.product.sold_out' | t | default: 'Sold out' }}
+            </button>
+          {%- endif -%}
+        {%- elsif right_btn_url != blank -%}
+          <a href="{{ right_btn_url }}" class="sh-cta sh-cta--primary">
+            {{ right_btn_lbl }}{%- if show_price and product != blank %} – {{ right_price }}{%- endif -%}
+          </a>
+        {%- else -%}
+          <span class="sh-cta sh-cta--primary" role="presentation">{{ right_btn_lbl }}</span>
+        {%- endif -%}
+      {%- endif -%}
+    </div>
+  </div>
+
+</div>
+
+{%- comment -%} ═══ Video play/pause + mute JS (hosted video only) ═══ {%- endcomment -%}
+{%- if left_render == 'video_hosted' and section.settings.show_video_controls -%}
+<script>
+(function () {
+  var root = document.getElementById('split-hero-{{ section.id }}');
+  if (!root) return;
+
+  var video      = root.querySelector('#sh-vid-{{ section.id }}');
+  var toggleBtn  = root.querySelector('[data-sh-vid-toggle="{{ section.id }}"]');
+  var muteBtn    = root.querySelector('[data-sh-vid-mute="{{ section.id }}"]');
+
+  if (!video) return;
+
+  /* ── Play / Pause ── */
+  if (toggleBtn) {
+    var iconPause = toggleBtn.querySelector('.icon-pause');
+    var iconPlay  = toggleBtn.querySelector('.icon-play');
+
+    function syncPlayIcon() {
+      var paused = video.paused;
+      iconPause.style.display = paused ? 'none' : '';
+      iconPlay.style.display  = paused ? ''     : 'none';
+      toggleBtn.setAttribute('aria-label', paused ? 'Play video' : 'Pause video');
+      toggleBtn.setAttribute('aria-pressed', paused ? 'false' : 'true');
+    }
+
+    toggleBtn.addEventListener('click', function () {
+      if (video.paused) { video.play(); } else { video.pause(); }
+    });
+
+    video.addEventListener('play',  syncPlayIcon);
+    video.addEventListener('pause', syncPlayIcon);
+    video.addEventListener('ended', syncPlayIcon);
+    syncPlayIcon();
+  }
+
+  /* ── Mute / Unmute ── */
+  if (muteBtn) {
+    var iconMuted   = muteBtn.querySelector('.icon-muted');
+    var iconUnmuted = muteBtn.querySelector('.icon-unmuted');
+
+    function syncMuteIcon() {
+      var muted = video.muted;
+      iconMuted.style.display   = muted ? '' : 'none';
+      iconUnmuted.style.display = muted ? 'none' : '';
+      muteBtn.setAttribute('aria-label', muted ? 'Unmute video' : 'Mute video');
+      muteBtn.setAttribute('aria-pressed', muted ? 'true' : 'false');
+    }
+
+    muteBtn.addEventListener('click', function () {
+      video.muted = !video.muted;
+      syncMuteIcon();
+    });
+
+    syncMuteIcon();
+  }
+
+  /* ── Theme Editor lifecycle ── */
+  document.addEventListener('shopify:section:load', function (e) {
+    if (e.detail.sectionId !== '{{ section.id }}') return;
+    if ({{ vid_autoplay }}) { video.play().catch(function(){}); }
+  });
+  document.addEventListener('shopify:section:unload', function (e) {
+    if (e.detail.sectionId !== '{{ section.id }}') return;
+    video.pause();
+  });
+})();
+</script>
+{%- endif -%}
+ 
+{%- if section.settings.enable_atc -%}
+<script>
+(function () {
+  var root = document.getElementById('split-hero-{{ section.id }}');
+  if (!root) return;
+  var btn = root.querySelector('[data-sh-atc]');
+  if (!btn) return;
+
+  btn.addEventListener('click', function () {
+    var variantId = btn.dataset.variantId;
+    if (!variantId) return;
+    var originalText = btn.textContent.trim();
+    btn.disabled = true;
+    btn.textContent = '{{ 'products.product.adding' | t | default: 'Adding…' }}';
+
+    fetch('/cart/add.js', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'X-Requested-With': 'XMLHttpRequest' },
+      body: JSON.stringify({ id: parseInt(variantId, 10), quantity: 1 })
+    })
+      .then(function (res) {
+        if (!res.ok) return res.json().then(function (d) { throw new Error(d.description || 'Cart error'); });
+        return res.json();
+      })
+      .then(function () {
+        btn.textContent = '{{ 'products.product.added' | t | default: 'Added!' }}';
+        document.dispatchEvent(new CustomEvent('cart:refresh', { bubbles: true }));
+        setTimeout(function () { btn.textContent = originalText; btn.disabled = false; }, 2200);
+      })
+      .catch(function (err) {
+        console.error('[split-hero] ATC error:', err);
+        btn.textContent = '{{ 'products.product.add_to_cart_error' | t | default: 'Try again' }}';
+        setTimeout(function () { btn.textContent = originalText; btn.disabled = false; }, 2200);
+      });
+  });
+})();
+</script>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Split Hero",
+  "tag": "section",
+  "class": "section-split-hero",
+  "disabled_on": { "groups": ["header", "footer", "custom.overlay"] },
+  "settings": [
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "checkbox",
+      "id": "full_width",
+      "label": "Full width",
+      "default": true
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "range",
+      "id": "left_width",
+      "label": "Left panel width (%)",
+      "min": 30,
+      "max": 70,
+      "step": 5,
+      "default": 50
+    },
+    {
+      "type": "range",
+      "id": "min_height",
+      "label": "Minimum height (px)",
+      "min": 400,
+      "max": 1000,
+      "step": 50,
+      "default": 700
+    },
+    {
+      "type": "range",
+      "id": "panel_gap",
+      "label": "Gap between panels (px)",
+      "min": 0,
+      "max": 30,
+      "step": 2,
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "border_radius",
+      "label": "Panel corner radius (px)",
+      "min": 0,
+      "max": 24,
+      "step": 2,
+      "default": 0
+    },
+    {
+      "type": "header",
+      "content": "Left Panel - Media"
+    },
+    {
+      "type": "select",
+      "id": "left_media_type",
+      "label": "Left panel media type",
+      "options": [
+        { "value": "image",        "label": "Image" },
+        { "value": "video_hosted", "label": "Video (Shopify-hosted)" },
+        { "value": "video_url",    "label": "Video (YouTube / Vimeo)" }
+      ],
+      "default": "image",
+      "info": "Select what to show. Upload the matching media below."
+    },
+    {
+      "type": "image_picker",
+      "id": "left_image",
+      "label": "Background image",
+      "info": "Used when Media type is Image"
+    },
+    {
+      "type": "select",
+      "id": "left_focal",
+      "label": "Image focal point",
+      "options": [
+        { "value": "center center", "label": "Center" },
+        { "value": "top center",    "label": "Top" },
+        { "value": "bottom center", "label": "Bottom" },
+        { "value": "center left",   "label": "Left" },
+        { "value": "center right",  "label": "Right" }
+      ],
+      "default": "center center",
+      "visible_if": "{{ section.settings.left_media_type == 'image' }}"
+    },
+    {
+      "type": "video",
+      "id": "left_video",
+      "label": "Shopify-hosted video",
+      "info": "Upload via Shopify Admin -> Content -> Files. Used when Media type is Video (Shopify-hosted)",
+      "visible_if": "{{ section.settings.left_media_type == 'video_hosted' }}"
+    },
+    {
+      "type": "video_url",
+      "id": "left_video_url",
+      "label": "YouTube or Vimeo URL",
+      "accept": ["youtube", "vimeo"],
+      "info": "Paste a full video URL. Used when Media type is Video (YouTube / Vimeo)",
+      "visible_if": "{{ section.settings.left_media_type == 'video_url' }}"
+    },
+    {
+      "type": "header",
+      "content": "Video Behaviour",
+      "info": "Applies to Shopify-hosted and embedded videos"
+    },
+    {
+      "type": "checkbox",
+      "id": "video_autoplay",
+      "label": "Autoplay",
+      "default": true,
+      "info": "Browsers require Muted to be on for autoplay to work"
+    },
+    {
+      "type": "checkbox",
+      "id": "video_muted",
+      "label": "Muted",
+      "default": true,
+      "info": "Automatically forced on when Autoplay is enabled"
+    },
+    {
+      "type": "checkbox",
+      "id": "video_loop",
+      "label": "Loop",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "video_controls",
+      "label": "Show native browser controls",
+      "default": false,
+      "info": "Shows the browser's built-in video controls. Not available for YouTube / Vimeo when disabled by the platform."
+    },
+    {
+      "type": "select",
+      "id": "video_fit",
+      "label": "Video fill mode",
+      "options": [
+        { "value": "cover",   "label": "Cover (crop to fill)" },
+        { "value": "contain", "label": "Contain (letterbox)" }
+      ],
+      "default": "cover",
+      "visible_if": "{{ section.settings.left_media_type == 'video_hosted' }}"
+    },
+    {
+      "type": "image_picker",
+      "id": "video_poster",
+      "label": "Video poster / fallback image",
+      "info": "Shown while video loads or in browsers that don't support it",
+      "visible_if": "{{ section.settings.left_media_type == 'video_hosted' }}"
+    },
+    {
+      "type": "header",
+      "content": "Video Controls UI",
+      "info": "Custom play/pause and mute buttons (Shopify-hosted only)"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_video_controls",
+      "label": "Show play/pause & mute buttons",
+      "default": true,
+      "visible_if": "{{ section.settings.left_media_type == 'video_hosted' }}"
+    },
+    {
+      "type": "color",
+      "id": "video_btn_color",
+      "label": "Button icon & border colour",
+      "default": "#FFFFFF",
+      "visible_if": "{{ section.settings.left_media_type == 'video_hosted' and section.settings.show_video_controls == true }}"
+    },
+    {
+      "type": "range",
+      "id": "video_btn_bottom",
+      "label": "Button distance from bottom (px)",
+      "min": 8,
+      "max": 80,
+      "step": 4,
+      "default": 20,
+      "visible_if": "{{ section.settings.left_media_type == 'video_hosted' and section.settings.show_video_controls == true }}"
+    },
+    {
+      "type": "range",
+      "id": "video_btn_right",
+      "label": "Button distance from right (px)",
+      "min": 8,
+      "max": 80,
+      "step": 4,
+      "default": 20,
+      "visible_if": "{{ section.settings.left_media_type == 'video_hosted' and section.settings.show_video_controls == true }}"
+    },
+    {
+      "type": "header",
+      "content": "Left Panel - Text"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow text",
+      "default": "Premium Beauty Brand"
+    },
+    {
+      "type": "textarea",
+      "id": "headline",
+      "label": "Headline",
+      "default": "Reveal Your Natural Radiance"
+    },
+    {
+      "type": "select",
+      "id": "headline_tag",
+      "label": "Headline HTML tag",
+      "options": [
+        { "value": "h1", "label": "H1" },
+        { "value": "h2", "label": "H2" },
+        { "value": "h3", "label": "H3" }
+      ],
+      "default": "h2"
+    },
+    {
+      "type": "range",
+      "id": "headline_size",
+      "label": "Headline max size (px)",
+      "min": 32,
+      "max": 120,
+      "step": 4,
+      "default": 72
+    },
+    {
+      "type": "select",
+      "id": "headline_weight",
+      "label": "Headline weight",
+      "options": [
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "700", "label": "Bold" }
+      ],
+      "default": "400"
+    },
+    {
+      "type": "color",
+      "id": "left_text_color",
+      "label": "Left text colour",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "range",
+      "id": "overlay_opacity",
+      "label": "Left overlay darkness (%)",
+      "min": 0,
+      "max": 80,
+      "step": 5,
+      "default": 40
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Left CTA label"
+    },
+    {
+      "type": "url",
+      "id": "button_url",
+      "label": "Left CTA URL"
+    },
+    {
+      "type": "header",
+      "content": "Right Panel - Product Spotlight"
+    },
+    {
+      "type": "image_picker",
+      "id": "right_image",
+      "label": "Right background image",
+      "info": "Overrides the product featured image"
+    },
+    {
+      "type": "select",
+      "id": "right_focal",
+      "label": "Right image focal point",
+      "options": [
+        { "value": "center center", "label": "Center" },
+        { "value": "top center",    "label": "Top" },
+        { "value": "bottom center", "label": "Bottom" },
+        { "value": "center left",   "label": "Left" },
+        { "value": "center right",  "label": "Right" }
+      ],
+      "default": "center center"
+    },
+    {
+      "type": "product",
+      "id": "product",
+      "label": "Product"
+    },
+    {
+      "type": "text",
+      "id": "product_title",
+      "label": "Product title override",
+      "info": "Used when no product is selected"
+    },
+    {
+      "type": "text",
+      "id": "product_subtitle",
+      "label": "Product subtitle / tagline",
+      "default": "Daily Clean + Soothe"
+    },
+    {
+      "type": "range",
+      "id": "product_title_size",
+      "label": "Product title max size (px)",
+      "min": 16,
+      "max": 48,
+      "step": 2,
+      "default": 28
+    },
+    {
+      "type": "checkbox",
+      "id": "show_price",
+      "label": "Show price",
+      "default": true
+    },
+    {
+      "type": "color",
+      "id": "right_text_color",
+      "label": "Right text colour",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "range",
+      "id": "right_overlay_opacity",
+      "label": "Right overlay darkness (%)",
+      "min": 0,
+      "max": 80,
+      "step": 5,
+      "default": 30
+    },
+    {
+      "type": "text",
+      "id": "cta_label",
+      "label": "CTA button label",
+      "default": "Add to bag"
+    },
+    {
+      "type": "url",
+      "id": "cta_url",
+      "label": "CTA URL",
+      "info": "Used when no product is selected"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_atc",
+      "label": "Enable Add to Cart (direct)",
+      "default": true,
+      "info": "Adds product to cart without leaving the page. Requires a product to be selected."
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding top (px)",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding bottom (px)",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "default": 0
+    }
+  ],
+  "presets": [
+    {
+      "name": "Split Hero - Image",
+      "category": "Hero & Banners",
+      "settings": {
+        "left_media_type": "image",
+        "eyebrow": "Premium Beauty Brand",
+        "headline": "Reveal Your Natural Radiance",
+        "headline_tag": "h2",
+        "headline_size": 72,
+        "headline_weight": "400",
+        "left_text_color": "#FFFFFF",
+        "overlay_opacity": 40,
+        "product_subtitle": "Daily Clean + Soothe",
+        "show_price": true,
+        "right_text_color": "#FFFFFF",
+        "cta_label": "Add to bag",
+        "enable_atc": true
+      }
+    },
+    {
+      "name": "Split Hero - Autoplay Video",
+      "category": "Hero & Banners",
+      "settings": {
+        "left_media_type": "video_hosted",
+        "video_autoplay": true,
+        "video_muted": true,
+        "video_loop": true,
+        "video_controls": false,
+        "video_fit": "cover",
+        "show_video_controls": true,
+        "video_btn_color": "#FFFFFF",
+        "video_btn_bottom": 20,
+        "video_btn_right": 20,
+        "eyebrow": "Premium Beauty Brand",
+        "headline": "Reveal Your Natural Radiance",
+        "headline_tag": "h2",
+        "overlay_opacity": 30,
+        "left_text_color": "#FFFFFF",
+        "product_subtitle": "Daily Clean + Soothe",
+        "show_price": true,
+        "right_text_color": "#FFFFFF",
+        "cta_label": "Add to bag",
+        "enable_atc": true
+      }
+    },
+    {
+      "name": "Split Hero - YouTube/Vimeo",
+      "category": "Hero & Banners",
+      "settings": {
+        "left_media_type": "video_url",
+        "video_autoplay": true,
+        "video_muted": true,
+        "video_loop": true,
+        "video_controls": false,
+        "overlay_opacity": 30,
+        "eyebrow": "Premium Beauty Brand",
+        "headline": "Reveal Your Natural Radiance",
+        "headline_tag": "h2",
+        "left_text_color": "#FFFFFF",
+        "product_subtitle": "Daily Clean + Soothe",
+        "show_price": true,
+        "right_text_color": "#FFFFFF",
+        "cta_label": "Add to bag",
+        "enable_atc": true
+      }
+    }
+  ]
+}
+{% endschema %}
