@@ -1,0 +1,790 @@
+<style>
+  .fp-wrap-{{ section.id }} {
+    --fp-bg:      {{ section.settings.section_bg }};
+    --fp-card-bg: {{ section.settings.card_bg }};
+    --fp-accent:  {{ section.settings.accent_color }};
+    --fp-text:    {{ section.settings.text_color }};
+    --fp-muted:   {{ section.settings.muted_color }};
+    --fp-border:  {{ section.settings.border_color }};
+    --fp-radius:  20px;
+
+    background: var(--fp-bg);
+    padding: {{ section.settings.section_padding_top }}px 0 {{ section.settings.section_padding_bottom }}px;
+    position: relative;
+  }
+
+  .fp-wrap-{{ section.id }}::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 50%;
+    transform: translateX(-50%);
+    width: 800px; height: 350px;
+    background: radial-gradient(ellipse, var(--fp-accent) 0%, transparent 70%);
+    opacity: 0.07;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ── Header ── */
+  .fp-wrap-{{ section.id }} .fp-header {
+    position: relative;
+    z-index: 1;
+    margin-bottom: 40px;
+  }
+  .fp-wrap-{{ section.id }} .fp-eyebrow {
+    font-family: 'Inter', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--fp-accent);
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 10px;
+  }
+  .fp-wrap-{{ section.id }} .fp-eyebrow::before {
+    content: '';
+    display: inline-block;
+    width: 24px; height: 2px;
+    background: var(--fp-accent);
+    border-radius: 2px;
+  }
+  .fp-wrap-{{ section.id }} .fp-title {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(1.8rem, 4vw, 3rem);
+    font-weight: 800;
+    color: var(--fp-text);
+    line-height: 1.05;
+    margin: 0;
+    letter-spacing: -0.02em;
+  }
+  .fp-wrap-{{ section.id }} .fp-subtitle {
+    font-family: 'Inter', sans-serif;
+    font-size: 15px;
+    color: var(--fp-muted);
+    margin-top: 10px;
+    max-width: 460px;
+    line-height: 1.65;
+    margin-bottom: 0;
+  }
+
+  /* ── Nav arrows ── */
+  .fp-wrap-{{ section.id }} .fp-nav-btn {
+    width: 46px; height: 46px;
+    border-radius: 50%;
+    border: 1px solid var(--fp-border);
+    background: var(--fp-card-bg);
+    color: var(--fp-text);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background .22s, border-color .22s, transform .22s;
+    flex-shrink: 0;
+  }
+  .fp-wrap-{{ section.id }} .fp-nav-btn:hover {
+    background: var(--fp-accent);
+    border-color: var(--fp-accent);
+    color: #fff;
+    transform: scale(1.08);
+  }
+  .fp-wrap-{{ section.id }} .fp-nav-btn.is-disabled {
+    opacity: .28;
+    pointer-events: none;
+  }
+  .fp-wrap-{{ section.id }} .fp-nav-btn svg {
+    width: 18px; height: 18px;
+    stroke-width: 2; display: block;
+  }
+
+  /* ── Swiper shell ── */
+  /* overflow:hidden on the OUTER shell so slides clip at edges */
+  .fp-wrap-{{ section.id }} .fp-slider-shell {
+    overflow: hidden;
+    position: relative;
+    z-index: 1;
+    /* small side padding so partially-visible next slide peeks in */
+    padding: 0 2px;
+  }
+  .fp-wrap-{{ section.id }} .fp-swiper-init {
+    overflow: hidden !important;
+    padding-bottom: 0 !important;
+    width: 100% !important;
+  }
+  .fp-wrap-{{ section.id }} .fp-slider-shell,
+  .fp-wrap-{{ section.id }} .fp-swiper-init {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+  .fp-wrap-{{ section.id }} .fp-swiper-init > .swiper-wrapper {
+    display: flex !important;
+    flex-wrap: nowrap !important;
+    align-items: stretch !important;
+    background: transparent !important;
+    width: 100% !important;
+  }
+  .fp-wrap-{{ section.id }} .fp-swiper-init > .swiper-wrapper > .swiper-slide {
+    flex-shrink: 0 !important;
+    height: auto !important;
+    display: block !important;
+    background: transparent !important;
+    text-align: left !important;
+    font-size: inherit !important;
+    justify-content: unset !important;
+    align-items: unset !important;
+    /* Let Swiper JS set the width via inline style — don't override it */
+    min-width: 0 !important;
+  }
+
+  /* ── Card ── */
+  .fp-wrap-{{ section.id }} .fp-card {
+    background: var(--fp-card-bg);
+    border: 1px solid var(--fp-border);
+    border-radius: var(--fp-radius);
+    overflow: hidden;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    transition: transform .3s ease, box-shadow .3s ease, border-color .3s ease;
+  }
+  .fp-wrap-{{ section.id }} .fp-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 20px 56px rgba(0,0,0,.38);
+    border-color: var(--fp-accent);
+  }
+
+  /* Image */
+  .fp-wrap-{{ section.id }} .fp-card__img {
+    position: relative;
+    aspect-ratio: 1/1;
+    overflow: hidden;
+    background: color-mix(in srgb, var(--fp-card-bg) 85%, var(--fp-border));
+  }
+  .fp-wrap-{{ section.id }} .fp-card__img img {
+    width: 100%; height: 100%;
+    object-fit: contain;
+    padding: 28px;
+    transition: transform .5s cubic-bezier(.25,.46,.45,.94);
+  }
+  .fp-wrap-{{ section.id }} .fp-card:hover .fp-card__img img {
+    transform: scale(1.07) translateY(-4px);
+  }
+
+  /* Badge */
+  .fp-wrap-{{ section.id }} .fp-badge {
+    position: absolute;
+    top: 12px; right: 12px;
+    font-family: 'Inter', sans-serif;
+    font-size: 10px; font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    padding: 4px 10px;
+    border-radius: 100px;
+    z-index: 2;
+  }
+  .fp-wrap-{{ section.id }} .fp-badge--sale    { background: var(--fp-accent); color: #fff; }
+  .fp-wrap-{{ section.id }} .fp-badge--new     { background: rgba(255,255,255,.1); color: var(--fp-text); border: 1px solid var(--fp-border); }
+  .fp-wrap-{{ section.id }} .fp-badge--soldout { background: rgba(0,0,0,.45); color: var(--fp-muted); border: 1px solid var(--fp-border); }
+
+  /* Body */
+  .fp-wrap-{{ section.id }} .fp-card__body {
+    padding: 20px 22px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .fp-wrap-{{ section.id }} .fp-card__vendor {
+    font-family: 'Inter', sans-serif;
+    font-size: 10px; font-weight: 600;
+    letter-spacing: 2px; text-transform: uppercase;
+    color: var(--fp-accent);
+  }
+  .fp-wrap-{{ section.id }} .fp-card__stars {
+    color: #f5b731; font-size: 11px; letter-spacing: 1px;
+  }
+  .fp-wrap-{{ section.id }} .fp-card__title {
+    font-family: 'Syne', sans-serif;
+    font-size: 17px; font-weight: 700;
+    color: var(--fp-text);
+    line-height: 1.25; margin: 0;
+  }
+  .fp-wrap-{{ section.id }} .fp-card__title a {
+    color: inherit; text-decoration: none;
+  }
+  .fp-wrap-{{ section.id }} .fp-card__desc {
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    color: var(--fp-muted);
+    line-height: 1.6; margin: 0;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  /* Variant pills */
+  .fp-wrap-{{ section.id }} .fp-variants-label {
+    font-family: 'Inter', sans-serif;
+    font-size: 10px; font-weight: 600;
+    letter-spacing: 1px; text-transform: uppercase;
+    color: var(--fp-muted); margin-bottom: 6px;
+  }
+  .fp-wrap-{{ section.id }} .fp-variants { display: flex; flex-wrap: wrap; gap: 6px; }
+  .fp-wrap-{{ section.id }} .fp-pill {
+    font-family: 'Inter', sans-serif;
+    font-size: 12px; font-weight: 500;
+    padding: 5px 13px;
+    border-radius: 100px;
+    border: 1px solid var(--fp-border);
+    color: var(--fp-muted);
+    background: transparent;
+    cursor: pointer;
+    transition: all .2s ease;
+  }
+  .fp-wrap-{{ section.id }} .fp-pill:hover,
+  .fp-wrap-{{ section.id }} .fp-pill.is-active {
+    background: var(--fp-accent);
+    border-color: var(--fp-accent);
+    color: #fff;
+  }
+
+  /* Footer */
+  .fp-wrap-{{ section.id }} .fp-card__footer {
+    padding: 16px 22px;
+    border-top: 1px solid var(--fp-border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .fp-wrap-{{ section.id }} .fp-price {
+    font-family: 'Syne', sans-serif;
+    font-size: 22px; font-weight: 800;
+    color: var(--fp-text);
+    letter-spacing: -0.02em; line-height: 1;
+  }
+  .fp-wrap-{{ section.id }} .fp-price-compare {
+    font-family: 'Inter', sans-serif;
+    font-size: 12px; color: var(--fp-muted);
+    text-decoration: line-through; margin-top: 2px;
+  }
+  .fp-wrap-{{ section.id }} .fp-actions {
+    display: flex; align-items: center; gap: 8px;
+  }
+
+  /* Qty */
+  .fp-wrap-{{ section.id }} .fp-qty {
+    display: flex; align-items: center;
+    border: 1px solid var(--fp-border);
+    border-radius: 100px;
+    overflow: hidden;
+    background: var(--fp-bg);
+    height: 38px;
+  }
+  .fp-wrap-{{ section.id }} .fp-qty__btn {
+    background: none; border: none;
+    color: var(--fp-text);
+    font-size: 16px;
+    width: 34px; height: 38px;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; padding: 0; line-height: 1;
+    transition: background .18s;
+  }
+  .fp-wrap-{{ section.id }} .fp-qty__btn:hover { background: var(--fp-border); }
+  .fp-wrap-{{ section.id }} .fp-qty__val {
+    font-family: 'Inter', sans-serif;
+    font-size: 13px; font-weight: 600;
+    color: var(--fp-text);
+    min-width: 22px; text-align: center;
+  }
+
+  /* Cart button */
+  .fp-wrap-{{ section.id }} .fp-btn-cart {
+    font-family: 'Inter', sans-serif;
+    font-size: 12px; font-weight: 700;
+    letter-spacing: .4px;
+    padding: 0 20px; height: 38px;
+    border-radius: 100px;
+    background: var(--fp-accent);
+    color: #fff; border: none;
+    cursor: pointer;
+    transition: background .22s, transform .22s, box-shadow .22s;
+    white-space: nowrap;
+    flex: 1; min-width: 100px;
+  }
+  .fp-wrap-{{ section.id }} .fp-btn-cart:hover:not(:disabled) {
+    background: var(--fp-text);
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px rgba(0,0,0,.35);
+  }
+  .fp-wrap-{{ section.id }} .fp-btn-cart:disabled {
+    background: var(--fp-border);
+    color: var(--fp-muted);
+    cursor: not-allowed;
+  }
+
+  /* ── Pagination ── */
+  .fp-wrap-{{ section.id }} .fp-pag {
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+    margin-top: 36px;
+    position: relative; z-index: 1;
+  }
+  .fp-wrap-{{ section.id }} .fp-pag .swiper-pagination-bullet {
+    width: 6px; height: 6px;
+    border-radius: 100px;
+    background: var(--fp-border);
+    opacity: 1;
+    transition: all .3s ease;
+    margin: 0 !important;
+    cursor: pointer;
+  }
+  .fp-wrap-{{ section.id }} .fp-pag .swiper-pagination-bullet-active {
+    background: var(--fp-accent);
+    width: 24px;
+  }
+
+  @media (max-width: 767px) {
+    .fp-wrap-{{ section.id }} .fp-card__footer { flex-direction: column; align-items: flex-start; }
+    .fp-wrap-{{ section.id }} .fp-actions { width: 100%; }
+    .fp-wrap-{{ section.id }} .fp-btn-cart { flex: 1; }
+  }
+</style>
+
+<div class="fp-wrap-{{ section.id }}">
+  <div class="container-fluid px-3 px-md-4 px-lg-5">
+
+    {%- if section.settings.title != blank -%}
+    <div class="fp-header d-flex flex-column flex-md-row align-items-md-end justify-content-between gap-3">
+      <div>
+        {%- if section.settings.eyebrow != blank -%}
+          <p class="fp-eyebrow mb-0">{{ section.settings.eyebrow }}</p>
+        {%- endif -%}
+        <h2 class="fp-title">{{ section.settings.title }}</h2>
+        {%- if section.settings.subtitle != blank -%}
+          <p class="fp-subtitle">{{ section.settings.subtitle }}</p>
+        {%- endif -%}
+      </div>
+      <div class="d-flex gap-2">
+        <button class="fp-nav-btn fp-prev-{{ section.id }}" type="button" aria-label="Previous">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M15 18l-6-6 6-6"/></svg>
+        </button>
+        <button class="fp-nav-btn fp-next-{{ section.id }}" type="button" aria-label="Next">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M9 18l6-6-6-6"/></svg>
+        </button>
+      </div>
+    </div>
+    {%- endif -%}
+
+    <div class="fp-slider-shell">
+      <!-- data-sid used by JS to scope everything — avoids ID conflicts in theme editor -->
+      <div class="fp-swiper-init" data-sid="{{ section.id }}">
+        <div class="swiper-wrapper">
+
+          {%- for block in section.blocks -%}
+            {%- assign product = block.settings.product -%}
+            {%- if product != blank -%}
+              {%- assign fv = product.selected_or_first_available_variant -%}
+              {%- assign on_sale = false -%}
+              {%- if fv.compare_at_price > fv.price -%}{%- assign on_sale = true -%}{%- endif -%}
+
+              <div class="swiper-slide" {{ block.shopify_attributes }}>
+                <div class="fp-card">
+
+                  <div class="fp-card__img">
+                    {%- if product.available == false -%}
+                      <span class="fp-badge fp-badge--soldout">Sold Out</span>
+                    {%- elsif on_sale -%}
+                      <span class="fp-badge fp-badge--sale">Sale</span>
+                    {%- elsif block.settings.badge_text != blank -%}
+                      <span class="fp-badge fp-badge--new">{{ block.settings.badge_text }}</span>
+                    {%- endif -%}
+                    <a href="{{ product.url }}">
+                      {%- if product.featured_image != blank -%}
+                        {%- assign img_alt = product.featured_image.alt | escape -%}
+                        {%- assign img_src = product.featured_image | image_url: width: 600 -%}
+                        <img
+                          src="{{ img_src }}"
+                          alt="{{ img_alt }}"
+                          loading="lazy"
+                          width="600"
+                          height="600"
+                          style="width:100%;height:100%;object-fit:contain;padding:28px;"
+                        >
+                      {%- else -%}
+                        {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg' }}
+                      {%- endif -%}
+                    </a>
+                  </div>
+
+                  <div class="fp-card__body">
+                    <div class="d-flex align-items-center justify-content-between">
+                      <span class="fp-card__vendor">{{ product.vendor }}</span>
+                      {%- if block.settings.show_rating -%}<span class="fp-card__stars">★★★★★</span>{%- endif -%}
+                    </div>
+
+                    <h3 class="fp-card__title">
+                      <a href="{{ product.url }}">{{ product.title }}</a>
+                    </h3>
+
+                    {%- if block.settings.show_description and product.description != blank -%}
+                      <p class="fp-card__desc">{{ product.description | strip_html }}</p>
+                    {%- endif -%}
+
+                    {%- if product.variants.size > 1 and block.settings.show_variants -%}
+                      <div>
+                        <p class="fp-variants-label">Size</p>
+                        <div class="fp-variants" data-vfor="{{ product.id }}">
+                          {%- for v in product.variants limit: 6 -%}
+                            <button
+                              class="fp-pill {% if forloop.first %}is-active{% endif %}"
+                              data-vid="{{ v.id }}"
+                              data-price="{{ v.price | money }}"
+                              data-compare="{{ v.compare_at_price | money }}"
+                              data-avail="{{ v.available }}"
+                              type="button"
+                              {% unless v.available %}disabled style="opacity:.38"{% endunless %}
+                            >{{ v.title }}</button>
+                          {%- endfor -%}
+                        </div>
+                      </div>
+                    {%- endif -%}
+                  </div>
+
+                  <div class="fp-card__footer">
+                    <div>
+                      <div class="fp-price" data-price-el="{{ product.id }}">{{ fv.price | money }}</div>
+                      {%- if on_sale -%}
+                        <div class="fp-price-compare" data-compare-el="{{ product.id }}">{{ fv.compare_at_price | money }}</div>
+                      {%- endif -%}
+                    </div>
+                    <div class="fp-actions">
+                      {%- if block.settings.show_quantity -%}
+                        <div class="fp-qty">
+                          <button class="fp-qty__btn" data-qminus="{{ product.id }}" type="button">−</button>
+                          <span class="fp-qty__val" data-qval="{{ product.id }}">1</span>
+                          <button class="fp-qty__btn" data-qplus="{{ product.id }}" type="button">+</button>
+                        </div>
+                      {%- endif -%}
+                      <button
+                        type="button"
+                        class="fp-btn-cart"
+                        data-pid="{{ product.id }}"
+                        data-vid="{{ fv.id }}"
+                        {% unless product.available %}disabled{% endunless %}
+                      >
+                        {%- if product.available -%}{{ block.settings.button_label | default: 'Add to Cart' }}{%- else -%}Sold Out{%- endif -%}
+                      </button>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+            {%- endif -%}
+          {%- endfor -%}
+
+        </div><!-- /.swiper-wrapper -->
+        <div class="fp-pag swiper-pagination"></div>
+      </div><!-- /.swiper -->
+    </div><!-- /.fp-slider-shell -->
+
+  </div>
+</div>
+
+<script>
+(function () {
+  var SID  = '{{ section.id }}';
+  var WRAP = null;
+
+  function initSwiper() {
+    if (typeof Swiper === 'undefined') return false;
+
+    WRAP = document.querySelector('.fp-wrap-' + SID);
+    if (!WRAP) return false;
+
+    var el = WRAP.querySelector('.fp-swiper-init[data-sid="' + SID + '"]');
+    if (!el) return false;
+
+    /* destroy any previous instance (theme editor re-renders) */
+    if (el.swiper) el.swiper.destroy(true, true);
+
+    var spv = parseFloat('{{ section.settings.slides_per_view }}') || 3;
+
+    var sw = new Swiper(el, {
+      slidesPerView: 1.2,
+      spaceBetween: 16,
+      grabCursor: true,
+      pagination: {
+        el: WRAP.querySelector('.fp-pag'),
+        clickable: true,
+      },
+      navigation: {
+        prevEl: WRAP.querySelector('.fp-prev-' + SID),
+        nextEl: WRAP.querySelector('.fp-next-' + SID),
+        disabledClass: 'is-disabled',
+      },
+      breakpoints: {
+        480:  { slidesPerView: 1.6, spaceBetween: 18 },
+        768:  { slidesPerView: 2,   spaceBetween: 22 },
+        992:  { slidesPerView: 1.5, spaceBetween: 24 },
+        1200: { slidesPerView: spv, spaceBetween: 28 },
+      },
+    });
+
+    /* Force Swiper to recalculate slide widths after paint */
+    setTimeout(function () { sw.update(); sw.updateSize(); sw.updateSlides(); }, 300);
+
+    bindUI();
+    return true;
+  }
+
+  function bindUI() {
+ 
+    WRAP.querySelectorAll('[data-qminus]').forEach(function (b) {
+      b.addEventListener('click', function () {
+        var el = WRAP.querySelector('[data-qval="' + b.dataset.qminus + '"]');
+        if (el) el.textContent = Math.max(1, parseInt(el.textContent) - 1);
+      });
+    });
+    WRAP.querySelectorAll('[data-qplus]').forEach(function (b) {
+      b.addEventListener('click', function () {
+        var el = WRAP.querySelector('[data-qval="' + b.dataset.qplus + '"]');
+        if (el) el.textContent = parseInt(el.textContent) + 1;
+      });
+    });
+ 
+    WRAP.querySelectorAll('[data-vfor]').forEach(function (vWrap) {
+      var pid   = vWrap.dataset.vfor;
+      var pills = vWrap.querySelectorAll('.fp-pill');
+      var cart  = WRAP.querySelector('.fp-btn-cart[data-pid="' + pid + '"]');
+      pills.forEach(function (pill) {
+        pill.addEventListener('click', function () {
+          pills.forEach(function (p) { p.classList.remove('is-active'); });
+          pill.classList.add('is-active');
+          var pEl = WRAP.querySelector('[data-price-el="' + pid + '"]');
+          var cEl = WRAP.querySelector('[data-compare-el="' + pid + '"]');
+          if (pEl && pill.dataset.price)   pEl.textContent = pill.dataset.price;
+          if (cEl && pill.dataset.compare) cEl.textContent = pill.dataset.compare;
+          if (cart) {
+            var ok = pill.dataset.avail === 'true';
+            cart.dataset.vid = pill.dataset.vid;
+            cart.disabled    = !ok;
+            cart.textContent = ok ? (cart.dataset.label || 'Add to Cart') : 'Sold Out';
+          }
+        });
+      });
+    });
+ 
+    WRAP.querySelectorAll('.fp-btn-cart').forEach(function (btn) {
+      btn.dataset.label = btn.textContent.trim();
+      btn.addEventListener('click', function () {
+        if (btn.disabled) return;
+        var qEl = WRAP.querySelector('[data-qval="' + btn.dataset.pid + '"]');
+        var qty = parseInt((qEl && qEl.textContent) || '1');
+        btn.textContent = 'Adding…';
+        btn.disabled = true;
+        fetch('/cart/add.js', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+          body: JSON.stringify({ id: btn.dataset.vid, quantity: qty }),
+        }).then(function (r) {
+          if (!r.ok) throw new Error();
+          btn.textContent = '✓ Added!';
+          btn.style.background = '#22c55e';
+          document.dispatchEvent(new CustomEvent('cart:updated'));
+          setTimeout(function () { btn.textContent = btn.dataset.label; btn.style.background = ''; btn.disabled = false; }, 2200);
+        }).catch(function () {
+          btn.textContent = 'Try Again';
+          btn.style.background = '#ef4444';
+          setTimeout(function () { btn.textContent = btn.dataset.label; btn.style.background = ''; btn.disabled = false; }, 2000);
+        });
+      });
+    });
+  } 
+  function tryInit() {
+    if (initSwiper()) return;
+    var attempts = 0;
+    var timer = setInterval(function () {
+      attempts++;
+      if (initSwiper() || attempts > 30) clearInterval(timer);
+    }, 100);
+  } 
+  document.addEventListener('DOMContentLoaded', tryInit);
+  window.addEventListener('load', tryInit);
+  setTimeout(tryInit, 500);
+  setTimeout(tryInit, 1500);
+
+  document.addEventListener('shopify:section:load', function (e) {
+    if (e.detail && e.detail.sectionId && e.detail.sectionId.indexOf(SID) !== -1) {
+      setTimeout(tryInit, 200);
+    }
+  });
+})();
+</script>
+
+{% schema %}
+{
+  "name": "Featured Carousel",
+  "tag": "section",
+  "class": "fp-section-outer",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Section Header"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow label",
+      "default": "Featured Items"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Heading",
+      "default": "Picked & Poured"
+    },
+    {
+      "type": "textarea",
+      "id": "subtitle",
+      "label": "Subheading",
+      "default": "Handpicked drinks that hit different."
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "select",
+      "id": "slides_per_view",
+      "label": "Cards visible on desktop",
+      "options": [
+        { "value": "1.5", "label": "1.5 (peek)" },
+        { "value": "2",   "label": "2" },
+        { "value": "2.5", "label": "2.5 (peek)" },
+        { "value": "3",   "label": "3" },
+        { "value": "3.5", "label": "3.5 (peek)" },
+        { "value": "4",   "label": "4" }
+      ],
+      "default": "3"
+    },
+    {
+      "type": "range",
+      "id": "section_padding_top",
+      "label": "Padding top",
+      "min": 0, "max": 120, "step": 8, "unit": "px", "default": 80
+    },
+    {
+      "type": "range",
+      "id": "section_padding_bottom",
+      "label": "Padding bottom",
+      "min": 0, "max": 120, "step": 8, "unit": "px", "default": 80
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "section_bg",
+      "label": "Section background",
+      "default": "#0f0a1e"
+    },
+    {
+      "type": "color",
+      "id": "card_bg",
+      "label": "Card background",
+      "default": "#1a1030"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent / CTA color",
+      "default": "#8b5cf6"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#f1f0f5"
+    },
+    {
+      "type": "color",
+      "id": "muted_color",
+      "label": "Muted text color",
+      "default": "#7c7a8e"
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Border color",
+      "default": "#2e2646"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "product_card",
+      "name": "Product Card",
+      "settings": [
+        {
+          "type": "product",
+          "id": "product",
+          "label": "Product"
+        },
+        {
+          "type": "text",
+          "id": "badge_text",
+          "label": "Badge text",
+          "placeholder": "e.g. New, Best Seller"
+        },
+        {
+          "type": "text",
+          "id": "button_label",
+          "label": "Button label",
+          "default": "Add to Cart"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_description",
+          "label": "Show description",
+          "default": true
+        },
+        {
+          "type": "checkbox",
+          "id": "show_variants",
+          "label": "Show variant pills",
+          "default": true
+        },
+        {
+          "type": "checkbox",
+          "id": "show_quantity",
+          "label": "Show quantity selector",
+          "default": true
+        },
+        {
+          "type": "checkbox",
+          "id": "show_rating",
+          "label": "Show star rating",
+          "default": false
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Featured Carousel",
+      "category": "Products",
+      "blocks": [
+        { "type": "product_card" },
+        { "type": "product_card" },
+        { "type": "product_card" },
+        { "type": "product_card" }
+      ]
+    }
+  ]
+}
+{% endschema %}
