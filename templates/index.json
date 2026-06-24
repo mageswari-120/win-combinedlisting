@@ -11,13 +11,126 @@
   "sections": {
     "recently_viewed_hfqdYT": {
       "type": "recently-viewed",
+      "disabled": true,
       "name": "Recently viewed",
       "settings": {
         "max_items": 8
       }
+    },
+    "shoppable_video_zxWHBr": {
+      "type": "shoppable-video",
+      "blocks": {
+        "story_card_WRMTrD": {
+          "type": "story_card",
+          "settings": {
+            "media_type": "video",
+            "video": "shopify://files/videos/selena vid.mp4",
+            "poster_image": "shopify://shop_images/87a61e02003d58aa3742527a76e157220424a4d5.png",
+            "image": "shopify://shop_images/red-t-shirt_868c3ba3-00cd-4ef7-8cae-f8ffda8bfdda.jpg",
+            "label": "New Arrivals",
+            "title": "Summer Edit",
+            "subtitle": "Just now",
+            "product_list": [
+              "pre-order",
+              "bowtie-product-rich-media",
+              "dummy-product",
+              "enamel-pin",
+              "rte-test"
+            ],
+            "max_products": 4,
+            "overlay_opacity": 45
+          }
+        },
+        "story_card_UWV7xd": {
+          "type": "story_card",
+          "settings": {
+            "media_type": "image",
+            "poster_image": "shopify://shop_images/color-geometric-socks_da005a32-620d-4bad-bec0-58598815d4bc.jpg",
+            "image": "shopify://shop_images/red-t-shirt_3799e83f-5159-41ad-b55f-0999ab4d892d.jpg",
+            "label": "Best Sellers",
+            "title": "Fan Favorites",
+            "subtitle": "2 min ago",
+            "product_list": [],
+            "max_products": 4,
+            "overlay_opacity": 45
+          }
+        },
+        "story_card_8trrzU": {
+          "type": "story_card",
+          "settings": {
+            "media_type": "video",
+            "video": "shopify://files/videos/insta1-video-01 (2).webm",
+            "label": "Sale",
+            "title": "Up to 40% Off",
+            "subtitle": "Today only",
+            "product_list": [
+              "rte-test",
+              "enamel-pin",
+              "dummy-product",
+              "bowtie-product-rich-media",
+              "pre-order"
+            ],
+            "max_products": 4,
+            "overlay_opacity": 45
+          }
+        }
+      },
+      "block_order": [
+        "story_card_WRMTrD",
+        "story_card_UWV7xd",
+        "story_card_8trrzU"
+      ],
+      "name": "Shoppable Video Feed",
+      "settings": {
+        "heading": "Shop the Look",
+        "subheading": "Tap a story to explore",
+        "heading_align": "left",
+        "show_header": true,
+        "show_profile_image": true,
+        "profile_name": "Our Brand",
+        "show_progress_bar": true,
+        "progress_auto_advance": false,
+        "progress_duration": 8,
+        "products_label": "🛍️ Shop this look",
+        "cta_type": "quick_view",
+        "cta_quick_view_label": "Quick View",
+        "cta_atc_label": "Add to Cart",
+        "cta_view_label": "View Product",
+        "show_price": true,
+        "show_vendor": false,
+        "product_spacing": 10,
+        "product_autoplay": false,
+        "product_show_scrollbar": false,
+        "show_mute_btn": true,
+        "show_play_icon": true,
+        "slides_per_view_desktop": 3,
+        "slides_per_view_tablet": 2,
+        "slides_per_view_mobile": 1.2,
+        "card_gap": 12,
+        "card_height": 480,
+        "enable_loop": true,
+        "enable_autoplay": false,
+        "autoplay_delay": 4000,
+        "center_active": false,
+        "show_arrows": true,
+        "show_pagination": false,
+        "show_scrollbar": false,
+        "swiper_speed": 400,
+        "color_scheme": "",
+        "background_color": "rgba(0,0,0,0)",
+        "text_color": "#111111",
+        "accent_color": "#111111",
+        "card_border_radius": 16,
+        "popup_border_radius": 20,
+        "full_width": false,
+        "section_width": 1280,
+        "padding_top": 48,
+        "padding_bottom": 48
+      }
     }
   },
   "order": [
-    "recently_viewed_hfqdYT"
+    "recently_viewed_hfqdYT",
+    "shoppable_video_zxWHBr"
   ]
 }
