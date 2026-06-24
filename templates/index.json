@@ -41,6 +41,27 @@
             "overlay_opacity": 45
           }
         },
+        "story_card_ewU4ph": {
+          "type": "story_card",
+          "settings": {
+            "media_type": "video",
+            "video": "shopify://files/videos/selena vid.mp4",
+            "poster_image": "shopify://shop_images/87a61e02003d58aa3742527a76e157220424a4d5.png",
+            "image": "shopify://shop_images/red-t-shirt_868c3ba3-00cd-4ef7-8cae-f8ffda8bfdda.jpg",
+            "label": "New Arrivals",
+            "title": "Summer Edit",
+            "subtitle": "Just now",
+            "product_list": [
+              "pre-order",
+              "bowtie-product-rich-media",
+              "dummy-product",
+              "enamel-pin",
+              "rte-test"
+            ],
+            "max_products": 4,
+            "overlay_opacity": 45
+          }
+        },
         "story_card_UWV7xd": {
           "type": "story_card",
           "settings": {
@@ -73,12 +94,33 @@
             "max_products": 4,
             "overlay_opacity": 45
           }
+        },
+        "story_card_zGBLrX": {
+          "type": "story_card",
+          "settings": {
+            "media_type": "video",
+            "video": "shopify://files/videos/insta1-video-01 (2).webm",
+            "label": "Sale",
+            "title": "Up to 40% Off",
+            "subtitle": "Today only",
+            "product_list": [
+              "rte-test",
+              "enamel-pin",
+              "dummy-product",
+              "bowtie-product-rich-media",
+              "pre-order"
+            ],
+            "max_products": 4,
+            "overlay_opacity": 45
+          }
         }
       },
       "block_order": [
         "story_card_WRMTrD",
+        "story_card_ewU4ph",
         "story_card_UWV7xd",
-        "story_card_8trrzU"
+        "story_card_8trrzU",
+        "story_card_zGBLrX"
       ],
       "name": "Shoppable Video Feed",
       "settings": {
