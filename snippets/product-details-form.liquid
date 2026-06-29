@@ -268,8 +268,7 @@ label.swatch-option.d-inline-flex.align-items-center.justify-content-center.acti
                                       {% endfor %}
                                     </ul>
                                   </div>
-{% assign combined_listing = product.combined_listing %}
-{{ product.combined_listing | json }}
+
                                 {%- when 'button' -%}
                                   <div class="variants variant-options {% unless forloop.last %}mb-4{% endunless %}" data-variantid="{{ product.selected_or_first_available_variant.id }}">
                                     <div class="d-flex selected-variant-display gap-1">
