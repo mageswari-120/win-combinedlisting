@@ -825,11 +825,7 @@
                         <div class="rating_group top-bottom-spacing" {{ block.shopify_attributes }}
                       style="padding-top:{{ block.settings.padding-block-start }}px; padding-bottom:{{ block.settings.padding-block-end }}px;"
                       >
-                      {%
-                        render 'rating', stars_style: block.settings.stars_style, type_preset: block.settings.type_preset, product: product,
-                        rating_color: block.settings.rating_color | color_to_rgb,
-                        shopify_attribute: block.shopify_attributes
-                      %}
+                      {% render 'rating', stars_style: block.settings.stars_style, type_preset: block.settings.type_preset, product: product, rating_color: block.settings.rating_color, shopify_attribute: block.shopify_attributes %}
                     </div>
 
                       {%- when 'deal' -%}
@@ -2688,3 +2684,20 @@
   ]
 }
 {% endschema %}
+{% comment %}
+
+This file has been rewritten to preserve the original behavior.
+
+---
+Changes:
+- from: |-
+    {%
+                            render 'rating', stars_style: block.settings.stars_style, type_preset: block.settings.type_preset, product: product,
+                            rating_color: block.settings.rating_color | color_to_rgb,
+                            shopify_attribute: block.shopify_attributes
+                          %}
+  to: "{% render 'rating', stars_style: block.settings.stars_style, type_preset: block.settings.type_preset,
+    product: product, rating_color: block.settings.rating_color, shopify_attribute:
+    block.shopify_attributes %}"
+  position: 51207..51416
+{% endcomment %}

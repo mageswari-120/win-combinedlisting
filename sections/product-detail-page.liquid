@@ -275,18 +275,7 @@ product-gallery.stacked .product-thumbnails {
                     "
                     {{ block.shopify_attributes }}
                   >
-                    {%
-                      render 'product-sidebar',
-                      settings: block.settings,
-                      children: children,
-                      menu: menu,
-                      products: items,
-                      collection_item: collection_item,
-                      enable_wishlist: settings.enable_wishlist,
-                      enable_compare: settings.enable_compare,
-                      enable_quickview: settings.enable_quickview,
-                      attribute
-                    %}
+                    {% render 'product-sidebar', settings: block.settings, children: children, menu: menu, products: items, collection_item: collection_item, enable_wishlist: settings.enable_wishlist, enable_compare: settings.enable_compare, enable_quickview: settings.enable_quickview %}
                   </aside>
                 {% endif %}
               </div>
@@ -3475,3 +3464,28 @@ product-gallery.stacked .product-thumbnails {
   ]
 }
 {% endschema %}
+{% comment %}
+
+This file has been rewritten to preserve the original behavior.
+
+---
+Changes:
+- from: |-
+    {%
+                          render 'product-sidebar',
+                          settings: block.settings,
+                          children: children,
+                          menu: menu,
+                          products: items,
+                          collection_item: collection_item,
+                          enable_wishlist: settings.enable_wishlist,
+                          enable_compare: settings.enable_compare,
+                          enable_quickview: settings.enable_quickview,
+                          attribute
+                        %}
+  to: "{% render 'product-sidebar', settings: block.settings, children: children,
+    menu: menu, products: items, collection_item: collection_item, enable_wishlist:
+    settings.enable_wishlist, enable_compare: settings.enable_compare, enable_quickview:
+    settings.enable_quickview %}"
+  position: 12647..12915
+{% endcomment %}

@@ -208,7 +208,7 @@ label.swatch-option.d-inline-flex.align-items-center.justify-content-center.acti
                               </div>
 
                             {% else %}
-                              {%- case swatch_type -%%}
+                              {%- case swatch_type %}
 
                                 {%- when 'color' -%}
                                   <div class="variant-container swatch-{{ swatch_type }} mb-4">
@@ -828,11 +828,7 @@ label.swatch-option.d-inline-flex.align-items-center.justify-content-center.acti
                       <div class="rating_group top-bottom-spacing" {{ block.shopify_attributes }}
                       style="padding-top:{{ block.settings.padding-block-start }}px; padding-bottom:{{ block.settings.padding-block-end }}px;"
                       >
-                      {%
-                        render 'rating', stars_style: block.settings.stars_style, type_preset: block.settings.type_preset,
-                        rating_color: block.settings.rating_color | color_to_rgb,
-                        shopify_attribute: block.shopify_attributes
-                      %}
+                      {% render 'rating', stars_style: block.settings.stars_style, type_preset: block.settings.type_preset, rating_color: block.settings.rating_color, shopify_attribute: block.shopify_attributes %}
                     </div>
 
 
@@ -1051,4 +1047,23 @@ label.swatch-option.d-inline-flex.align-items-center.justify-content-center.acti
                   {% endcase %}
                 {% endfor %}
               {%- endif -%}
-            </product-detail-page-form>
+            </product-detail-page-form>{%- comment -%}
+
+This file has been rewritten to preserve the original behavior.
+
+---
+Changes:
+- from: "{%- case swatch_type -%%}"
+  to: "{%- case swatch_type %}"
+  position: 12081..12104
+- from: |-
+    {%
+                            render 'rating', stars_style: block.settings.stars_style, type_preset: block.settings.type_preset,
+                            rating_color: block.settings.rating_color | color_to_rgb,
+                            shopify_attribute: block.shopify_attributes
+                          %}
+  to: "{% render 'rating', stars_style: block.settings.stars_style, type_preset: block.settings.type_preset,
+    rating_color: block.settings.rating_color, shopify_attribute: block.shopify_attributes
+    %}"
+  position: 50677..50868
+{%- endcomment -%}

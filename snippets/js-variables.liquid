@@ -74,7 +74,7 @@
          moneyFormat: {{ shop.money_format | json }},
         {% endif %}
         shopCurrency: {{ shop.money_with_currency_format | json }},
-        sub_total: {{ 'sections.cart.sub_total' | | t | json }},      
+        sub_total: {{ 'sections.cart.sub_total' | t | json }},      
         animation_status: "{{ animation_is }}"        
       };  
   
@@ -95,3 +95,13 @@
   {%- if template contains 'collection' or template == 'search' -%}
   <script src="{{ 'ajaxinate.min.js' | asset_url }}" defer></script> 
   {%- endif -%}
+{% comment %}
+
+This file has been rewritten to preserve the original behavior.
+
+---
+Changes:
+- from: "{{ 'sections.cart.sub_total' | | t | json }}"
+  to: "{{ 'sections.cart.sub_total' | t | json }}"
+  position: 3943..3985
+{% endcomment %}
